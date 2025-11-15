@@ -1,13 +1,14 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-
+import { ThemeProvider, useTheme } from "./styles/themeContext"
 import styles from './styles/styles';
 
+/*
 import Footer from "./pages/components/Footer"
 import Explore from './pages/Explore';
 import Boards from './pages/Boards';
-import Profile from './pages/Profile';
+import Profile from './pages/Profile';*/
 
 function AppContent() {
   const [activeTab, setActiveTab] = useState<'explore' | 'boards' | 'profile'>('explore');
