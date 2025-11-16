@@ -3,6 +3,9 @@
 # dependencies
 node_modules/
 
+# supabase keys
+.env
+
 # Expo
 .expo/
 dist/
