@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Pressable, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 import styles from '../../styles/styles';
 import { palette } from '../../styles/palette';
 import { House, Users, Snail } from 'lucide-react-native';
@@ -11,6 +11,10 @@ interface FooterProps {
 }
 
 export default function Footer({ activeTab, setActiveTab }: FooterProps) {
+
+  const activeFrog = require("../../assets/other/frog_g.png")
+  const inactiveFrog = require("../../assets/other/frog_b.png");
+
   return (
     <View style={styles.footer}>
       <TouchableOpacity style={styles.navButton} onPress={()=>setActiveTab("friends")}>
@@ -21,8 +25,8 @@ export default function Footer({ activeTab, setActiveTab }: FooterProps) {
         <House size = {40} color={activeTab == "home" ? theme.pressed : theme.notpressed}></House><Text style={styles.text}>Home</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.navButton} onPress={()=>setActiveTab("profile")}>
-        <Snail size = {40} color={activeTab == "profile" ? theme.pressed : theme.notpressed}></Snail><Text style={styles.text}>Profile</Text>
+      <TouchableOpacity style={[styles.navButton, {transform: [{ translateY: -8 }]}]} onPress={()=>setActiveTab("profile")}>
+        <Image source={(activeTab == "profile") ? activeFrog : inactiveFrog}  style={{ width: 48,  height: 48}}></Image><Text style={styles.text}>Profile</Text>
       </TouchableOpacity>
     </View>
   );
