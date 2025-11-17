@@ -10,7 +10,15 @@ const theme = {
   heading: palette.mediumBrown,   
   text: palette.darkBrown,       
   textSecondary: palette.lightBrown, 
-  textMuted: palette.mutedBrown,   
+  textMuted: palette.mutedBrown,
+
+  //button
+  button: palette.slate,  
+  buttontext: palette.cream,
+  
+  // footer
+  pressed: palette.sage,
+  notpressed: palette.slate,
 
   // ui
   primary: palette.slate,  

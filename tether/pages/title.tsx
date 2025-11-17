@@ -102,9 +102,8 @@ export default function Title () {
 
           <Pressable
             style={[
-              styles.loginButtonPrimary,
+              styles.loginButton,
               styles.loginButtonSpacing,
-              loading && styles.loginButtonDisabled
             ]}
             onPress={handleLogin}
             disabled={loading}

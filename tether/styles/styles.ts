@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { palette } from './palette';
+import theme from './theme';
 
 // Global stylesheet for Tether app using extracted palette
 const globalStyles = StyleSheet.create({
@@ -7,7 +8,6 @@ const globalStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: palette.cream,
-    padding: 15,
 
   },
   screen: {
@@ -55,6 +55,16 @@ const globalStyles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 4,
   },
+  logoutLogo:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    backgroundColor: theme.button,
+    padding: 16,
+    borderRadius: 16,
+    marginTop: 12,
+  },
   titleLarge: {
     fontSize: 40,
     fontWeight: '700',
@@ -96,9 +106,6 @@ const globalStyles = StyleSheet.create({
     paddingLeft: 16,
     fontSize: 16,
     color: palette.darkBrown,
-  },
-  loginButtonSpacing: {
-    marginTop: 16,
   },
   signUpLinkContainer: {
     marginTop: 16,
@@ -144,7 +151,7 @@ const globalStyles = StyleSheet.create({
     fontSize: 16,
     color: palette.darkBrown,
   },
-  loginButtonPrimary: {
+  loginButton: {
     backgroundColor: palette.slate,
     padding: 18,
     borderRadius: 20,
@@ -158,22 +165,12 @@ const globalStyles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 4,
     elevation: 2,
-  },
-  loginButtonSecondary: {
-    backgroundColor: palette.lightBeige,
-    padding: 18,
-    borderRadius: 20,
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 10,
-    borderWidth: 1,
-    borderColor: palette.lightGray,
+    marginTop: 16,
   },
   loginButtonDisabled: {
     opacity: 0.6,
   },
-  loginButtonTextPrimary: {
+  loginButtonText: {
     color: palette.cream,
     fontSize: 17,
     fontWeight: '700',
@@ -311,6 +308,7 @@ const globalStyles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: palette.cream,
     borderTopWidth: 1,
+    paddingBottom: 20,
     borderTopColor: palette.divider,
   },
   navButton: {

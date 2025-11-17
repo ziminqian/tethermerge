@@ -4,6 +4,7 @@ import { TetherProvider } from './context/TetherContext';
 import { Contacts } from './pages/contacts';
 import { Message } from './pages/message';
 import { Home } from './pages/home';
+import { Profile } from './pages/profile';
 import Footer from './pages/components/Footer';
 import styles from './styles/styles';
 import AuthGate from './pages/components/AuthGate';
@@ -24,7 +25,7 @@ function AppContent() {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
-      <View style={{ flex: 8 }}>
+      <View style={{ flex: 9 }}>
         {activeTab === 'friends' && (
           <Contacts 
             onNext={() => setActiveTab('friends')} 
@@ -37,8 +38,7 @@ function AppContent() {
           />
         )}
         {activeTab === 'profile' && (
-          <Message 
-            onNext={() => setActiveTab('profile')} // to-FIX
+          <Profile 
             onBack={() => setActiveTab('profile')} 
           />
         )}

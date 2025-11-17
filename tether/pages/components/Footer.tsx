@@ -13,17 +13,16 @@ interface FooterProps {
 export default function Footer({ activeTab, setActiveTab }: FooterProps) {
   return (
     <View style={styles.footer}>
-
       <TouchableOpacity style={styles.navButton} onPress={()=>setActiveTab("friends")}>
-        <Users size = {40} color={activeTab == "friends" ? theme.accent : theme.primary}></Users><Text style={styles.text}>Friends</Text>
+        <Users size = {40} color={activeTab == "friends" ? theme.pressed : theme.notpressed}></Users><Text style={styles.text}>Friends</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.navButton} onPress={()=>setActiveTab("home")}>
-        <House size = {40} color={activeTab == "home" ? theme.accent : theme.primary}></House><Text style={styles.text}>Home</Text>
+        <House size = {40} color={activeTab == "home" ? theme.pressed : theme.notpressed}></House><Text style={styles.text}>Home</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.navButton} onPress={()=>setActiveTab("profile")}>
-        <Snail size = {40} color={activeTab == "profile" ? theme.accent : theme.primary}></Snail><Text style={styles.text}>Profile</Text>
+        <Snail size = {40} color={activeTab == "profile" ? theme.pressed : theme.notpressed}></Snail><Text style={styles.text}>Profile</Text>
       </TouchableOpacity>
     </View>
   );

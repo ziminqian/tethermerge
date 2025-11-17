@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Mock session type
+// Change this line:
+const SESSION_KEY = '@tether_session';  // Use consistent key
+
 type MockSession = {
   user: {
     phone: string;
@@ -12,14 +14,13 @@ export default function useSession() {
   const [session, setSession] = useState<MockSession>(null);
   const [loading, setLoading] = useState(true);
 
-  // Check for existing session on mount
   useEffect(() => {
     checkSession();
   }, []);
 
   const checkSession = async () => {
     try {
-      const storedSession = await AsyncStorage.getItem('mock_session');
+      const storedSession = await AsyncStorage.getItem(SESSION_KEY);
       if (storedSession) {
         setSession(JSON.parse(storedSession));
       }
@@ -34,12 +35,12 @@ export default function useSession() {
     const newSession = {
       user: { phone }
     };
-    await AsyncStorage.setItem('mock_session', JSON.stringify(newSession));
+    await AsyncStorage.setItem(SESSION_KEY, JSON.stringify(newSession)); 
     setSession(newSession);
   };
 
   const signOut = async () => {
-    await AsyncStorage.removeItem('mock_session');
+    await AsyncStorage.removeItem(SESSION_KEY);
     setSession(null);
   };
 
