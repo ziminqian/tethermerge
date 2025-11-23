@@ -6,7 +6,7 @@ import { Search, ChevronDown, ChevronRight } from 'lucide-react-native';
 import theme from '../styles/theme';
 
 interface ContactsProps {
-  onNext: (contact: { id: string; name: string }) => void;
+  onNext: (contact: { id: string; name: string }, isInvite?: boolean) => void;
   onBack: () => void;
   onSearch: (query: string) => void;
 }
@@ -76,7 +76,7 @@ export const Contacts = ({ onNext, onBack, onSearch }: ContactsProps) => {
                   <TouchableOpacity 
                     key={friend.id} 
                     style={styles.contactCard} 
-                    onPress={() => onNext(friend)} 
+                    onPress={() => onNext(friend, false)} 
                   >
                     <View style={styles.avatar}>
                       <Image source = {require('../assets/frogs/frog.png')}/>
@@ -105,7 +105,7 @@ export const Contacts = ({ onNext, onBack, onSearch }: ContactsProps) => {
                   <TouchableOpacity 
                     key={invite.id} 
                     style={styles.contactCard} 
-                    onPress={() => onNext(invite)} //change?
+                    onPress={() => onNext(invite, true)}
                   >
                     <View style={styles.avatar}>
                       <Image source = {require('../assets/frogs/frog.png')}/>

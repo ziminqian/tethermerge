@@ -91,7 +91,7 @@ const globalStyles = StyleSheet.create({
   inputLabel: {
     fontSize: 16,
     fontWeight: '600',
-    fontFamily: "../assets/fonts/AbhayaLibre-Regular.ttf",
+    fontFamily: 'Avenir',
     color: palette.mutedBrown,
     marginBottom: 8,
   },
@@ -104,7 +104,7 @@ const globalStyles = StyleSheet.create({
   areaCodeText: {
     fontSize: 16,
     fontWeight: '700',
-    fontFamily: "../assets/fonts/AbhayaLibre-Bold.ttf",
+    fontFamily: 'Avenir',
     color: palette.darkBrown,
   },
   loginInputPassword: {
@@ -112,6 +112,7 @@ const globalStyles = StyleSheet.create({
     paddingVertical: 16,
     paddingLeft: 16,
     fontSize: 16,
+    fontFamily: 'Avenir',
     color: palette.darkBrown,
   },
   signUpLinkContainer: {
@@ -120,7 +121,7 @@ const globalStyles = StyleSheet.create({
   },
   signUpLink: {
     fontSize: 16,
-    fontFamily: "../assets/fonts/AbhayaLibre-Bold.ttf",
+    fontFamily: 'Avenir',
     color: palette.mediumBrown,
     textDecorationLine: 'underline',
   },
@@ -134,7 +135,7 @@ const globalStyles = StyleSheet.create({
   },
   loginSubtitle: {
     fontSize: 16,
-    
+    fontFamily: 'Avenir',
     color: palette.lightBrown,
     textAlign: 'center',
     opacity: 0.8,
@@ -162,6 +163,7 @@ const globalStyles = StyleSheet.create({
     flex: 1,
     paddingVertical: 16,
     fontSize: 16,
+    fontFamily: 'Avenir',
     color: palette.darkBrown,
   },
   loginButton: {
@@ -188,7 +190,7 @@ const globalStyles = StyleSheet.create({
     color: palette.cream,
     fontSize: 20,
     fontWeight: '700',
-    fontFamily: "../assets/fonts/AbhayaLibre-Bold.ttf",
+    fontFamily: 'Avenir',
   },
 
   loginFooterText: {
@@ -243,12 +245,13 @@ const globalStyles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 18,
+    fontFamily: 'Avenir',
     textAlign: 'center',
     color: palette.lightBrown,
     lineHeight: 26,
   },
   empty: {
-    fontFamily: "../assets/fonts/AbhayaLibre-Regular.ttf",
+    fontFamily: 'Avenir',
     marginBottom: 20,
     marginLeft: 20,
   },
@@ -273,29 +276,33 @@ const globalStyles = StyleSheet.create({
   },
   body: {
     fontSize: 17,
+    fontFamily: 'Avenir',
     color: palette.darkBrown,
     lineHeight: 24,
   },
   bodySecondary: {
     fontSize: 17,
+    fontFamily: 'Avenir',
     color: palette.lightBrown,
     lineHeight: 22,
   },
   caption: {
     fontSize: 13,
+    fontFamily: 'Avenir',
     color: palette.mutedBrown,
   },
   label: {
     fontSize: 15,
     fontWeight: '600',
+    fontFamily: 'Avenir',
     color: palette.mediumBrown,
     marginBottom: 8,
   },
   text: {
     fontSize: 16,
     fontWeight: '400',
+    fontFamily: 'Avenir',
     color: palette.mediumBrown,
-    fontFamily: "../assets/fonts/AbhayaLibre-Bold.ttf",
   },
 
   // Buttons
@@ -337,18 +344,22 @@ const globalStyles = StyleSheet.create({
     color: palette.cream,
     fontSize: 18,
     fontWeight: '600',
+    fontFamily: 'Avenir',
   },
   buttonTextOutline: {
     color: palette.slate,
     fontSize: 18,
     fontWeight: '600',
+    fontFamily: 'Avenir',
   },
   buttonTextSmall: {
     fontSize: 15,
+    fontFamily: 'Avenir',
   },
 
   backText: {
     fontSize: 17,
+    fontFamily: 'Avenir',
     color: palette.slate,
   },
   footer: {
@@ -428,6 +439,7 @@ const globalStyles = StyleSheet.create({
   },
   contactName: {
     fontSize: 17,
+    fontFamily: 'Avenir',
     color: palette.darkBrown,
     fontWeight: '500',
   },
@@ -438,6 +450,7 @@ const globalStyles = StyleSheet.create({
     borderRadius: 16,
     padding: 16,
     fontSize: 17,
+    fontFamily: 'Avenir',
     color: palette.darkBrown,
     marginBottom: 8,
     borderWidth: 1,
@@ -448,6 +461,7 @@ const globalStyles = StyleSheet.create({
     borderRadius: 16,
     padding: 16,
     fontSize: 17,
+    fontFamily: 'Avenir',
     color: palette.darkBrown,
     minHeight: 100,
     textAlignVertical: 'top',
@@ -475,10 +489,12 @@ const globalStyles = StyleSheet.create({
   },
   tabText: {
     fontSize: 15,
+    fontFamily: 'Avenir',
     color: palette.mutedBrown,
   },
   tabTextActive: {
     fontSize: 15,
+    fontFamily: 'Avenir',
     color: palette.slate,
     fontWeight: '600',
   },
@@ -496,6 +512,7 @@ const globalStyles = StyleSheet.create({
   },
   message: {
     fontSize: 17,
+    fontFamily: 'Avenir',
     color: palette.darkBrown,
     lineHeight: 24,
   },
@@ -521,6 +538,7 @@ const globalStyles = StyleSheet.create({
   },
   phaseText: {
     fontSize: 17,
+    fontFamily: 'Avenir',
     color: palette.lightBrown,
     textAlign: 'center',
     lineHeight: 24,
@@ -543,6 +561,7 @@ const globalStyles = StyleSheet.create({
   },
   listItemText: {
     fontSize: 17,
+    fontFamily: 'Avenir',
     color: palette.darkBrown,
   },
 
@@ -691,7 +710,7 @@ const globalStyles = StyleSheet.create({
   },
   profileBio: {
     fontSize: 15,
-    fontFamily: "../assets/fonts/AbhayaLibre-Bold.ttf",
+    fontFamily: 'Avenir',
     fontStyle: "italic",
     color: palette.lightBrown,
     lineHeight: 20,
@@ -699,7 +718,7 @@ const globalStyles = StyleSheet.create({
   },
   profilePhone: {
     fontSize: 13,
-    fontFamily: "../assets/fonts/AbhayaLibre-Bold.ttf",
+    fontFamily: 'Avenir',
     color: palette.mutedBrown,
     opacity: 0.7,
   },
@@ -751,6 +770,7 @@ const globalStyles = StyleSheet.create({
   modalLabel: {
     fontSize: 15,
     fontWeight: '600',
+    fontFamily: 'Avenir',
     color: palette.mediumBrown,
     marginBottom: 8,
   },
@@ -759,6 +779,7 @@ const globalStyles = StyleSheet.create({
     padding: 16,
     borderRadius: 16,
     fontSize: 16,
+    fontFamily: 'Avenir',
     color: palette.darkBrown,
     marginBottom: 20,
     borderWidth: 1,
@@ -808,6 +829,7 @@ const globalStyles = StyleSheet.create({
     color: palette.cream,
     fontSize: 17,
     fontWeight: '700',
+    fontFamily: 'Avenir',
   },
   userGraphicItem: {
     alignItems: 'center',
@@ -825,9 +847,9 @@ const globalStyles = StyleSheet.create({
   },
   userGraphicLabel: {
     fontSize: 18,
+    fontFamily: 'Avenir',
     color: palette.mutedBrown,
     marginTop: 2,
-    fontFamily: "../assets/fonts/AbhayaLibre-Regular.ttf",
   },
   chatContainer: {
     flex: 1,
@@ -849,15 +871,15 @@ const globalStyles = StyleSheet.create({
   },
   aiLabel: {
     fontSize: 12,
+    fontFamily: 'Avenir',
     color: palette.slate,
     marginBottom: 8,
-    fontFamily: "../assets/fonts/AbhayaLibre-Bold.ttf",
   },
   messageText: {
     fontSize: 15,
+    fontFamily: 'Avenir',
     color: palette.shadow,
     lineHeight: 22,
-    fontFamily: "../assets/fonts/AbhayaLibre-Regular.ttf",
   },
   inputArea: {
     flexDirection: 'row',
@@ -871,8 +893,8 @@ const globalStyles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     fontSize: 15,
+    fontFamily: 'Avenir',
     fontStyle: "italic",
-    fontFamily: "../assets/fonts/AbhayaLibre-Regular.ttf",
     color: palette.darkBrown,
     borderWidth: 1,
     borderColor: palette.lightGray,
