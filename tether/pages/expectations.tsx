@@ -19,7 +19,7 @@ interface ExpectationsProps {
 export const Expectations = ({ onBack }: ExpectationsProps) => {
   return (
     <ImageBackground 
-      source={require("../assets/backgrounds/light_ombre.png")}
+      source={require("../assets/backgrounds/background_vibrant.png")}
       style={localStyles.background}
       resizeMode='cover'
     >

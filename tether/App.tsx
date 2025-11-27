@@ -87,9 +87,21 @@ function AppContent() {
     setSelectedContact(null);
   };
 
+  const handleTabChange = (tab: 'friends' | 'home' | 'profile') => {
+    if (tab === 'friends') {
+      // Reset all state when navigating to friends tab
+      setShowMessage(false);
+      setShowPortal(false);
+      setShowExpectations(false);
+      setShowReflect(false);
+      setShowAcceptInvite(false);
+      setSelectedContact(null);
+    }
+    setActiveTab(tab);
+  };
+
   console.log(activeTab);
   
-  // Check if any overlay pages are showing
   const showOverlay = showExpectations || showReflect || showAcceptInvite;
   
   return (
@@ -143,7 +155,7 @@ function AppContent() {
       </View>
       {!showOverlay && (
         <View style={{flex: 1}}>
-          <Footer activeTab={activeTab} setActiveTab={setActiveTab}/>
+          <Footer activeTab={activeTab} setActiveTab={handleTabChange}/>
         </View>
       )}
     </View>

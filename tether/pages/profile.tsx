@@ -125,7 +125,8 @@ export const Profile = ({ onBack }: ProfileProps) => {
 
   return (
     <ImageBackground 
-      source={require("../assets/backgrounds/light_ombre.png")}
+      source= {require("../assets/backgrounds/light_ombre.png")}
+      // {require("../assets/backgrounds/light_ombre.png")}
       style={{ flex: 1, width: '100%', height: '100%' }}
       resizeMode='cover'
     >

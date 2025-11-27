@@ -38,7 +38,8 @@ interface PortalProps {
 export const Portal = ({ contact, onBack, onNavigateToExpectations, onNavigateToReflect, onNavigateToAcceptInvite }: PortalProps) => {
   return (
     <ImageBackground 
-      source={require("../assets/backgrounds/light_ombre.png")}
+      source={require("../assets/backgrounds/background_vibrant.png")}
+      // {require("../assets/backgrounds/light_ombre.png")}
       style={{ flex: 1, width: '100%', height: '100%' }}
       resizeMode='cover'
     >
