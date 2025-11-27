@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, Text, Pressable, Image, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, Pressable, Image, StyleSheet, Dimensions, ImageBackground } from 'react-native';
 import { palette } from '../styles/palette';
 
 const portal = require('../assets/onboard3/portal.png');
 const enterButton = require('../assets/onboard3/enter_button.png');
-const leftProfile = require('../assets/onboard3/left.png');
-const rightProfile = require('../assets/onboard3/right.png');
-const stroke = require('../assets/onboard3/stroke.png');
+const together = require('../assets/onboard3/together.png');
+
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 interface Onboard3Props {
   onContinue: () => void;
@@ -14,58 +14,54 @@ interface Onboard3Props {
 
 export default function Onboard3({ onContinue }: Onboard3Props) {
   return (
-    <View style={styles.container}>
-      {/* Top text */}
-      <Text style={styles.topText}>enter portal to begin</Text>
-      
-      {/* Portal graphic */}
-      <View style={styles.portalContainer}>
+    <ImageBackground 
+      source={require("../assets/backgrounds/background_vibrant.png")}
+      style={styles.background}
+      resizeMode='cover'
+    >
+      <View style={styles.container}>
+        {/* Top text */}
+        <Text style={styles.topText}>enter portal to begin</Text>
+        
+        {/* Portal graphic */}
+        <View style={styles.portalContainer}>
+          <Image 
+            source={portal} 
+            style={styles.portal}
+          />
+        </View>
+        
+        {/* Enter button */}
+        <Pressable
+          style={styles.enterButton}
+          onPress={onContinue}
+        >
+          <Image 
+            source={enterButton} 
+            style={styles.enterButtonImage}
+          />
+        </Pressable>
+        
+        {/* Bottom profiles with stroke */}
         <Image 
-          source={portal} 
-          style={styles.portal}
+          source={together} 
+          style={styles.together}
         />
       </View>
-      
-      {/* Enter button */}
-      <Pressable
-        style={styles.enterButton}
-        onPress={onContinue}
-      >
-        <Image 
-          source={enterButton} 
-          style={styles.enterButtonImage}
-        />
-      </Pressable>
-      
-      {/* Bottom profiles with stroke */}
-      <View style={styles.profilesContainer}>
-        <Image 
-          source={leftProfile} 
-          style={styles.leftProfile}
-        />
-        
-        <Image 
-          source={stroke} 
-          style={styles.stroke}
-        />
-        
-        <Image 
-          source={rightProfile} 
-          style={styles.rightProfile}
-        />
-      </View>
-    </View>
+    </ImageBackground>
   );
 }
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
-
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
   container: {
     flex: 1,
     width: SCREEN_WIDTH,
     height: SCREEN_HEIGHT,
-    backgroundColor: '#F5F8E8', // Light green-yellow gradient approximation
     paddingTop: SCREEN_HEIGHT * 0.1,
     paddingBottom: SCREEN_HEIGHT * 0.1,
     alignItems: 'center',
@@ -105,29 +101,9 @@ const styles = StyleSheet.create({
     height: SCREEN_HEIGHT * 0.06,
     resizeMode: 'contain',
   },
-  profilesContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    paddingHorizontal: SCREEN_WIDTH * 0.15,
-    marginBottom: SCREEN_HEIGHT * 0.05,
-    position: 'relative',
-  },
-  leftProfile: {
-    width: SCREEN_WIDTH * 0.2,
-    height: SCREEN_WIDTH * 0.2,
-    resizeMode: 'contain',
-  },
-  stroke: {
-    width: SCREEN_WIDTH * 0.15,
-    height: SCREEN_WIDTH * 0.05,
-    resizeMode: 'contain',
-    marginHorizontal: SCREEN_WIDTH * 0.05,
-  },
-  rightProfile: {
-    width: SCREEN_WIDTH * 0.2,
-    height: SCREEN_WIDTH * 0.2,
+  together: {
+    width: SCREEN_WIDTH * 0.6,
+    height: SCREEN_HEIGHT * 0.15,
     resizeMode: 'contain',
   },
 });
