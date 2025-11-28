@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     bottom: SCREEN_HEIGHT * 0.08,
     left: SCREEN_WIDTH * 0.08,
     fontSize: 42,
-    fontFamily: "../assets/fonts/AbhayaLibre-Bold.ttf",
+    fontFamily: 'Avenir',
     color: palette.mediumBrown,
     zIndex: 2,
   },

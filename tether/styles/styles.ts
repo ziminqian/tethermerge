@@ -67,7 +67,7 @@ const globalStyles = StyleSheet.create({
     fontSize: 50,
     fontWeight: '700',
     textAlign: 'center',
-    fontFamily: "../assets/fonts/AbhayaLibre-Bold.ttf",
+    fontFamily: 'Avenir',
     color: palette.slate,
     marginBottom: 8,
   },
@@ -75,7 +75,7 @@ const globalStyles = StyleSheet.create({
     fontSize: 16,
     fontStyle: 'italic',
     textAlign: 'center',
-    fontFamily: "../assets/fonts/AbhayaLibre-Bold.ttf",
+    fontFamily: 'Avenir',
     color: palette.lightBrown,
   },
   imagePlaceholder: {
@@ -234,12 +234,12 @@ const globalStyles = StyleSheet.create({
     fontSize: 30,
     fontWeight: '700',
     color: palette.slate,
-    fontFamily: "../assets/fonts/AbhayaLibre-Bold.ttf",
+    fontFamily: 'Avenir',
   },
   subheading: {
     fontSize: 22,
     fontWeight: '600',
-    fontFamily: "../assets/fonts/AbhayaLibre-Bold.ttf",
+    fontFamily: 'Avenir',
     color: palette.slate,
     marginBottom: 16,
   },
@@ -694,7 +694,7 @@ const globalStyles = StyleSheet.create({
   profileUsername: {
     fontSize: 26,
     fontWeight: '700',
-    fontFamily: "../assets/fonts/AbhayaLibre-Bold.ttf",
+    fontFamily: 'Avenir',
     color: palette.darkBrown,
     flex: 1,
   },
@@ -927,7 +927,7 @@ const globalStyles = StyleSheet.create({
     fontWeight: '700',
     marginBottom: 5,
     color: palette.darkBrown,
-    fontFamily: "../assets/fonts/AbhayaLibre-Bold.ttf",
+    fontFamily: 'Avenir',
   },
 
 });

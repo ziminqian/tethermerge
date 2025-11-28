@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { 
   View, 
   Text, 
@@ -10,7 +10,8 @@ import {
   Platform,
   TouchableOpacity,
   ImageBackground,
-  SafeAreaView
+  SafeAreaView,
+  StyleSheet
 } from 'react-native';
 import styles from '../styles/styles';
 import { LogIn } from 'lucide-react-native';
@@ -32,6 +33,7 @@ export default function Title({ onSignup, onLoginSuccess }: TitleProps = {}) {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const passwordRef = useRef<TextInput | null>(null);
 
   const handleLogin = async () => {
     if (!phoneNumber || !password) {
@@ -57,7 +59,7 @@ export default function Title({ onSignup, onLoginSuccess }: TitleProps = {}) {
 
   return (
     <ImageBackground 
-      source={require("../assets/backgrounds/light_ombre.png")}
+      source={require("../assets/backgrounds/background_vibrant.png")}
       style={{ flex: 1, width: '100%', height: '100%' }}
       resizeMode='cover'
     >
@@ -68,38 +70,38 @@ export default function Title({ onSignup, onLoginSuccess }: TitleProps = {}) {
         >
             <View style={styles.loginLogoContainer}>
               <Text style={styles.titleLarge}>Tether</Text>
-              <Text style={styles.titleSubtitleItalic}>A Safe Space</Text>
-              <Text style={styles.titleSubtitleItalic}>For Difficult Conversations</Text>
+              <Text style={localStyles.subtitleText}>A Safe Space</Text>
+              <Text style={localStyles.subtitleText}>For Difficult Conversations</Text>
             </View>
 
             <View style={styles.imagePlaceholder}>
               <Image source={require("../assets/other/hands.png")} style={styles.image}></Image>
-              <Text style={styles.titleSubtitleItalic}>Test credentials are: phone# 1234567890, pw test</Text>
+              <Text style={localStyles.testCredentialsText}>Test credentials are: phone# 1234567890, pw test</Text>
             </View>
 
             <View style={styles.loginInputContainer}>
-              <Text style={styles.inputLabel}>Phone Number</Text>
               <View style={styles.loginInputWrapper}>
                 <View style={styles.areaCodeContainer}>
                   <Text style={styles.areaCodeText}>{areaCode} -</Text>
                 </View>
                 <TextInput
-                  placeholder=""
+                  ref = {passwordRef}
+                  placeholder="phone number"
                   placeholderTextColor={palette.mutedBrown}
                   style={styles.loginInput}
                   keyboardType="phone-pad"
                   value={phoneNumber}
                   onChangeText={setPhoneNumber}
                   editable={!loading}
+                  blurOnSubmit={false}
                 />
               </View>
             </View>
 
             <View style={styles.loginInputContainer}>
-              <Text style={styles.inputLabel}>Password</Text>
               <View style={styles.loginInputWrapper}>
                 <TextInput
-                  placeholder="..."
+                  placeholder="password"
                   placeholderTextColor={palette.mutedBrown}
                   secureTextEntry
                   autoCapitalize="none"
@@ -136,3 +138,22 @@ export default function Title({ onSignup, onLoginSuccess }: TitleProps = {}) {
     </ImageBackground>
   );
 }
+
+const localStyles = StyleSheet.create({
+  subtitleText: {
+    fontSize: 22,
+    fontFamily: 'Avenir',
+    textAlign: 'center',
+    color: palette.lightBrown,
+    lineHeight: 30,
+    marginTop: 4,
+  },
+  testCredentialsText: {
+    fontSize: 14,
+    fontFamily: 'Avenir',
+    textAlign: 'center',
+    color: palette.lightBrown,
+    lineHeight: 20,
+    marginTop: 8,
+  },
+});

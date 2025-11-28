@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, Pressable, SafeAreaView, TouchableOpacity, TextInput, ScrollView, Image, ImageBackground } from 'react-native';
+import { View, Text, Pressable, SafeAreaView, TouchableOpacity, TextInput, ScrollView, Image, ImageBackground, StyleSheet } from 'react-native';
 import styles from '../styles/styles';
 import { ChevronDown, ChevronRight, Search, Plus } from 'lucide-react-native';
 import theme from '../styles/theme';
+import { palette } from '../styles/palette';
 
 interface HomeProps {
   onBack: () => void;
@@ -38,7 +39,6 @@ export const Home = ({ onBack, onNext, onSearch }: HomeProps) => {
   return (
     <ImageBackground 
           source= {require("../assets/backgrounds/light_ombre.png")}
-          // {require("../assets/backgrounds/light_ombre.png")}
           style={{ flex: 1, width: '100%', height: '100%' }}
           resizeMode='cover'
         >
@@ -46,7 +46,7 @@ export const Home = ({ onBack, onNext, onSearch }: HomeProps) => {
       
       <View style={styles.screen}>
         <View style={styles.heading}>
-          <Text style={styles.titleLarge}>Tether</Text>
+          <Text style={localStyles.tetherTitle}>Tether</Text>
         </View>
         <View style={[styles.search]}>
           <Search size={20} style={{margin: 5}} color={theme.button}></Search>
@@ -141,3 +141,14 @@ export const Home = ({ onBack, onNext, onSearch }: HomeProps) => {
     </ImageBackground>
   );
 };
+
+const localStyles = StyleSheet.create({
+  tetherTitle: {
+    fontSize: 50,
+    fontWeight: '400',
+    textAlign: 'center',
+    fontFamily: 'AbhayaLibre',
+    color: palette.slate,
+    marginBottom: 8,
+  },
+});

@@ -101,28 +101,27 @@ export default function Signup({ onBack, onSignupSuccess }: SignupProps) {
             </View>
 
             <View style={styles.loginInputContainer}>
-              <Text style={styles.inputLabel}>Phone Number</Text>
               <View style={styles.loginInputWrapper}>
                 <View style={styles.areaCodeContainer}>
                   <Text style={styles.areaCodeText}>{areaCode} -</Text>
                 </View>
                 <TextInput
-                  placeholder=""
+                  placeholder="phone number"
                   placeholderTextColor={palette.mutedBrown}
                   style={styles.loginInput}
                   keyboardType="phone-pad"
                   value={phoneNumber}
                   onChangeText={setPhoneNumber}
                   editable={!loading}
+                  returnKeyType= "next"
                 />
               </View>
             </View>
 
             <View style={styles.loginInputContainer}>
-              <Text style={styles.inputLabel}>Password</Text>
               <View style={styles.loginInputWrapper}>
                 <TextInput
-                  placeholder="..."
+                  placeholder="password"
                   placeholderTextColor={palette.mutedBrown}
                   secureTextEntry
                   autoCapitalize="none"
@@ -135,10 +134,9 @@ export default function Signup({ onBack, onSignupSuccess }: SignupProps) {
             </View>
 
             <View style={styles.loginInputContainer}>
-              <Text style={styles.inputLabel}>Confirm Password</Text>
               <View style={styles.loginInputWrapper}>
                 <TextInput
-                  placeholder="..."
+                  placeholder="confirm password"
                   placeholderTextColor={palette.mutedBrown}
                   secureTextEntry
                   autoCapitalize="none"
