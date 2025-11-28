@@ -6,8 +6,13 @@ import { Message } from './pages/message';
 import { Portal } from './pages/portal';
 import { Home } from './pages/home';
 import { Profile } from './pages/profile';
-import { Expectations } from './pages/expectations';
-import {Expectations2} from './pages/expectations2';
+import { ExpectationsIntro } from './pages/expectationsIntro';
+import { ExpectationsSection1 } from './pages/expectationsSection1';
+import { ExpectationsSection2 } from './pages/expectationsSection2';
+import { ExpectationsSection3 } from './pages/expectationsSection3';
+import { ExpectationsSection4 } from './pages/expectationsSection4';
+import { ExpectationsSection5 } from './pages/expectationsSection5';
+import { ExpectationsComplete } from './pages/expectationsComplete';
 import { Reflect } from './pages/reflect';
 import { AcceptInvite } from './pages/acceptInvite';
 import Welcome from './pages/welcome';
@@ -27,11 +32,16 @@ function AppContent() {
   //　
   const [showMessage, setShowMessage] = useState(false);
   const [showPortal, setShowPortal] = useState(false);
-  const [showExpectations, setShowExpectations] = useState(false);
+  const [showExpectationsIntro, setShowExpectationsIntro] = useState(false);
+  const [showExpectationsSection1, setShowExpectationsSection1] = useState(false);
+  const [showExpectationsSection2, setShowExpectationsSection2] = useState(false);
+  const [showExpectationsSection3, setShowExpectationsSection3] = useState(false);
+  const [showExpectationsSection4, setShowExpectationsSection4] = useState(false);
+  const [showExpectationsSection5, setShowExpectationsSection5] = useState(false);
+  const [showExpectationsComplete, setShowExpectationsComplete] = useState(false);
   const [showReflect, setShowReflect] = useState(false);
   const [showAcceptInvite, setShowAcceptInvite] = useState(false);
   const [selectedContact, setSelectedContact] = useState<{ id: string; name: string } | null>(null);
-  const [showExpectations2, setShowExpectations2] = useState(false);
 
   // supabase stuff : for later
   /*
@@ -57,22 +67,52 @@ function AppContent() {
   const handleBackToContacts = () => {
     setShowMessage(false);
     setShowPortal(false);
-    setShowExpectations(false);
+    setShowExpectationsIntro(false);
+    setShowExpectationsSection1(false);
+    setShowExpectationsSection2(false);
+    setShowExpectationsSection3(false);
+    setShowExpectationsSection4(false);
+    setShowExpectationsSection5(false);
+    setShowExpectationsComplete(false);
     setShowReflect(false);
     setShowAcceptInvite(false);
     setSelectedContact(null);
     setActiveTab('friends');
-    setShowExpectations2(false);
   };
 
   const handleNavigateToExpectations = () => {
-    setShowExpectations(true);
+    setShowExpectationsIntro(true);
     setShowPortal(false);
   };
 
-  const handleNavigateToExpectations2 = () => {
-    setShowExpectations2(true);
-    setShowExpectations(false);
+  const handleNavigateToSection1 = () => {
+    setShowExpectationsSection1(true);
+    setShowExpectationsIntro(false);
+  };
+
+  const handleNavigateToSection2 = () => {
+    setShowExpectationsSection2(true);
+    setShowExpectationsSection1(false);
+  };
+
+  const handleNavigateToSection3 = () => {
+    setShowExpectationsSection3(true);
+    setShowExpectationsSection2(false);
+  };
+
+  const handleNavigateToSection4 = () => {
+    setShowExpectationsSection4(true);
+    setShowExpectationsSection3(false);
+  };
+
+  const handleNavigateToSection5 = () => {
+    setShowExpectationsSection5(true);
+    setShowExpectationsSection4(false);
+  };
+
+  const handleNavigateToComplete = () => {
+    setShowExpectationsComplete(true);
+    setShowExpectationsSection5(false);
   };
 
   const handleNavigateToReflect = () => {
@@ -86,16 +126,46 @@ function AppContent() {
   };
 
   const handleBackToPortal = () => {
-    setShowExpectations(false);
-    setShowExpectations2(false);
+    setShowExpectationsIntro(false);
+    setShowExpectationsSection1(false);
+    setShowExpectationsSection2(false);
+    setShowExpectationsSection3(false);
+    setShowExpectationsSection4(false);
+    setShowExpectationsSection5(false);
+    setShowExpectationsComplete(false);
     setShowReflect(false);
     setShowAcceptInvite(false);
     setShowPortal(true);
   };
 
-  const handleBackToExpectations = () => {
-    setShowExpectations2(false);
-    setShowExpectations(true);
+  const handleBackToExpectationsIntro = () => {
+    setShowExpectationsSection1(false);
+    setShowExpectationsIntro(true);
+  };
+
+  const handleBackToSection1 = () => {
+    setShowExpectationsSection2(false);
+    setShowExpectationsSection1(true);
+  };
+
+  const handleBackToSection2 = () => {
+    setShowExpectationsSection3(false);
+    setShowExpectationsSection2(true);
+  };
+
+  const handleBackToSection3 = () => {
+    setShowExpectationsSection4(false);
+    setShowExpectationsSection3(true);
+  };
+
+  const handleBackToSection4 = () => {
+    setShowExpectationsSection5(false);
+    setShowExpectationsSection4(true);
+  };
+
+  const handleBackToSection5 = () => {
+    setShowExpectationsComplete(false);
+    setShowExpectationsSection5(true);
   };
 
   const handleSendInvite = () => {
@@ -108,18 +178,25 @@ function AppContent() {
       // Reset all state when navigating to friends tab
       setShowMessage(false);
       setShowPortal(false);
-      setShowExpectations(false);
+      setShowExpectationsIntro(false);
+      setShowExpectationsSection1(false);
+      setShowExpectationsSection2(false);
+      setShowExpectationsSection3(false);
+      setShowExpectationsSection4(false);
+      setShowExpectationsSection5(false);
+      setShowExpectationsComplete(false);
       setShowReflect(false);
       setShowAcceptInvite(false);
       setSelectedContact(null);
-      setShowExpectations2(false);
     }
     setActiveTab(tab);
   };
 
   console.log(activeTab);
   
-  const showOverlay = showExpectations || showExpectations2 || showReflect || showAcceptInvite;
+  const showOverlay = showExpectationsIntro || showExpectationsSection1 || showExpectationsSection2 || 
+    showExpectationsSection3 || showExpectationsSection4 || showExpectationsSection5 || 
+    showExpectationsComplete || showReflect || showAcceptInvite;
   
   return (
     <View style={styles.container}>
@@ -132,7 +209,9 @@ function AppContent() {
             onSearch={(query) => console.log(query)}
           />
         )}
-        {activeTab === 'friends' && showPortal && !showExpectations && !showExpectations2 && !showReflect && !showAcceptInvite && selectedContact && (
+        {activeTab === 'friends' && showPortal && !showExpectationsIntro && !showExpectationsSection1 && 
+          !showExpectationsSection2 && !showExpectationsSection3 && !showExpectationsSection4 && 
+          !showExpectationsSection5 && !showExpectationsComplete && !showReflect && !showAcceptInvite && selectedContact && (
           <Portal 
             contact={selectedContact}
             onBack={handleBackToContacts}
@@ -141,11 +220,53 @@ function AppContent() {
             onNavigateToAcceptInvite={handleNavigateToAcceptInvite}
           />
         )}
-        {activeTab === 'friends' && showExpectations && !showExpectations2 && (
-          <Expectations onBack={handleBackToPortal} onContinue={handleNavigateToExpectations2} />
+        {activeTab === 'friends' && showExpectationsIntro && (
+          <ExpectationsIntro 
+            onBack={handleBackToPortal} 
+            onContinue={handleNavigateToSection1}
+            onBackToPortal={handleBackToPortal}
+          />
         )}
-        {activeTab === 'friends' && showExpectations2 && !showPortal && !showMessage && (
-          <Expectations2 onBack={handleBackToExpectations} />
+        {activeTab === 'friends' && showExpectationsSection1 && (
+          <ExpectationsSection1 
+            onBack={handleBackToExpectationsIntro} 
+            onContinue={handleNavigateToSection2}
+            onBackToPortal={handleBackToPortal}
+          />
+        )}
+        {activeTab === 'friends' && showExpectationsSection2 && (
+          <ExpectationsSection2 
+            onBack={handleBackToSection1} 
+            onContinue={handleNavigateToSection3}
+            onBackToPortal={handleBackToPortal}
+          />
+        )}
+        {activeTab === 'friends' && showExpectationsSection3 && (
+          <ExpectationsSection3 
+            onBack={handleBackToSection2} 
+            onContinue={handleNavigateToSection4}
+            onBackToPortal={handleBackToPortal}
+          />
+        )}
+        {activeTab === 'friends' && showExpectationsSection4 && (
+          <ExpectationsSection4 
+            onBack={handleBackToSection3} 
+            onContinue={handleNavigateToSection5}
+            onBackToPortal={handleBackToPortal}
+          />
+        )}
+        {activeTab === 'friends' && showExpectationsSection5 && (
+          <ExpectationsSection5 
+            onBack={handleBackToSection4} 
+            onContinue={handleNavigateToComplete}
+            onBackToPortal={handleBackToPortal}
+          />
+        )}
+        {activeTab === 'friends' && showExpectationsComplete && (
+          <ExpectationsComplete 
+            onBack={handleBackToSection5}
+            onBackToPortal={handleBackToPortal}
+          />
         )}
         {activeTab === 'friends' && showReflect && (
           <Reflect onBack={handleBackToPortal} />
