@@ -15,6 +15,7 @@ import Onboard1 from './pages/onboard1';
 import Onboard2 from './pages/onboard2';
 import Onboard3 from './pages/onboard3';
 import Title from './pages/title';
+import Signup from './pages/signup';
 import Footer from './pages/components/Footer';
 import styles from './styles/styles';
 import AuthGate from './pages/components/AuthGate';
@@ -118,7 +119,7 @@ function AppContent() {
 
   console.log(activeTab);
   
-  const showOverlay = showExpectations || showReflect || showAcceptInvite;
+  const showOverlay = showExpectations || showExpectations2 || showReflect || showAcceptInvite;
   
   return (
     <View style={styles.container}>
@@ -143,7 +144,7 @@ function AppContent() {
         {activeTab === 'friends' && showExpectations && !showExpectations2 && (
           <Expectations onBack={handleBackToPortal} onContinue={handleNavigateToExpectations2} />
         )}
-        {activeTab === 'friends' && showExpectations2 && (
+        {activeTab === 'friends' && showExpectations2 && !showPortal && !showMessage && (
           <Expectations2 onBack={handleBackToExpectations} />
         )}
         {activeTab === 'friends' && showReflect && (
@@ -182,7 +183,8 @@ function AppContent() {
 }
 
 export default function App() {
-  const [currentScreen, setCurrentScreen] = useState<'welcome' | 'onboard1' | 'onboard2' | 'login' | 'onboard3' | 'app'>('welcome');
+  const [currentScreen, setCurrentScreen] = useState<'welcome' | 'onboard1' | 'onboard2' | 'login' | 'signup' | 'onboard3' | 'app'>('welcome');
+  const [showSignup, setShowSignup] = useState(false);
 
   const handleWelcomeContinue = () => {
     setCurrentScreen('onboard1');
@@ -194,6 +196,18 @@ export default function App() {
 
   const handleOnboard2Continue = () => {
     setCurrentScreen('login');
+  };
+
+  const handleShowSignup = () => {
+    setShowSignup(true);
+  };
+
+  const handleBackToLogin = () => {
+    setShowSignup(false);
+  };
+
+  const handleSignupSuccess = () => {
+    setCurrentScreen('onboard3');
   };
 
   const handleLoginSuccess = () => {
@@ -246,7 +260,11 @@ export default function App() {
       <TetherProvider>
         <View style={styles.container}>
           <StatusBar barStyle="dark-content" />
-          <Title onLoginSuccess={handleLoginSuccess} />
+          {showSignup ? (
+            <Signup onBack={handleBackToLogin} onSignupSuccess={handleSignupSuccess} />
+          ) : (
+            <Title onSignup={handleShowSignup} onLoginSuccess={handleLoginSuccess} />
+          )}
         </View>
       </TetherProvider>
     );

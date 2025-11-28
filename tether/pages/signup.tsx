@@ -18,11 +18,14 @@ import { UserPlus, ChevronLeft, X } from 'lucide-react-native';
 import { palette } from '../styles/palette';
 import theme from '../styles/theme';
 
+const back = require('../assets/onboard1/backgroundonboard1.png');
+
 interface SignupProps {
   onBack: () => void;
+  onSignupSuccess?: () => void;
 }
 
-export default function Signup({ onBack }: SignupProps) {
+export default function Signup({ onBack, onSignupSuccess }: SignupProps) {
   const [areaCode, setAreaCode] = useState('+1');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
@@ -57,12 +60,17 @@ export default function Signup({ onBack }: SignupProps) {
 
   const handleCloseModal = () => {
     setShowSuccessModal(false);
-    onBack();
+    // Navigate to onboard3 after successful signup
+    if (onSignupSuccess) {
+      onSignupSuccess();
+    } else {
+      onBack();
+    }
   };
 
   return (
     <ImageBackground 
-      source={require("../assets/backgrounds/light_ombre.png")}
+      source={back}
       style={{ flex: 1, width: '100%', height: '100%' }}
       resizeMode='cover'
     >
