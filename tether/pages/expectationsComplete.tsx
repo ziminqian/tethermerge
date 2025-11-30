@@ -13,15 +13,12 @@ import { ChevronLeft } from 'lucide-react-native';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-interface ExpectationsProps {
+interface ExpectationsCompleteProps {
   onBack: () => void;
-  onContinue: () => void;
+  onBackToPortal: () => void;
 }
 
-export const Expectations = ({ onBack, onContinue }: ExpectationsProps) => {
- const handleContinue = () => {
-        onContinue();
-    };
+export const ExpectationsComplete = ({ onBack, onBackToPortal }: ExpectationsCompleteProps) => {
   return (
     <ImageBackground 
       source={require("../assets/backgrounds/background_vibrant.png")}
@@ -34,14 +31,18 @@ export const Expectations = ({ onBack, onContinue }: ExpectationsProps) => {
         </TouchableOpacity>
         
         <View style={localStyles.content}>
-          <Text style={localStyles.title}> Setting Expectations</Text>
+          <Text style={localStyles.title}>Complete!</Text>
+          <Text style={localStyles.message}>
+            You've set your expectations. You're ready to have this conversation with clarity and intention.
+          </Text>
         </View>
       </View>
+
       <Pressable
-          style={localStyles.continueButton}
-          onPress={handleContinue}
-        >
-          <Text style={localStyles.continueButtonText}>Continue</Text>
+        style={localStyles.backToPortalButtonMain}
+        onPress={onBackToPortal}
+      >
+        <Text style={localStyles.backToPortalButtonText}>Back to Portal</Text>
       </Pressable>
     </ImageBackground>
   );
@@ -72,19 +73,29 @@ const localStyles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    fontSize: 28,
+    fontSize: 42,
     fontFamily: 'Avenir',
     color: palette.mediumBrown,
-    fontWeight: '600',
+    fontWeight: '700',
+    marginBottom: 24,
+    textAlign: 'center',
   },
-
-  continueButton: {
+  message: {
+    fontSize: 20,
+    fontFamily: 'Avenir',
+    color: palette.darkBrown,
+    lineHeight: 30,
+    textAlign: 'center',
+    paddingHorizontal: 30,
+  },
+  backToPortalButtonMain: {
     position: 'absolute',
     bottom: SCREEN_HEIGHT * 0.05,
-    right: SCREEN_WIDTH * 0.1,
+    left: SCREEN_WIDTH * 0.5,
+    transform: [{ translateX: -SCREEN_WIDTH * 0.2 }],
     backgroundColor: palette.lightBeige,
-    paddingVertical: 14,
-    paddingHorizontal: 24,
+    paddingVertical: 16,
+    paddingHorizontal: 32,
     borderRadius: 30,
     flexDirection: 'row',
     alignItems: 'center',
@@ -95,11 +106,13 @@ const localStyles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 8,
     elevation: 4,
+    width: SCREEN_WIDTH * 0.4,
   },
-  continueButtonText: {
+  backToPortalButtonText: {
     fontSize: 18,
     fontFamily: 'Avenir',
     color: palette.mediumBrown,
-
-  }
+    fontWeight: '600',
+  },
 });
+

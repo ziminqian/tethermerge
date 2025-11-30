@@ -23,15 +23,13 @@ export default function Onboard3({ onContinue }: Onboard3Props) {
         {/* Top text */}
         <Text style={styles.topText}>enter portal to begin</Text>
         
-        {/* Portal graphic */}
-        <View style={styles.portalContainer}>
-          <Image 
-            source={portal} 
-            style={styles.portal}
-          />
-        </View>
+        {/* Portal spiral graphic - upper middle */}
+        <Image 
+          source={portal} 
+          style={styles.portal}
+        />
         
-        {/* Enter button */}
+        {/* Enter button - directly below portal */}
         <Pressable
           style={styles.enterButton}
           onPress={onContinue}
@@ -42,7 +40,9 @@ export default function Onboard3({ onContinue }: Onboard3Props) {
           />
         </Pressable>
         
-        {/* Bottom profiles with stroke */}
+        {/* Enter button */}
+        
+        {/* Two profiles together - at bottom */}
         <Image 
           source={together} 
           style={styles.together}
@@ -62,39 +62,40 @@ const styles = StyleSheet.create({
     flex: 1,
     width: SCREEN_WIDTH,
     height: SCREEN_HEIGHT,
-    paddingTop: SCREEN_HEIGHT * 0.1,
-    paddingBottom: SCREEN_HEIGHT * 0.1,
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    position: 'relative',
+    overflow: 'visible',
   },
   topText: {
+    position: 'absolute',
+    top: SCREEN_HEIGHT * 0.15,
+    left: 0,
+    right: 0,
     fontSize: 20,
     fontFamily: 'Avenir',
     color: palette.darkBrown,
     fontWeight: '500',
     textAlign: 'center',
-    marginTop: SCREEN_HEIGHT * 0.05,
-  },
-  portalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    paddingHorizontal: SCREEN_WIDTH * 0.1,
+    zIndex: 2,
   },
   portal: {
-    width: SCREEN_WIDTH * 0.7,
-    height: SCREEN_WIDTH * 0.7,
+    position: 'absolute',
+    top: SCREEN_HEIGHT * 0.03,
+    left: (SCREEN_WIDTH - SCREEN_WIDTH * 1.5) / 2, // Centers horizontally
+    width: SCREEN_WIDTH * 1.5,
+    height: SCREEN_WIDTH * 1.5,
     resizeMode: 'contain',
+    zIndex: 1,
   },
   enterButton: {
-    marginTop: SCREEN_HEIGHT * 0.02,
-    marginBottom: SCREEN_HEIGHT * 0.05,
+    position: 'absolute',
+    top: SCREEN_HEIGHT * 0.53,
+    left: SCREEN_WIDTH * 0.3,
     shadowColor: palette.shadow,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 8,
     elevation: 4,
+    zIndex: 3,
   },
   enterButtonImage: {
     width: SCREEN_WIDTH * 0.4,
@@ -102,9 +103,12 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   together: {
-    width: SCREEN_WIDTH * 0.6,
-    height: SCREEN_HEIGHT * 0.15,
+    position: 'absolute',
+    bottom: 0,
+    left: (SCREEN_WIDTH - SCREEN_WIDTH * 1.5) / 2, // Centers horizontally
+    width: SCREEN_WIDTH * 1.5,
+    height: SCREEN_HEIGHT * 0.4,
     resizeMode: 'contain',
+    zIndex: 2,
   },
 });
-

@@ -5,26 +5,21 @@ import {
   ImageBackground, 
   TouchableOpacity,
   StyleSheet,
-  Dimensions,
-  Pressable
+  Dimensions
 } from 'react-native';
 import { palette } from '../styles/palette';
 import { ChevronLeft } from 'lucide-react-native';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-interface ExpectationsProps {
+interface Expectations2Props {
   onBack: () => void;
-  onContinue: () => void;
 }
 
-export const Expectations = ({ onBack, onContinue }: ExpectationsProps) => {
- const handleContinue = () => {
-        onContinue();
-    };
+export const Expectations2 = ({ onBack }: Expectations2Props) => {
   return (
     <ImageBackground 
-      source={require("../assets/backgrounds/background_vibrant.png")}
+      source={require("../assets/backgrounds/light_ombre.png")}
       style={localStyles.background}
       resizeMode='cover'
     >
@@ -34,15 +29,9 @@ export const Expectations = ({ onBack, onContinue }: ExpectationsProps) => {
         </TouchableOpacity>
         
         <View style={localStyles.content}>
-          <Text style={localStyles.title}> Setting Expectations</Text>
+          <Text style={localStyles.title}>Expectations 2</Text>
         </View>
       </View>
-      <Pressable
-          style={localStyles.continueButton}
-          onPress={handleContinue}
-        >
-          <Text style={localStyles.continueButtonText}>Continue</Text>
-      </Pressable>
     </ImageBackground>
   );
 };
@@ -77,29 +66,4 @@ const localStyles = StyleSheet.create({
     color: palette.mediumBrown,
     fontWeight: '600',
   },
-
-  continueButton: {
-    position: 'absolute',
-    bottom: SCREEN_HEIGHT * 0.05,
-    right: SCREEN_WIDTH * 0.1,
-    backgroundColor: palette.lightBeige,
-    paddingVertical: 14,
-    paddingHorizontal: 24,
-    borderRadius: 30,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 10,
-    shadowColor: palette.shadow,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  continueButtonText: {
-    fontSize: 18,
-    fontFamily: 'Avenir',
-    color: palette.mediumBrown,
-
-  }
 });

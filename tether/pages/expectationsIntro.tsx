@@ -13,15 +13,17 @@ import { ChevronLeft } from 'lucide-react-native';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-interface ExpectationsProps {
+interface ExpectationsIntroProps {
   onBack: () => void;
   onContinue: () => void;
+  onBackToPortal: () => void;
 }
 
-export const Expectations = ({ onBack, onContinue }: ExpectationsProps) => {
- const handleContinue = () => {
-        onContinue();
-    };
+export const ExpectationsIntro = ({ onBack, onContinue, onBackToPortal }: ExpectationsIntroProps) => {
+  const handleContinue = () => {
+    onContinue();
+  };
+
   return (
     <ImageBackground 
       source={require("../assets/backgrounds/background_vibrant.png")}
@@ -34,15 +36,20 @@ export const Expectations = ({ onBack, onContinue }: ExpectationsProps) => {
         </TouchableOpacity>
         
         <View style={localStyles.content}>
-          <Text style={localStyles.title}> Setting Expectations</Text>
+          <Text style={localStyles.title}>Setting Expectations</Text>
         </View>
       </View>
+      
       <Pressable
-          style={localStyles.continueButton}
-          onPress={handleContinue}
-        >
-          <Text style={localStyles.continueButtonText}>Continue</Text>
+        style={localStyles.continueButton}
+        onPress={handleContinue}
+      >
+        <Text style={localStyles.continueButtonText}>Continue</Text>
       </Pressable>
+
+      <TouchableOpacity onPress={onBackToPortal} style={localStyles.backToPortalButton}>
+        <Text style={localStyles.backToPortalText}>Back to Portal</Text>
+      </TouchableOpacity>
     </ImageBackground>
   );
 };
@@ -77,7 +84,6 @@ const localStyles = StyleSheet.create({
     color: palette.mediumBrown,
     fontWeight: '600',
   },
-
   continueButton: {
     position: 'absolute',
     bottom: SCREEN_HEIGHT * 0.05,
@@ -100,6 +106,22 @@ const localStyles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'Avenir',
     color: palette.mediumBrown,
-
-  }
+    fontWeight: '600',
+  },
+  backToPortalButton: {
+    position: 'absolute',
+    bottom: SCREEN_HEIGHT * 0.05,
+    left: SCREEN_WIDTH * 0.1,
+    backgroundColor: 'transparent',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    zIndex: 10,
+  },
+  backToPortalText: {
+    fontSize: 16,
+    fontFamily: 'Avenir',
+    color: palette.slate,
+    textDecorationLine: 'underline',
+  },
 });
+
