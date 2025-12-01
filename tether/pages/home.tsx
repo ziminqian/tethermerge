@@ -141,9 +141,9 @@ export const Home = ({ onBack, onNext, onSearch }: HomeProps) => {
 const localStyles = StyleSheet.create({
   tetherTitle: {
     fontSize: 50,
-    fontWeight: '400',
+    fontWeight: '700',
     textAlign: 'center',
-    fontFamily: 'AbhayaLibre-Regular',
+    fontFamily: "../assets/fonts/AbhayaLibre-Bold.ttf",
     color: palette.slate,
     marginBottom: 8,
   },
@@ -182,6 +182,6 @@ const localStyles = StyleSheet.create({
     color: palette.cream,
     fontSize: 16,
     fontWeight: '700',
-    fontFamily: 'Avenir',
+    fontFamily: "../assets/fonts/AbhayaLibre-Bold.ttf",
   },
 });

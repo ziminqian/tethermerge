@@ -5,6 +5,9 @@ import theme from './theme';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
+const chosenFont = "../assets/fonts/AbhayaLibre-Bold.ttf" // or "Avenir"
+
+
 // Global stylesheet for Tether app using extracted palette
 const globalStyles = StyleSheet.create({
   // Containers
@@ -67,7 +70,7 @@ const globalStyles = StyleSheet.create({
     fontSize: 50,
     fontWeight: '700',
     textAlign: 'center',
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.slate,
     marginBottom: 8,
   },
@@ -75,7 +78,7 @@ const globalStyles = StyleSheet.create({
     fontSize: 16,
     fontStyle: 'italic',
     textAlign: 'center',
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.lightBrown,
   },
   imagePlaceholder: {
@@ -91,7 +94,7 @@ const globalStyles = StyleSheet.create({
   inputLabel: {
     fontSize: 16,
     fontWeight: '600',
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.mutedBrown,
     marginBottom: 8,
   },
@@ -104,7 +107,7 @@ const globalStyles = StyleSheet.create({
   areaCodeText: {
     fontSize: 16,
     fontWeight: '700',
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.darkBrown,
   },
   loginInputPassword: {
@@ -112,7 +115,7 @@ const globalStyles = StyleSheet.create({
     paddingVertical: 16,
     paddingLeft: 16,
     fontSize: 16,
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.darkBrown,
   },
   signUpLinkContainer: {
@@ -121,7 +124,7 @@ const globalStyles = StyleSheet.create({
   },
   signUpLink: {
     fontSize: 16,
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.mediumBrown,
     textDecorationLine: 'underline',
   },
@@ -135,7 +138,7 @@ const globalStyles = StyleSheet.create({
   },
   loginSubtitle: {
     fontSize: 16,
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.lightBrown,
     textAlign: 'center',
     opacity: 0.8,
@@ -163,7 +166,7 @@ const globalStyles = StyleSheet.create({
     flex: 1,
     paddingVertical: 16,
     fontSize: 16,
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.darkBrown,
   },
   loginButton: {
@@ -190,7 +193,7 @@ const globalStyles = StyleSheet.create({
     color: palette.cream,
     fontSize: 20,
     fontWeight: '700',
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
   },
 
   loginFooterText: {
@@ -234,24 +237,24 @@ const globalStyles = StyleSheet.create({
     fontSize: 30,
     fontWeight: '700',
     color: palette.slate,
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
   },
   subheading: {
     fontSize: 22,
     fontWeight: '600',
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.slate,
     marginBottom: 16,
   },
   subtitle: {
     fontSize: 18,
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     textAlign: 'center',
     color: palette.lightBrown,
     lineHeight: 26,
   },
   empty: {
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     marginBottom: 20,
     marginLeft: 20,
   },
@@ -276,32 +279,32 @@ const globalStyles = StyleSheet.create({
   },
   body: {
     fontSize: 17,
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.darkBrown,
     lineHeight: 24,
   },
   bodySecondary: {
     fontSize: 17,
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.lightBrown,
     lineHeight: 22,
   },
   caption: {
     fontSize: 13,
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.mutedBrown,
   },
   label: {
     fontSize: 15,
     fontWeight: '600',
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.mediumBrown,
     marginBottom: 8,
   },
   text: {
     fontSize: 16,
     fontWeight: '400',
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.mediumBrown,
   },
 
@@ -344,22 +347,22 @@ const globalStyles = StyleSheet.create({
     color: palette.cream,
     fontSize: 18,
     fontWeight: '600',
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
   },
   buttonTextOutline: {
     color: palette.slate,
     fontSize: 18,
     fontWeight: '600',
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
   },
   buttonTextSmall: {
     fontSize: 15,
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
   },
 
   backText: {
     fontSize: 17,
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.slate,
   },
   footer: {
@@ -439,7 +442,7 @@ const globalStyles = StyleSheet.create({
   },
   contactName: {
     fontSize: 17,
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.darkBrown,
     fontWeight: '500',
   },
@@ -450,7 +453,7 @@ const globalStyles = StyleSheet.create({
     borderRadius: 16,
     padding: 16,
     fontSize: 17,
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.darkBrown,
     marginBottom: 8,
     borderWidth: 1,
@@ -461,7 +464,7 @@ const globalStyles = StyleSheet.create({
     borderRadius: 16,
     padding: 16,
     fontSize: 17,
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.darkBrown,
     minHeight: 100,
     textAlignVertical: 'top',
@@ -489,12 +492,12 @@ const globalStyles = StyleSheet.create({
   },
   tabText: {
     fontSize: 15,
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.mutedBrown,
   },
   tabTextActive: {
     fontSize: 15,
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.slate,
     fontWeight: '600',
   },
@@ -512,7 +515,7 @@ const globalStyles = StyleSheet.create({
   },
   message: {
     fontSize: 17,
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.darkBrown,
     lineHeight: 24,
   },
@@ -538,7 +541,7 @@ const globalStyles = StyleSheet.create({
   },
   phaseText: {
     fontSize: 17,
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.lightBrown,
     textAlign: 'center',
     lineHeight: 24,
@@ -561,7 +564,7 @@ const globalStyles = StyleSheet.create({
   },
   listItemText: {
     fontSize: 17,
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.darkBrown,
   },
 
@@ -694,7 +697,7 @@ const globalStyles = StyleSheet.create({
   profileUsername: {
     fontSize: 26,
     fontWeight: '700',
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.darkBrown,
     flex: 1,
   },
@@ -710,7 +713,7 @@ const globalStyles = StyleSheet.create({
   },
   profileBio: {
     fontSize: 15,
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     fontStyle: "italic",
     color: palette.lightBrown,
     lineHeight: 20,
@@ -718,7 +721,7 @@ const globalStyles = StyleSheet.create({
   },
   profilePhone: {
     fontSize: 13,
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.mutedBrown,
     opacity: 0.7,
   },
@@ -770,7 +773,7 @@ const globalStyles = StyleSheet.create({
   modalLabel: {
     fontSize: 15,
     fontWeight: '600',
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.mediumBrown,
     marginBottom: 8,
   },
@@ -779,7 +782,7 @@ const globalStyles = StyleSheet.create({
     padding: 16,
     borderRadius: 16,
     fontSize: 16,
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.darkBrown,
     marginBottom: 20,
     borderWidth: 1,
@@ -829,7 +832,7 @@ const globalStyles = StyleSheet.create({
     color: palette.cream,
     fontSize: 17,
     fontWeight: '700',
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
   },
   userGraphicItem: {
     alignItems: 'center',
@@ -847,7 +850,7 @@ const globalStyles = StyleSheet.create({
   },
   userGraphicLabel: {
     fontSize: 18,
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.mutedBrown,
     marginTop: 2,
   },
@@ -871,13 +874,13 @@ const globalStyles = StyleSheet.create({
   },
   aiLabel: {
     fontSize: 12,
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.slate,
     marginBottom: 8,
   },
   messageText: {
     fontSize: 15,
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     color: palette.shadow,
     lineHeight: 22,
   },
@@ -893,7 +896,7 @@ const globalStyles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     fontSize: 15,
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
     fontStyle: "italic",
     color: palette.darkBrown,
     borderWidth: 1,
@@ -927,7 +930,7 @@ const globalStyles = StyleSheet.create({
     fontWeight: '700',
     marginBottom: 5,
     color: palette.darkBrown,
-    fontFamily: 'Avenir',
+    fontFamily: chosenFont,
   },
 
 });
