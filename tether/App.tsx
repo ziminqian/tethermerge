@@ -6,19 +6,19 @@ import { Message } from './pages/message';
 import { Portal } from './pages/portal';
 import { Home } from './pages/home';
 import { Profile } from './pages/profile';
-import { ExpectationsIntro } from './pages/expectationsIntro';
-import { ExpectationsSection1 } from './pages/expectationsSection1';
-import { ExpectationsSection2 } from './pages/expectationsSection2';
-import { ExpectationsSection3 } from './pages/expectationsSection3';
-import { ExpectationsSection4 } from './pages/expectationsSection4';
-import { ExpectationsSection5 } from './pages/expectationsSection5';
-import { ExpectationsComplete } from './pages/expectationsComplete';
+import { ExpectationsIntro } from './pages/expectations/expectationsIntro';
+import { ExpectationsSection1 } from './pages/expectations/expectationsSection1';
+import { ExpectationsSection2 } from './pages/expectations/expectationsSection2';
+import { ExpectationsSection3 } from './pages/expectations/expectationsSection3';
+import { ExpectationsSection4 } from './pages/expectations/expectationsSection4';
+import { ExpectationsSection5 } from './pages/expectations/expectationsSection5';
+import { ExpectationsComplete } from './pages/expectations/expectationsComplete';
 import { Reflect } from './pages/reflect';
-import { AcceptInvite } from './pages/acceptInvite';
-import Welcome from './pages/welcome';
-import Onboard1 from './pages/onboard1';
-import Onboard2 from './pages/onboard2';
-import Onboard3 from './pages/onboard3';
+import { AcceptInvite } from './pages/expectations/acceptInvite';
+import Welcome from './pages/onboarding/welcome';
+import Onboard1 from './pages/onboarding/onboard1';
+import Onboard2 from './pages/onboarding/onboard2';
+import Onboard3 from './pages/onboarding/onboard3';
 import Title from './pages/title';
 import Signup from './pages/signup';
 import Footer from './pages/components/Footer';
@@ -304,7 +304,7 @@ function AppContent() {
 }
 
 export default function App() {
-  const [currentScreen, setCurrentScreen] = useState<'welcome' | 'onboard1' | 'onboard2' | 'login' | 'signup' | 'onboard3' | 'app'>('welcome');
+  const [currentScreen, setCurrentScreen] = useState<'welcome' | 'onboard1' | 'onboard2' | 'login' | 'signup' | /*'onboard3' | */'app'>('welcome');
   const [showSignup, setShowSignup] = useState(false);
 
   const handleWelcomeContinue = () => {
@@ -328,16 +328,19 @@ export default function App() {
   };
 
   const handleSignupSuccess = () => {
-    setCurrentScreen('onboard3');
+    //setCurrentScreen('onboard3');
+    setCurrentScreen('app');
   };
 
   const handleLoginSuccess = () => {
-    setCurrentScreen('onboard3');
-  };
-
-  const handleOnboard3Continue = () => {
+    //setCurrentScreen('onboard3');
     setCurrentScreen('app');
   };
+
+  /*
+  const handleOnboard3Continue = () => {
+    setCurrentScreen('app');
+  };*/
 
   // Show welcome page first
   if (currentScreen === 'welcome') {
@@ -392,6 +395,7 @@ export default function App() {
   }
 
   // Show onboard3
+  /*
   if (currentScreen === 'onboard3') {
     return (
       <TetherProvider>
@@ -401,7 +405,7 @@ export default function App() {
         </View>
       </TetherProvider>
     );
-  }
+  }*/
 
   // After onboarding, show login/auth flow
   return (

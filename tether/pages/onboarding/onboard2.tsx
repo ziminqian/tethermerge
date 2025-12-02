@@ -1,14 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, Pressable, Image, StyleSheet, Dimensions, ImageBackground, Animated } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { palette } from '../styles/palette';
+import { palette } from '../../styles/palette';
 
-const frogLeft = require('../assets/onboard2/frog left.png');
-const rightFrog = require('../assets/onboard2/rightfrog.png');
-const squiggle = require('../assets/onboard2/squiggle.png');
-const number1 = require('../assets/onboard2/number1.png');
-const lock = require('../assets/onboard2/lock.png');
-const background = require('../assets/onboard2/background.png');
+const frogLeft = require('../../assets/onboard2/frog left.png');
+const rightFrog = require('../../assets/onboard2/rightfrog.png');
+const squiggle = require('../../assets/onboard2/squiggle.png');
+const number1 = require('../../assets/onboard2/number1.png');
+const lock = require('../../assets/onboard2/lock.png');
+const background = require('../../assets/onboard2/background.png');
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     top: SCREEN_HEIGHT * 0.05,
     left: SCREEN_WIDTH * 0.05,
     fontSize: 24,
-    fontFamily: 'Avenir',
+    fontFamily: '../../assets/fonts/AbhayaLibre-Regular.ttf',
     color: palette.darkGray,
     fontWeight: '600',
     zIndex: 5,
@@ -166,10 +166,10 @@ const styles = StyleSheet.create({
   },
   topTextLine: {
     fontSize: 26,
-    fontFamily: 'Avenir',
+    fontFamily: '../../assets/fonts/AbhayaLibre-Regular.ttf',
     color: palette.darkGray,
     lineHeight: 30,
-    fontWeight: '500',
+    fontWeight: '300',
   },
   leftCharacter: {
     position: 'absolute',
@@ -227,10 +227,10 @@ const styles = StyleSheet.create({
   },
   bottomTextLine: {
     fontSize: 24,
-    fontFamily: 'Avenir',
+    fontFamily: '../../assets/fonts/AbhayaLibre-Regular.ttf',
     color: palette.darkGray,
     lineHeight: 22,
-    fontWeight: '500',
+    fontWeight: '300',
   },
 });
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { 
   View, 
   Text, 
@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   SafeAreaView,
-  Animated
+  StyleSheet
 } from 'react-native';
 import styles from '../styles/styles';
 import { LogIn } from 'lucide-react-native';
@@ -24,32 +24,16 @@ const TEST_PASSWORD = 'test';
 
 interface TitleProps {
   onSignup?: () => void;
+  onLoginSuccess?: () => void;
 }
 
-export default function Title({ onSignup }: TitleProps = {}) {
+export default function Title({ onSignup, onLoginSuccess }: TitleProps = {}) {
   const { signIn } = useSession();
   const [areaCode, setAreaCode] = useState('+1');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(50)).current;
-
-  useEffect(() => {
-    // Fade in and slide up animation on mount
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 400,
-        useNativeDriver: true,
-      }),
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 400,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, [fadeAnim, slideAnim]);
+  const passwordRef = useRef<TextInput | null>(null);
 
   const handleLogin = async () => {
     if (!phoneNumber || !password) {
@@ -58,10 +42,14 @@ export default function Title({ onSignup }: TitleProps = {}) {
     }
 
     setLoading(true);
-
+    
     setTimeout(async () => {
       if (phoneNumber === TEST_PHONE && password === TEST_PASSWORD) {
         await signIn(areaCode + phoneNumber);
+        // Call onLoginSuccess callback if provided
+        if (onLoginSuccess) {
+          onLoginSuccess();
+        }
       } else {
         Alert.alert('Error', 'Invalid phone number or password');
       }
@@ -76,13 +64,6 @@ export default function Title({ onSignup }: TitleProps = {}) {
       resizeMode='cover'
     >
       <SafeAreaView style={{ flex: 1 }}>
-        <Animated.View
-          style={{
-            flex: 1,
-            opacity: fadeAnim,
-            transform: [{ translateY: slideAnim }],
-          }}
-        >
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={{ flex: 1, justifyContent: "center", alignItems: "center"  }}
@@ -99,28 +80,28 @@ export default function Title({ onSignup }: TitleProps = {}) {
             </View>
 
             <View style={styles.loginInputContainer}>
-              <Text style={styles.inputLabel}>Phone Number</Text>
               <View style={styles.loginInputWrapper}>
                 <View style={styles.areaCodeContainer}>
                   <Text style={styles.areaCodeText}>{areaCode} -</Text>
                 </View>
                 <TextInput
-                  placeholder=""
+                  ref = {passwordRef}
+                  placeholder="phone number"
                   placeholderTextColor={palette.mutedBrown}
                   style={styles.loginInput}
                   keyboardType="phone-pad"
                   value={phoneNumber}
                   onChangeText={setPhoneNumber}
                   editable={!loading}
+                  blurOnSubmit={false}
                 />
               </View>
             </View>
 
             <View style={styles.loginInputContainer}>
-              <Text style={styles.inputLabel}>Password</Text>
               <View style={styles.loginInputWrapper}>
                 <TextInput
-                  placeholder="..."
+                  placeholder="password"
                   placeholderTextColor={palette.mutedBrown}
                   secureTextEntry
                   autoCapitalize="none"
@@ -146,15 +127,14 @@ export default function Title({ onSignup }: TitleProps = {}) {
                 </>
               )}
             </TouchableOpacity>
+
             <View style={styles.signUpLinkContainer}>
               <TouchableOpacity onPress={onSignup}>
                 <Text style={styles.signUpLink}>New user? Sign up</Text>
               </TouchableOpacity>
             </View>
         </KeyboardAvoidingView>
-        </Animated.View>
       </SafeAreaView>
     </ImageBackground>
-
   );
 }

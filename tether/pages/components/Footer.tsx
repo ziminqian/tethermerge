@@ -22,7 +22,7 @@ export default function Footer({ activeTab, setActiveTab }: FooterProps) {
   return (
     <View style={styles.footer}>
       <TouchableOpacity style={styles.navButton} onPress={()=>setActiveTab("friends")}>
-        <Users size = {40} color={activeTab == "friends" ? theme.pressed : theme.notpressed}></Users><Text style={styles.text}>Friends</Text>
+        <Users size = {40} color={activeTab == "friends" ? theme.pressed : theme.notpressed}></Users><Text style={styles.text}>Contacts</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.navButton} onPress={()=>setActiveTab("home")}>

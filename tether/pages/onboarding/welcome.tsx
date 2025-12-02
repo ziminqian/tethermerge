@@ -1,15 +1,16 @@
 import React from 'react';
 import { View, Text, Pressable, Image, StyleSheet, Dimensions } from 'react-native';
-import { palette } from '../styles/palette';
+import { palette } from '../../styles/palette';
+import styles from '../../styles/styles';
 
-const bigLeftOutline = require('../assets/welcome/bigleftoutline.png');
-const background = require('../assets/welcome/tetherbackground.png');
-const rightProfile = require('../assets/welcome/rightprofile.png');
-const circleButton = require('../assets/welcome/circle_button.png');
-const topRectangle = require('../assets/welcome/top_rectangle.png');
-const leftRectangle = require('../assets/welcome/left_rectangle.png');
-const rightRectangle = require('../assets/welcome/right_rectangle.png');
-const smallRectangle = require('../assets/welcome/small_rectangle.png');
+const bigLeftOutline = require('../../assets/welcome/bigleftoutline.png');
+const background = require('../../assets/welcome/tetherbackground.png');
+const rightProfile = require('../../assets/welcome/rightprofile.png');
+const circleButton = require('../../assets/welcome/circle_button.png');
+const topRectangle = require('../../assets/welcome/top_rectangle.png');
+const leftRectangle = require('../../assets/welcome/left_rectangle.png');
+const rightRectangle = require('../../assets/welcome/right_rectangle.png');
+const smallRectangle = require('../../assets/welcome/small_rectangle.png');
 
 interface WelcomeProps {
   onContinue: () => void;
@@ -17,62 +18,62 @@ interface WelcomeProps {
 
 export default function Welcome({ onContinue }: WelcomeProps) {
   return (
-    <View style={styles.bigContainer}>
+    <View style={localStyles.bigContainer}>
       {/* Background with grid pattern */}
       <Image 
         source={background}
-        style={styles.background}
+        style={localStyles.background}
       />
       
       {/* Large left profile */}
       <Image 
         source={bigLeftOutline} 
-        style={styles.bigleftoutline}
+        style={localStyles.bigleftoutline}
       />
     
       <Image 
         source={rightProfile} 
-        style={styles.rightProfile}
+        style={localStyles.rightProfile}
       />
       
       <Image 
         source={topRectangle} 
-        style={styles.topRectangle}
+        style={localStyles.topRectangle}
       />
       <Image 
         source={leftRectangle} 
-        style={styles.leftRectangle}
+        style={localStyles.leftRectangle}
       />
       <Image 
         source={rightRectangle} 
-        style={styles.rightRectangle}
+        style={localStyles.rightRectangle}
       />
       
-      <View style={styles.taglineContainer}>
-        <Text style={styles.taglineText}>safe space</Text>
-        <Text style={styles.taglineText}>for difficult</Text>
-        <Text style={styles.taglineText}>conversations</Text>
+      <View style={localStyles.taglineContainer}>
+        <Text style={localStyles.taglineText}>safe space</Text>
+        <Text style={localStyles.taglineText}>for difficult</Text>
+        <Text style={localStyles.taglineText}>conversations</Text>
       </View>
       
       <Pressable
-        style={styles.getStartedButton}
+        style={localStyles.getStartedButton}
         onPress={onContinue}
       >
-        <Text style={styles.getStartedText}>Get Started</Text>
+        <Text style={localStyles.getStartedText}>Get Started</Text>
         <Image 
           source={circleButton} 
-          style={styles.circleButtonIcon}
+          style={localStyles.circleButtonIcon}
         />
       </Pressable>
       
-      <Text style={styles.tetherTitle}>Tether</Text>
+      <Text style={[styles.titleLarge, localStyles.tetherTitle]}>Tether</Text>
     </View>
   );
 }
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-const styles = StyleSheet.create({
+const localStyles = StyleSheet.create({
   bigContainer: {
     flex: 1,
     width: SCREEN_WIDTH,
@@ -119,7 +120,8 @@ const styles = StyleSheet.create({
   },
   taglineText: {
     fontSize: 26,
-    fontFamily: 'Avenir',
+    fontStyle: "italic",
+    fontFamily: '../../assets/fonts/AbhayaLibre-Regular.ttf',
     color: palette.mediumBrown,
     lineHeight: 28,
     textAlign: 'center',
@@ -128,9 +130,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: SCREEN_HEIGHT * 0.08,
     left: SCREEN_WIDTH * 0.08,
-    fontSize: 42,
-    fontFamily: 'Avenir',
-    color: palette.mediumBrown,
+    //fontSize: 42,
     zIndex: 2,
   },
   topRectangle: {
@@ -183,8 +183,8 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   getStartedText: {
-    fontSize: 22,
-    fontFamily: 'Avenir',
+    fontSize: 28,
+    fontFamily: '../../assets/fonts/AbhayaLibre-Regular.ttf',
     color: palette.mediumBrown,
   },
   circleButtonIcon: {

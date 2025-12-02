@@ -100,21 +100,23 @@ export const Portal = ({ contact, onBack, onNavigateToExpectations, onNavigateTo
               style={newstyles.expectations} 
         />
       </TouchableOpacity>
-        <View style={newstyles.reflectContainer}> 
+      <View style={newstyles.reflectContainer}> 
+        <TouchableOpacity 
+          onPress={onNavigateToReflect}
+          style={newstyles.reflectTouchable}
+        > 
+        <Image 
+          source={reflect} 
+          style={newstyles.reflect} 
+        />
+          
           <Image 
-            source={reflect} 
-            style={newstyles.reflect} 
+                source={three} 
+                style={newstyles.three} 
           />
-          <TouchableOpacity 
-            onPress={onNavigateToReflect}
-            style={newstyles.reflectTouchable}
-          >  
-            <Image 
-                  source={three} 
-                  style={newstyles.three} 
-            />
-          </TouchableOpacity>
-        </View>
+        </TouchableOpacity>
+      </View>
+      
 
       <View style={newstyles.elementcontainer}>
          <Image 

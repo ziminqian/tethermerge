@@ -1,12 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, Image, StyleSheet, Dimensions, ImageBackground, Animated } from 'react-native';
-import { palette } from '../styles/palette';
+import { palette } from '../../styles/palette';
 
-const leftprofile = require('../assets/onboard1/leftprofile.png');
-const rightimage = require('../assets/onboard1/rightimage.png');
-const squiggle = require('../assets/onboard1/squiggle.png');
-const thought = require('../assets/onboard1/thoughtbubble.png');
-const back = require('../assets/onboard1/backgroundonboard1.png');
+const leftprofile = require('../../assets/onboard1/leftprofile.png');
+const rightimage = require('../../assets/onboard1/rightimage.png');
+const squiggle = require('../../assets/onboard1/squiggle.png');
+const thought = require('../../assets/onboard1/thoughtbubble.png');
+const back = require('../../assets/onboard1/backgroundonboard1.png');
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -120,10 +120,10 @@ const styles = StyleSheet.create({
   },
   topTextLine: {
     fontSize: 26,
-    fontFamily: 'Avenir',
+    fontFamily: '../../assets/fonts/AbhayaLibre-Regular.ttf',
     color: palette.darkGray,
     lineHeight: 32,
-    fontWeight: '500',
+    fontWeight: '300',
   },
   peopleContainer: {
     flex: 1,
@@ -169,10 +169,10 @@ const styles = StyleSheet.create({
     bottom: SCREEN_HEIGHT * 0.03,
     right: SCREEN_WIDTH * 0.1,
     fontSize: 26,
-    fontFamily: 'Avenir',
+    fontFamily: '../../assets/fonts/AbhayaLibre-Regular.ttf',
     color: palette.darkGray,
     textAlign: 'right',
     zIndex: 2,
-    fontWeight: '500',
+    fontWeight: '300',
   },
 });

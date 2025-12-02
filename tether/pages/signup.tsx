@@ -19,7 +19,7 @@ import { UserPlus, ChevronLeft, X } from 'lucide-react-native';
 import { palette } from '../styles/palette';
 import theme from '../styles/theme';
 
-const back = require('../assets/onboard1/backgroundonboard1.png');
+const back = require('../assets/backgrounds/light_ombre.png');
 
 interface SignupProps {
   onBack: () => void;

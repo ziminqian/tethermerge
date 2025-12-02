@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, Pressable, Image, StyleSheet, Dimensions, ImageBackground } from 'react-native';
-import { palette } from '../styles/palette';
+import { palette } from '../../styles/palette';
 
-const portal = require('../assets/onboard3/portal.png');
-const enterButton = require('../assets/onboard3/enter_button.png');
-const together = require('../assets/onboard3/together.png');
+const portal = require('../../assets/onboard3/portal.png');
+const enterButton = require('../../assets/onboard3/enter_button.png');
+const together = require('../../assets/onboard3/together.png');
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -15,7 +15,7 @@ interface Onboard3Props {
 export default function Onboard3({ onContinue }: Onboard3Props) {
   return (
     <ImageBackground 
-      source={require("../assets/backgrounds/background_vibrant.png")}
+      source={require("../../assets/backgrounds/background_vibrant.png")}
       style={styles.background}
       resizeMode='cover'
     >
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     fontSize: 24,
-    fontFamily: 'Avenir',
+    fontFamily: '../../assets/fonts/AbhayaLibre-Regular.ttf',
     color: palette.darkBrown,
     fontWeight: '500',
     textAlign: 'center',
