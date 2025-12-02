@@ -413,7 +413,7 @@ const globalStyles = StyleSheet.create({
   contactCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: palette.cream,
+    backgroundColor: palette.cream + "95",
     padding: 5,
     borderRadius: 16,
     marginBottom: 10,

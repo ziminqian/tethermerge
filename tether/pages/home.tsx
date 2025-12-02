@@ -78,7 +78,7 @@ export const Home = ({ onBack, onNext, onSearch }: HomeProps) => {
                   <TouchableOpacity 
                     key={contact.id} 
                     style={styles.contactCard} 
-                    onPress={onNext}
+                    onPress={() => onNext(contact)}
                   >
                     <View style={styles.avatar}>
                       <Image source={require('../assets/frogs/frog.png')}/>
@@ -89,7 +89,7 @@ export const Home = ({ onBack, onNext, onSearch }: HomeProps) => {
               )
             )}
           <TouchableOpacity style={styles.dropdown} onPress={() => setShowRequestPortals(!showRequestPortals)}>
-            {showActivePortals ? 
+            {showRequestPortals ? 
                 <ChevronDown color={theme.button}/> : 
                 <ChevronRight color={theme.button}/>
               }
