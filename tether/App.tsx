@@ -24,6 +24,7 @@ import Signup from './pages/signup';
 import Footer from './pages/components/Footer';
 import {Pause} from './pages/pause';
 import {Conversation} from './pages/conversation';
+import { Calling } from './pages/calling';
 import styles from './styles/styles';
 import AuthGate from './pages/components/AuthGate';
 //import { supabase } from './config/supabase';
@@ -47,7 +48,7 @@ function AppContent() {
   const [showConversation, setShowConversation] = useState(false);
   const [showPause, setShowPause] = useState(false);
   const [isNewPortalRequest, setIsNewPortalRequest] = useState(false);
-
+  const [showCalling, setShowCalling] = useState(false);
   // supabase stuff : for later
   /*
   useEffect(() => {
@@ -180,29 +181,14 @@ function AppContent() {
     setSelectedContact(null);
   };
 
-const handleTabChange = (tab: 'friends' | 'home' | 'profile') => {
-  if (tab === 'friends') {
-    setShowMessage(false);
-    setShowPortal(false);
-    setShowExpectationsIntro(false);
-    setShowExpectationsSection1(false);
-    setShowExpectationsSection2(false);
-    setShowExpectationsSection3(false);
-    setShowExpectationsSection4(false);
-    setShowExpectationsSection5(false);
-    setShowExpectationsComplete(false);
-    setShowReflect(false);
-    setShowAcceptInvite(false);
-    setShowConversation(false);
-    setShowPause(false);
-    setSelectedContact(null);
-  }
-  setActiveTab(tab);
-};
+    const handleCallConnected = () => {
+    setShowCalling(false);
+    setShowConversation(true);
+  };
 
   const handleStartCall = () => {
-  setShowConversation(true);
-  setShowPortal(false);
+    setShowCalling(true);
+    setShowPortal(false);
   };
 
   const handlePauseConversation = () => {
@@ -217,8 +203,31 @@ const handleTabChange = (tab: 'friends' | 'home' | 'profile') => {
 
   const handleEndCall = () => {
     setShowConversation(false);
+    setShowCalling(false);
     setShowPortal(true);
   };
+
+  const handleTabChange = (tab: 'friends' | 'home' | 'profile') => {
+    if (tab === 'friends') {
+      setShowMessage(false);
+      setShowPortal(false);
+      setShowExpectationsIntro(false);
+      setShowExpectationsSection1(false);
+      setShowExpectationsSection2(false);
+      setShowExpectationsSection3(false);
+      setShowExpectationsSection4(false);
+      setShowExpectationsSection5(false);
+      setShowExpectationsComplete(false);
+      setShowReflect(false);
+      setShowAcceptInvite(false);
+      setShowConversation(false);
+      setShowPause(false);
+      setShowCalling(false);
+      setSelectedContact(null);
+    }
+    setActiveTab(tab);
+  };
+
 
   console.log(activeTab);
   
@@ -328,11 +337,18 @@ const handleTabChange = (tab: 'friends' | 'home' | 'profile') => {
             onBack={() => setActiveTab('profile')} 
           />
         )}
-        {activeTab === 'friends' && showConversation && selectedContact && (
+        {activeTab === 'friends' && showConversation && !showCalling && selectedContact && (
           <Conversation 
             contact={selectedContact}
             onBack={handleEndCall}
             onPause={handlePauseConversation}
+          />
+        )}
+        {activeTab === 'friends' && showCalling && selectedContact && (
+          <Calling 
+            contact={selectedContact}
+            onBack={handleBackToContacts}
+            onCallConnected={handleCallConnected}
           />
         )}
         {activeTab === 'friends' && showPause && selectedContact && (

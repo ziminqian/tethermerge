@@ -11,6 +11,7 @@ import {
 import { palette } from '../styles/palette';
 import { ChevronLeft, Pause, Lightbulb, MessageCircleHeart } from 'lucide-react-native';
 import convoStyles from "../styles/convoStyles"
+import resourceStyles from '../styles/resourceStyles';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -73,19 +74,19 @@ export const Conversation = ({ contact, onBack, onPause }: ConversationProps) =>
           </View>
         </View>
 
-        <View style={convoStyles.resourcesContainer}>
-          <TouchableOpacity style={convoStyles.resourceCard}>
-            <View style={[convoStyles.resourceIcon, { backgroundColor: palette.teal }]}>
+        <View style={resourceStyles.resourcesContainer}>
+          <TouchableOpacity style={resourceStyles.resourceCard}>
+            <View style={[resourceStyles.resourceIcon, { backgroundColor: palette.teal }]}>
               <Lightbulb size={35} color={palette.cream}/>
             </View>
-            <Text style={convoStyles.resourceTitle}>Conversation{'\n'}Starters</Text>
+            <Text style={resourceStyles.resourceTitle}>Conversation{'\n'}Starters</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={convoStyles.resourceCard}>
-            <View style={[convoStyles.resourceIcon, { backgroundColor: palette.lightBrown }]}>
+          <TouchableOpacity style={resourceStyles.resourceCard}>
+            <View style={[resourceStyles.resourceIcon, { backgroundColor: palette.lightBrown }]}>
               <MessageCircleHeart size={33} color={palette.cream}/>
             </View>
-            <Text style={convoStyles.resourceTitle}>Revisit{'\n'}Expectations</Text>
+            <Text style={resourceStyles.resourceTitle}>Revisit{'\n'}Expectations</Text>
           </TouchableOpacity>
         </View>
 

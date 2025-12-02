@@ -89,52 +89,6 @@ const convoStyles = StyleSheet.create({
     height: 60,
     backgroundColor: palette.cream + '40',
   },
-  resourcesContainer: {
-    flexDirection: 'row',
-    gap: 16,
-    marginTop: 10,
-    marginBottom: 5,
-  },
-  resourceCard: {
-    backgroundColor: palette.cream + '80',
-    borderRadius: 16,
-    padding: 9,
-    width: SCREEN_WIDTH * 0.41,
-    alignItems: 'center',
-  },
-  resourceCard2: {
-    backgroundColor: palette.cream + '95',
-    borderRadius: 16,
-    padding: 9,
-    width: SCREEN_WIDTH * 0.41,
-    alignItems: 'center',
-  },
-  resourceIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  resourceIconText: {
-    fontSize: 24,
-  },
-  resourceTitle: {
-    fontSize: 16,
-    fontFamily: chosenFont,
-    color: palette.slate,
-    textAlign: 'center',
-    fontWeight: '500',
-  },
-  resourcesTitle: {
-    fontSize: 20,
-    fontFamily: chosenFont,
-    color: palette.slate,
-    textAlign: 'center',
-    fontWeight: '500',
-    marginBottom: 10,
-  },
   pauseHintText: {
     fontSize: 15,
     fontFamily: chosenFont,
@@ -224,25 +178,6 @@ const convoStyles = StyleSheet.create({
     color: palette.lightBrown + 'CC',
     fontStyle: 'italic',
   },
-  resourcesSection: {
-    flex: 1,
-    width: '100%',
-    marginBottom: 20,
-  },
-  resourcesGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 16,
-    justifyContent: "center",
-  },
-  resourceSubtitle: {
-    fontSize: 15,
-    marginTop: 4,
-    fontFamily: chosenFont,
-    color: palette.slate + 'AA',
-    textAlign: 'center',
-    lineHeight: 14,
-  },
   resumeButton: {
     backgroundColor: palette.slate,
     paddingVertical: 16,
@@ -265,6 +200,153 @@ const convoStyles = StyleSheet.create({
     color: palette.cream,
     fontWeight: '700',
   },
+  callingAvatarContainer: {
+  alignItems: 'center',
+  justifyContent: 'center',
+  marginVertical: 60,
+  height: 200,
+  width: 200,
+  alignSelf: 'center',
+},
+
+callingAvatar: {
+  width: 150,
+  height: 150,
+  borderRadius: 75,
+  backgroundColor: palette.cream,
+  alignItems: 'center',
+  justifyContent: 'center',
+  shadowColor: palette.shadow,
+  shadowOffset: { width: 0, height: 4 },
+  shadowOpacity: 0.3,
+  shadowRadius: 8,
+  elevation: 8,
+},
+
+callingRing: {
+  position: 'absolute',
+  width: 150,
+  height: 150,
+  borderRadius: 75,
+  borderWidth: 3,
+  borderColor: palette.teal,
+},
+
+callingNameText: {
+  fontSize: 32,
+  fontWeight: '700',
+  color: palette.slate,
+  textAlign: 'center',
+  marginBottom: 8,
+},
+
+callingStatusText: {
+  fontSize: 18,
+  color: palette.mutedBrown,
+  textAlign: 'center',
+  marginBottom: 40,
+},
+endCallButton: {
+  backgroundColor: palette.coral,
+  paddingVertical: 16,
+  paddingHorizontal: 32,
+  borderRadius: 30,
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: 12,
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 4 },
+  shadowOpacity: 0.3,
+  shadowRadius: 8,
+  elevation: 8,
+  marginTop: 20,
+},
+endCallButtonText: {
+  color: palette.cream,
+  fontSize: 18,
+  fontWeight: '700',
+},
+
+modalOverlay: {
+  flex: 1,
+  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+
+confirmModalContent: {
+  width: '85%',
+  backgroundColor: palette.cream,
+  borderRadius: 20,
+  padding: 30,
+  alignItems: 'center',
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 4 },
+  shadowOpacity: 0.3,
+  shadowRadius: 8,
+  elevation: 8,
+},
+
+confirmModalTitle: {
+  fontSize: 24,
+  fontWeight: '700',
+  color: palette.slate,
+  textAlign: 'center',
+  marginBottom: 12,
+},
+
+confirmModalText: {
+  fontSize: 16,
+  color: palette.darkBrown,
+  textAlign: 'center',
+  lineHeight: 24,
+  marginBottom: 30,
+},
+
+confirmModalButtons: {
+  flexDirection: 'row',
+  gap: 12,
+  width: '100%',
+},
+
+confirmModalButtonCancel: {
+  flex: 1,
+  paddingVertical: 14,
+  paddingHorizontal: 20,
+  borderRadius: 12,
+  borderWidth: 2,
+  borderColor: palette.slate,
+  alignItems: 'center',
+},
+
+confirmModalButtonCancelText: {
+  color: palette.slate,
+  fontSize: 16,
+  fontWeight: '700',
+},
+
+confirmModalButtonConfirm: {
+  flex: 1,
+  paddingVertical: 14,
+  paddingHorizontal: 20,
+  borderRadius: 12,
+  backgroundColor: palette.teal,
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: 8,
+  shadowColor: palette.shadow,
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.2,
+  shadowRadius: 4,
+  elevation: 4,
+},
+
+confirmModalButtonConfirmText: {
+  color: palette.cream,
+  fontSize: 16,
+  fontWeight: '700',
+},
 });
 
 export default convoStyles;

@@ -896,6 +896,7 @@ const globalStyles = StyleSheet.create({
   modalTitle: {
     fontSize: 24,
     fontWeight: '700',
+    fontFamily: chosenFont,
     color: palette.darkBrown,
   },
   modalLabel: {

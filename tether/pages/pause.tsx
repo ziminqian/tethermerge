@@ -12,6 +12,7 @@ import { palette } from '../styles/palette';
 import { Lightbulb, MessageCircleHeart, Brain, ShieldBan } from 'lucide-react-native';
 import { Play } from 'lucide-react-native';
 import convoStyles from '../styles/convoStyles';
+import resourceStyles from '../styles/resourceStyles';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -137,41 +138,41 @@ export const Pause = ({ onResume }: PauseProps) => {
           <Text style={convoStyles.breatheInstruction}>Inhale deeply... Hold... Exhale slowly...</Text>
         </View>
 
-        <View style={convoStyles.resourcesSection}>
+        <View style={resourceStyles.resourcesSection}>
           {/*<Text style={convoStyles.resourcesTitle}>Conversation Resources</Text>*/}
           
-          <View style={convoStyles.resourcesGrid}>
+          <View style={resourceStyles.resourcesGrid}>
             
-            <TouchableOpacity style={convoStyles.resourceCard}>
-              <View style={[convoStyles.resourceIcon, { backgroundColor: palette.teal }]}>
+            <TouchableOpacity style={resourceStyles.resourceCard}>
+              <View style={[resourceStyles.resourceIcon, { backgroundColor: palette.teal }]}>
               <Lightbulb size={35} color={palette.cream}/>
             </View>
-              <Text style={convoStyles.resourceTitle}>Conversation Starters</Text>
-              <Text style={convoStyles.resourceSubtitle}>Prompts to move forward</Text>
+              <Text style={resourceStyles.resourceTitle}>Conversation Starters</Text>
+              <Text style={resourceStyles.resourceSubtitle}>Prompts to move forward</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={convoStyles.resourceCard}>
-                <View style={[convoStyles.resourceIcon, { backgroundColor: palette.lightBrown }]}>
+            <TouchableOpacity style={resourceStyles.resourceCard}>
+                <View style={[resourceStyles.resourceIcon, { backgroundColor: palette.lightBrown }]}>
                 <MessageCircleHeart size={33} color={palette.cream}/>
                 </View>
-              <Text style={convoStyles.resourceTitle}>Revisit Expectations</Text>
-              <Text style={convoStyles.resourceSubtitle}>Reminders on your goals</Text>
+              <Text style={resourceStyles.resourceTitle}>Revisit Expectations</Text>
+              <Text style={resourceStyles.resourceSubtitle}>Reminders on your goals</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={convoStyles.resourceCard}>
-              <View style={[convoStyles.resourceIcon, { backgroundColor: palette.mutedBrown }]}>
+            <TouchableOpacity style={resourceStyles.resourceCard}>
+              <View style={[resourceStyles.resourceIcon, { backgroundColor: palette.mutedBrown }]}>
               <Brain size={35} color={palette.cream}/>
             </View>
-              <Text style={convoStyles.resourceTitle}>Empathy Prompts</Text>
-              <Text style={convoStyles.resourceSubtitle}>Understand their perspective</Text>
+              <Text style={resourceStyles.resourceTitle}>Empathy Prompts</Text>
+              <Text style={resourceStyles.resourceSubtitle}>Understand their perspective</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={convoStyles.resourceCard}>
-              <View style={[convoStyles.resourceIcon, { backgroundColor: palette.sage }]}>
+            <TouchableOpacity style={resourceStyles.resourceCard}>
+              <View style={[resourceStyles.resourceIcon, { backgroundColor: palette.sage }]}>
               <ShieldBan size={35} color={palette.cream}/>
             </View>
-              <Text style={convoStyles.resourceTitle}>Boundary Setting</Text>
-              <Text style={convoStyles.resourceSubtitle}>Respectful ways to set limits</Text>
+              <Text style={resourceStyles.resourceTitle}>Boundary Setting</Text>
+              <Text style={resourceStyles.resourceSubtitle}>Respectful ways to set limits</Text>
             </TouchableOpacity>
             {/*
             <TouchableOpacity style={convoStyles.resourceCard}>
