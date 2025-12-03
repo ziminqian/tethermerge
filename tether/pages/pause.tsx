@@ -162,7 +162,7 @@ export const Pause = ({ onResume }: PauseProps) => {
             </TouchableOpacity>
 
             <TouchableOpacity style={resourceStyles.resourceCard}
-            onPress={() => handleResourcePress('conversation-starters')}>
+            onPress={() => handleResourcePress('revisit-expectations')}>
                 <View style={[resourceStyles.resourceIcon, { backgroundColor: palette.lightBrown }]}>
                 <MessageCircleHeart size={33} color={palette.cream}/>
                 </View>

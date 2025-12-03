@@ -116,14 +116,14 @@ resourcesContainer: {
   contentItem: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginBottom: 16,
+    marginBottom: 4,
     paddingHorizontal: 5,
   },
   bullet: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: palette.teal,
+    backgroundColor: palette.slate,
     marginRight: 12,
     marginTop: 6,
   },
@@ -132,7 +132,15 @@ resourcesContainer: {
     fontFamily: chosenFont,
     fontSize: 16,
     lineHeight: 24,
-    color: palette.darkBrown,
+    color: palette.slate,
+  },
+  subheading: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: palette.slate,
+    marginTop: 3,
+    marginBottom: 2,
+    fontFamily: chosenFont,
   },
   closeButton: {
     backgroundColor: palette.slate,
@@ -146,6 +154,48 @@ resourcesContainer: {
     fontFamily: chosenFont,
     fontSize: 16,
     fontWeight: '700',
+  },
+  //expectations
+    expectationsContainer: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+  },
+  expectationSection: {
+    marginBottom: 20,
+  },
+  expectationHeader: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: palette.slate,
+    marginBottom: 12,
+    fontFamily: chosenFont,
+  },
+  expectationItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 10,
+    paddingLeft: 5,
+  },
+  expectationBullet: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: palette.slate,
+    marginTop: 7,
+    marginRight: 12,
+  },
+  expectationText: {
+    flex: 1,
+    fontSize: 16,
+    lineHeight: 24,
+    color: palette.slate,
+    fontFamily: chosenFont,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: palette.lightBrown,
+    marginVertical: 15,
+    opacity: 0.3,
   },
 });
 

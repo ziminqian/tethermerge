@@ -94,7 +94,7 @@ export const Conversation = ({ contact, onBack, onPause }: ConversationProps) =>
           </TouchableOpacity>
 
           <TouchableOpacity style={resourceStyles.resourceCard}
-          onPress={() => handleResourcePress('conversation-starters')}>
+          onPress={() => handleResourcePress('revisit-expectations')}>
             <View style={[resourceStyles.resourceIcon, { backgroundColor: palette.lightBrown }]}>
               <MessageCircleHeart size={33} color={palette.cream}/>
             </View>
@@ -116,6 +116,9 @@ export const Conversation = ({ contact, onBack, onPause }: ConversationProps) =>
                 visible={modalVisible}
                 onClose={() => setModalVisible(false)}
                 resourceType={selectedResource}
+                contactName={contact.name}
+                userExpectations={['Listen without interrupting', 'Stay calm and respectful']} //change
+                contactExpectations={['Be honest about feelings', 'Take breaks when needed']}
               />
     </ImageBackground>
   );
