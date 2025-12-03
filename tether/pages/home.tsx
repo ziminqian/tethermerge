@@ -13,14 +13,16 @@ interface HomeProps {
 
 export const Home = ({ onBack, onNext, onSearch }: HomeProps) => {
   
-  const activePortals: any[] = [];
+  const activePortals = [
+    { id: '1', name: 'Fayez' },
+  ];;
 
 
   const [showActivePortals, setShowActivePortals] = useState(true);
   const [showRequestPortals, setShowRequestPortals] = useState(true);
 
   const requestPortals = [
-    { id: '1', name: 'Yuina' },
+    { id: '1', name: 'Alan' },
   ];
   const [input, setInput] = useState<string>("");
 

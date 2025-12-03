@@ -16,7 +16,6 @@ export const Contacts = ({ onNext, onBack, onSearch }: ContactsProps) => {
     { id: '1', name: 'Zafar'},
     { id: '2', name: 'Yuina'},
     { id: '3', name: 'Zimin'},
-    { id: '4', name: 'Fayez'},
   ];
 
   const invites = [
