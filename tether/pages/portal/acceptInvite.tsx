@@ -31,14 +31,14 @@ export const AcceptInvite = ({ contact, onBack, onNavigateToExpectations }: Acce
         </TouchableOpacity>
         
         <View style={[portalStyles.content, { paddingTop: 80, justifyContent: 'center', flex: 1, alignItems: 'center' }]}>
-          <Text style={[portalStyles.title, { fontFamily: 'Avenir', textAlign: 'center' }]}>
-            {contact.name} accepted invite! Continue to setting expectations
+          <Text style={[portalStyles.title, { textAlign: 'center' }]}>
+            {contact.name} accepted invite!{"\n"}Continue to setting expectations{"\n"}
           </Text>
           <TouchableOpacity
             style={[portalStyles.continueButton, { marginTop: 8, alignSelf: 'center', position: 'relative', bottom: 'auto', right: 'auto', width: 'auto', minWidth: 200 }]}
             onPress={onNavigateToExpectations}
           >
-            <Text style={[portalStyles.continueButtonText, { fontFamily: 'Avenir' }]}>
+            <Text style={[portalStyles.continueButtonText,]}>
               Continue
             </Text>
           </TouchableOpacity>
@@ -50,7 +50,7 @@ export const AcceptInvite = ({ contact, onBack, onNavigateToExpectations }: Acce
               source={spiral} 
               style={{ width: 100, height: 100, resizeMode: 'contain' }}
             />
-            <Text style={[portalStyles.backToPortalText, { fontFamily: 'Avenir', marginTop: 8 }]}>
+            <Text style={[portalStyles.backToPortalText, { marginTop: 8 }]}>
               Back to Portal
             </Text>
           </TouchableOpacity>

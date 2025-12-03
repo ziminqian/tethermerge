@@ -26,12 +26,12 @@ export const ExpectationsComplete = ({ onBack, onBackToPortal }: ExpectationsCom
           <ChevronLeft size={40} color={palette.slate} />
         </TouchableOpacity>
         
-        <View style={[portalStyles.content, { paddingTop: 80 }]}>
-          <Text style={[portalStyles.title, { fontFamily: 'Avenir' }]}>Complete!</Text>
-          <Text style={[portalStyles.message, { fontFamily: 'Avenir' }]}>
+        <View style={[portalStyles.content]}>
+          <Text style={[portalStyles.title,]}>Complete!{"\n"}</Text>
+          <Text style={[portalStyles.message,]}>
             Congrats, you've set your expectations!
           </Text>
-          <Text style={[portalStyles.message, { fontFamily: 'Avenir' }]}>
+          <Text style={[portalStyles.message,]}>
             You're ready to have this conversation with clarity and intention.
           </Text>
         </View>
@@ -41,7 +41,7 @@ export const ExpectationsComplete = ({ onBack, onBackToPortal }: ExpectationsCom
         style={portalStyles.backToPortalButtonMain}
         onPress={onBackToPortal}
       >
-        <Text style={[portalStyles.backToPortalButtonText, { fontFamily: 'Avenir' }]}>Back to Portal</Text>
+        <Text style={[portalStyles.backToPortalButtonText,]}>Back to Portal</Text>
       </TouchableOpacity>
     </ImageBackground>
   );

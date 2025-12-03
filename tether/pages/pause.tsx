@@ -13,6 +13,7 @@ import { Lightbulb, MessageCircleHeart, Brain, ShieldBan } from 'lucide-react-na
 import { Play } from 'lucide-react-native';
 import convoStyles from '../styles/convoStyles';
 import resourceStyles from '../styles/resourceStyles';
+import { ResourceModal, ResourceType } from './components/Resources';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -25,6 +26,9 @@ export const Pause = ({ onResume }: PauseProps) => {
   const breatheScale = useRef(new Animated.Value(1)).current;
   const breatheOpacity = useRef(new Animated.Value(0.6)).current;
   const borderOpacity = useRef(new Animated.Value(0)).current;
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedResource, setSelectedResource] = useState<ResourceType>('conversation-starters');
+  
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -96,6 +100,11 @@ export const Pause = ({ onResume }: PauseProps) => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const handleResourcePress = (resourceType: ResourceType) => {
+      setSelectedResource(resourceType);
+      setModalVisible(true);
+    };
+
   return (
     <ImageBackground 
       source={require("../assets/backgrounds/background_vibrant.png")}
@@ -143,7 +152,8 @@ export const Pause = ({ onResume }: PauseProps) => {
           
           <View style={resourceStyles.resourcesGrid}>
             
-            <TouchableOpacity style={resourceStyles.resourceCard}>
+            <TouchableOpacity style={resourceStyles.resourceCard}
+            onPress={() => handleResourcePress('conversation-starters')}>
               <View style={[resourceStyles.resourceIcon, { backgroundColor: palette.teal }]}>
               <Lightbulb size={35} color={palette.cream}/>
             </View>
@@ -151,7 +161,8 @@ export const Pause = ({ onResume }: PauseProps) => {
               <Text style={resourceStyles.resourceSubtitle}>Prompts to move forward</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={resourceStyles.resourceCard}>
+            <TouchableOpacity style={resourceStyles.resourceCard}
+            onPress={() => handleResourcePress('conversation-starters')}>
                 <View style={[resourceStyles.resourceIcon, { backgroundColor: palette.lightBrown }]}>
                 <MessageCircleHeart size={33} color={palette.cream}/>
                 </View>
@@ -159,7 +170,8 @@ export const Pause = ({ onResume }: PauseProps) => {
               <Text style={resourceStyles.resourceSubtitle}>Reminders on your goals</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={resourceStyles.resourceCard}>
+            <TouchableOpacity style={resourceStyles.resourceCard}
+            onPress={() => handleResourcePress('empathy-prompts')}>
               <View style={[resourceStyles.resourceIcon, { backgroundColor: palette.mutedBrown }]}>
               <Brain size={35} color={palette.cream}/>
             </View>
@@ -167,7 +179,8 @@ export const Pause = ({ onResume }: PauseProps) => {
               <Text style={resourceStyles.resourceSubtitle}>Understand their perspective</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={resourceStyles.resourceCard}>
+            <TouchableOpacity style={resourceStyles.resourceCard}
+            onPress={() => handleResourcePress('boundary-setting')}>
               <View style={[resourceStyles.resourceIcon, { backgroundColor: palette.sage }]}>
               <ShieldBan size={35} color={palette.cream}/>
             </View>
@@ -201,6 +214,11 @@ export const Pause = ({ onResume }: PauseProps) => {
           <Text style={convoStyles.resumeButtonText}>RESUME CONVERSATION</Text>
         </TouchableOpacity>
       </View>
+      <ResourceModal
+                visible={modalVisible}
+                onClose={() => setModalVisible(false)}
+                resourceType={selectedResource}
+              />
     </ImageBackground>
   );
 };

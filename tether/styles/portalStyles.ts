@@ -426,7 +426,7 @@ const portalStyles = StyleSheet.create({
   },
   portalCallButton: {
   position: 'absolute',
-  bottom: 80,
+  bottom: 110,
   left: SCREEN_WIDTH / 2 - 40,
   zIndex: 100,
 },

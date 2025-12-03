@@ -17,7 +17,6 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../styles/styles';
 import resourceStyles from '../styles/resourceStyles';
-import convoStyles from '../styles/convoStyles';
 import theme from '../styles/theme';
 import { palette } from '../styles/palette';
 import { LogOut, Edit2, X, Check, Lightbulb, MessageCircleHeart, Brain, ShieldBan, Goal, Snail, CircleQuestionMark } from 'lucide-react-native';

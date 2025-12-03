@@ -26,7 +26,7 @@ export const Expectations2 = ({ onBack }: Expectations2Props) => {
         </TouchableOpacity>
         
         <View style={[portalStyles.content, { paddingTop: 80 }]}>
-          <Text style={[portalStyles.title, { fontFamily: 'Avenir' }]}>Expectations 2</Text>
+          <Text style={[portalStyles.title,]}>Expectations 2</Text>
         </View>
       </View>
     </ImageBackground>

@@ -12,6 +12,7 @@ import { palette } from '../styles/palette';
 import { ChevronLeft, Pause, Lightbulb, MessageCircleHeart } from 'lucide-react-native';
 import convoStyles from "../styles/convoStyles"
 import resourceStyles from '../styles/resourceStyles';
+import { ResourceModal, ResourceType } from './components/Resources';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -24,6 +25,9 @@ interface ConversationProps {
 export const Conversation = ({ contact, onBack, onPause }: ConversationProps) => {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [isSpeaking, setIsSpeaking] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedResource, setSelectedResource] = useState<ResourceType>('conversation-starters');
+  
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -38,6 +42,12 @@ export const Conversation = ({ contact, onBack, onPause }: ConversationProps) =>
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
+
+  const handleResourcePress = (resourceType: ResourceType) => {
+      setSelectedResource(resourceType);
+      setModalVisible(true);
+    };
+  
 
   return (
     <ImageBackground 
@@ -75,14 +85,16 @@ export const Conversation = ({ contact, onBack, onPause }: ConversationProps) =>
         </View>
 
         <View style={resourceStyles.resourcesContainer}>
-          <TouchableOpacity style={resourceStyles.resourceCard}>
+          <TouchableOpacity style={resourceStyles.resourceCard}
+          onPress={() => handleResourcePress('conversation-starters')}>
             <View style={[resourceStyles.resourceIcon, { backgroundColor: palette.teal }]}>
               <Lightbulb size={35} color={palette.cream}/>
             </View>
             <Text style={resourceStyles.resourceTitle}>Conversation{'\n'}Starters</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={resourceStyles.resourceCard}>
+          <TouchableOpacity style={resourceStyles.resourceCard}
+          onPress={() => handleResourcePress('conversation-starters')}>
             <View style={[resourceStyles.resourceIcon, { backgroundColor: palette.lightBrown }]}>
               <MessageCircleHeart size={33} color={palette.cream}/>
             </View>
@@ -100,6 +112,11 @@ export const Conversation = ({ contact, onBack, onPause }: ConversationProps) =>
           <Text style={convoStyles.pauseButtonText}>PAUSE & BREATHE</Text>
         </TouchableOpacity>
       </View>
+      <ResourceModal
+                visible={modalVisible}
+                onClose={() => setModalVisible(false)}
+                resourceType={selectedResource}
+              />
     </ImageBackground>
   );
 };

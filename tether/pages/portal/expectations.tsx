@@ -30,14 +30,14 @@ export const Expectations = ({ onBack, onContinue }: ExpectationsProps) => {
         </TouchableOpacity>
         
         <View style={[portalStyles.content, { paddingTop: 80 }]}>
-          <Text style={[portalStyles.title, { fontFamily: 'Avenir' }]}> Setting Expectations</Text>
+          <Text style={[portalStyles.title,]}> Setting Expectations</Text>
         </View>
       </View>
       <TouchableOpacity
           style={portalStyles.continueButton}
           onPress={handleContinue}
         >
-          <Text style={[portalStyles.continueButtonText, { fontFamily: 'Avenir' }]}>Continue</Text>
+          <Text style={[portalStyles.continueButtonText,]}>Continue</Text>
       </TouchableOpacity>
     </ImageBackground>
   );

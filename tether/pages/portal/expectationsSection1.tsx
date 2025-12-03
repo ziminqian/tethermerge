@@ -108,22 +108,22 @@ export const ExpectationsSection1 = ({ onBack, onContinue, onBackToPortal }: Exp
           showsVerticalScrollIndicator={true}
         >
           <View style={[portalStyles.content, { paddingTop: 80 }]}>
-            <Text style={[portalStyles.sectionTitle, { fontFamily: 'Avenir' }]}>What You Can Control</Text>
+            <Text style={[portalStyles.sectionTitle,]}>What You Can Control</Text>
             
             <View style={portalStyles.bulletList}>
-              <Text style={[portalStyles.bulletPoint, { fontFamily: 'Avenir' }]}>• Your tone and body language</Text>
-              <Text style={[portalStyles.bulletPoint, { fontFamily: 'Avenir' }]}>• Your honesty and vulnerability</Text>
-              <Text style={[portalStyles.bulletPoint, { fontFamily: 'Avenir' }]}>• How calmly you communicate</Text>
-              <Text style={[portalStyles.bulletPoint, { fontFamily: 'Avenir' }]}>• How you respond if emotions rise</Text>
-              <Text style={[portalStyles.bulletPoint, { fontFamily: 'Avenir' }]}>• The clarity of what you want to say</Text>
+              <Text style={[portalStyles.bulletPoint,]}>• Your tone and body language</Text>
+              <Text style={[portalStyles.bulletPoint,]}>• Your honesty and vulnerability</Text>
+              <Text style={[portalStyles.bulletPoint,]}>• How calmly you communicate</Text>
+              <Text style={[portalStyles.bulletPoint,]}>• How you respond if emotions rise</Text>
+              <Text style={[portalStyles.bulletPoint,]}>• The clarity of what you want to say</Text>
             </View>
 
-            <Text style={[portalStyles.prompt, { fontFamily: 'Avenir' }]}>What do you want to make sure you stay in control of during this conversation?</Text>
+            <Text style={[portalStyles.prompt,]}>What do you want to make sure you stay in control of during this conversation?</Text>
             
             {savedText && !isEditing ? (
               <>
                 <TextInput
-                  style={[portalStyles.savedTextBox, { fontFamily: 'Avenir' }]}
+                  style={[portalStyles.savedTextBox,]}
                   value={savedText}
                   editable={false}
                   multiline
@@ -131,13 +131,13 @@ export const ExpectationsSection1 = ({ onBack, onContinue, onBackToPortal }: Exp
                   textAlignVertical="top"
                 />
                 <TouchableOpacity onPress={handleEdit} style={portalStyles.editButton}>
-                  <Text style={[portalStyles.editButtonText, { fontFamily: 'Avenir' }]}>Edit</Text>
+                  <Text style={[portalStyles.editButtonText,]}>Edit</Text>
                 </TouchableOpacity>
               </>
             ) : (
               <>
                 <TextInput
-                  style={[portalStyles.textBox, { fontFamily: 'Avenir' }]}
+                  style={[portalStyles.textBox,]}
                   value={textValue}
                   onChangeText={setTextValue}
                   placeholder="Type your thoughts here..."
@@ -149,11 +149,11 @@ export const ExpectationsSection1 = ({ onBack, onContinue, onBackToPortal }: Exp
                 <View style={portalStyles.buttonRow}>
                   {isEditing && (
                     <TouchableOpacity onPress={handleCancelEdit} style={portalStyles.cancelButton}>
-                      <Text style={[portalStyles.cancelButtonText, { fontFamily: 'Avenir' }]}>Cancel</Text>
+                      <Text style={[portalStyles.cancelButtonText,]}>Cancel</Text>
                     </TouchableOpacity>
                   )}
                   <TouchableOpacity onPress={submitResponse} style={[portalStyles.savebutton, isEditing && portalStyles.saveButtonEdit]}>
-                    <Text style={[portalStyles.savebuttontext, { fontFamily: 'Avenir' }]}>Save</Text>
+                    <Text style={[portalStyles.savebuttontext,]}>Save</Text>
                   </TouchableOpacity>
                 </View>
               </>
@@ -166,11 +166,11 @@ export const ExpectationsSection1 = ({ onBack, onContinue, onBackToPortal }: Exp
         style={portalStyles.continueButton}
         onPress={onContinue}
       >
-        <Text style={[portalStyles.continueButtonText, { fontFamily: 'Avenir' }]}>Continue</Text>
+        <Text style={[portalStyles.continueButtonText,]}>Continue</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={onBackToPortal} style={portalStyles.backToPortalButton}>
-        <Text style={[portalStyles.backToPortalText, { fontFamily: 'Avenir' }]}>Back to Portal</Text>
+        <Text style={[portalStyles.backToPortalText,]}>Back to Portal</Text>
       </TouchableOpacity>
     </ImageBackground>
   );
