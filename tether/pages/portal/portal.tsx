@@ -47,10 +47,11 @@ interface PortalProps {
   onNavigateToReflect: () => void;
   onNavigateToAcceptInvite: () => void;
   onNavigateToLockedStep: () => void;
+  onNavigateToAIAssurance: () => void;
   onStartCall?: () => void;
 }
 
-export const Portal = ({ contact, isNewPortalRequest = false, expectationsCompleted = false, onBack, onNavigateToExpectations, onNavigateToReflect, onNavigateToAcceptInvite, onNavigateToLockedStep, onStartCall }: PortalProps) => {
+export const Portal = ({ contact, isNewPortalRequest = false, expectationsCompleted = false, onBack, onNavigateToExpectations, onNavigateToReflect, onNavigateToAcceptInvite, onNavigateToLockedStep, onNavigateToAIAssurance, onStartCall }: PortalProps) => {
   const [hasCompletedExpectations, setHasCompletedExpectations] = useState(expectationsCompleted);
 
   useEffect(() => {
@@ -167,7 +168,7 @@ export const Portal = ({ contact, isNewPortalRequest = false, expectationsComple
             if (!hasCompletedExpectations) {
               onNavigateToLockedStep();
             } else {
-              onNavigateToReflect();
+              onNavigateToAIAssurance();
             }
           }}
           style={portalStyles.reflectTouchable}

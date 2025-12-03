@@ -16,6 +16,7 @@ import { ExpectationsSection5 } from './pages/portal/expectationsSection5';
 import { ExpectationsComplete } from './pages/portal/expectationsComplete';
 import { Reflect } from './pages/portal/reflect';
 import { AcceptInvite } from './pages/portal/acceptInvite';
+import { AIPage as AIAssurance } from './pages/portal/ai_assurance';
 import { LockedStep } from './pages/portal/lockedStep';
 import Welcome from './pages/onboarding/welcome';
 import Onboard1 from './pages/onboarding/onboard1';
@@ -46,6 +47,7 @@ function AppContent() {
   const [showExpectationsComplete, setShowExpectationsComplete] = useState(false);
   const [showReflect, setShowReflect] = useState(false);
   const [showAcceptInvite, setShowAcceptInvite] = useState(false);
+  const [showAIAssurance, setShowAIAssurance] = useState(false);
   const [showLockedStep, setShowLockedStep] = useState(false);
   const [selectedContact, setSelectedContact] = useState<{ id: string; name: string } | null>(null);
   const [showConversation, setShowConversation] = useState(false);
@@ -138,6 +140,11 @@ function AppContent() {
     setShowPortal(false);
   };
 
+  const handleNavigateToAIAssurance = () => {
+    setShowAIAssurance(true);
+    setShowPortal(false);
+  };
+
   const handleNavigateToAcceptInvite = () => {
     setShowAcceptInvite(true);
     setShowPortal(false);
@@ -159,6 +166,7 @@ function AppContent() {
     setShowExpectationsComplete(false);
     setShowReflect(false);
     setShowAcceptInvite(false);
+    setShowAIAssurance(false);
     setShowLockedStep(false);
     setShowCalling(false);
     setShowConversation(false);
@@ -260,6 +268,7 @@ function AppContent() {
       setShowExpectationsComplete(false);
       setShowReflect(false);
       setShowAcceptInvite(false);
+      setShowAIAssurance(false);
       setShowLockedStep(false);
       setShowConversation(false);
       setShowPause(false);
@@ -272,7 +281,7 @@ function AppContent() {
 
   const showOverlay = showExpectationsIntro || showAIPage || showExpectationsSection1 || showExpectationsSection2 || 
     showExpectationsSection3 || showExpectationsSection4 || showExpectationsSection5 || 
-    showExpectationsComplete || showReflect || showAcceptInvite || showLockedStep;
+    showExpectationsComplete || showReflect || showAcceptInvite || showAIAssurance || showLockedStep;
   
   return (
     <View style={styles.container}>
@@ -299,6 +308,7 @@ function AppContent() {
               onNavigateToReflect={handleNavigateToReflect}
               onNavigateToAcceptInvite={handleNavigateToAcceptInvite}
               onNavigateToLockedStep={handleNavigateToLockedStep}
+              onNavigateToAIAssurance={handleNavigateToAIAssurance}
               onStartCall={handleStartCall}
             />
             <ConfirmCallModal
@@ -395,6 +405,13 @@ function AppContent() {
         {/* Reflect & Accept Invite */}
         {activeTab === 'friends' && showReflect && (
           <Reflect onBack={handleBackToPortal} />
+        )}
+        {activeTab === 'friends' && showAIAssurance && (
+          <AIAssurance 
+            onBack={handleBackToPortal} 
+            onContinue={handleBackToPortal}
+            onBackToPortal={handleBackToPortal}
+          />
         )}
         {activeTab === 'friends' && showAcceptInvite && selectedContact && (
           <AcceptInvite 
