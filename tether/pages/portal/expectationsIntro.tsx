@@ -31,8 +31,8 @@ export const ExpectationsIntro = ({ onBack, onContinue, onBackToPortal }: Expect
           <ChevronLeft size={40} color={palette.slate} />
         </TouchableOpacity>
         
-        <View style={portalStyles.content}>
-          <Text style={portalStyles.title}>Setting Expectations</Text>
+        <View style={[portalStyles.content, { paddingTop: 80 }]}>
+          <Text style={[portalStyles.title, { fontFamily: 'Avenir' }]}>Setting Expectations</Text>
         </View>
       </View>
       
@@ -40,11 +40,11 @@ export const ExpectationsIntro = ({ onBack, onContinue, onBackToPortal }: Expect
         style={portalStyles.continueButton}
         onPress={handleContinue}
       >
-        <Text style={portalStyles.continueButtonText}>Continue</Text>
+        <Text style={[portalStyles.continueButtonText, { fontFamily: 'Avenir' }]}>Continue</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={onBackToPortal} style={portalStyles.backToPortalButton}>
-        <Text style={portalStyles.backToPortalText}>Back to Portal</Text>
+        <Text style={[portalStyles.backToPortalText, { fontFamily: 'Avenir' }]}>Back to Portal</Text>
       </TouchableOpacity>
     </ImageBackground>
   );

@@ -25,8 +25,8 @@ export const Expectations2 = ({ onBack }: Expectations2Props) => {
           <ChevronLeft size={40} color={palette.slate} />
         </TouchableOpacity>
         
-        <View style={portalStyles.content}>
-          <Text style={portalStyles.title}>Expectations 2</Text>
+        <View style={[portalStyles.content, { paddingTop: 80 }]}>
+          <Text style={[portalStyles.title, { fontFamily: 'Avenir' }]}>Expectations 2</Text>
         </View>
       </View>
     </ImageBackground>

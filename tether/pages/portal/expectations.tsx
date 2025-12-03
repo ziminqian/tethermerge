@@ -29,15 +29,15 @@ export const Expectations = ({ onBack, onContinue }: ExpectationsProps) => {
           <ChevronLeft size={40} color={palette.slate} />
         </TouchableOpacity>
         
-        <View style={portalStyles.content}>
-          <Text style={portalStyles.title}> Setting Expectations</Text>
+        <View style={[portalStyles.content, { paddingTop: 80 }]}>
+          <Text style={[portalStyles.title, { fontFamily: 'Avenir' }]}> Setting Expectations</Text>
         </View>
       </View>
       <TouchableOpacity
           style={portalStyles.continueButton}
           onPress={handleContinue}
         >
-          <Text style={portalStyles.continueButtonText}>Continue</Text>
+          <Text style={[portalStyles.continueButtonText, { fontFamily: 'Avenir' }]}>Continue</Text>
       </TouchableOpacity>
     </ImageBackground>
   );
