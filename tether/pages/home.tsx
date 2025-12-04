@@ -14,7 +14,7 @@ interface HomeProps {
 export const Home = ({ onBack, onNext, onSearch }: HomeProps) => {
   
   const activePortals = [
-    { id: '1', name: 'Fayez' },
+    { id: '1', name: 'Fayez', color: palette.teal },
   ];;
 
 
@@ -22,7 +22,7 @@ export const Home = ({ onBack, onNext, onSearch }: HomeProps) => {
   const [showRequestPortals, setShowRequestPortals] = useState(true);
 
   const requestPortals = [
-    { id: '1', name: 'Alan' },
+    { id: '1', name: 'Alan', color: palette.beige },
   ];
   const [input, setInput] = useState<string>("");
 
@@ -83,7 +83,21 @@ export const Home = ({ onBack, onNext, onSearch }: HomeProps) => {
                     onPress={() => onNext(contact)}
                   >
                     <View style={styles.avatar}>
-                      <Image source={require('../assets/frogs/frog.png')}/>
+                      <Image 
+                        source={require('../assets/frogs/cute_frog_body.png')}
+                        style={[styles.profileAvatarImage, {height: 37}, {transform: [{ translateY: 6}, {translateX: -5}]}]}
+                        resizeMode="contain"
+                        tintColor={contact.color}
+                      />
+                      <Image 
+                        source={require('../assets/frogs/cute_frog_outline.png')}
+                        style={[styles.profileAvatarImage, { position: 'absolute', height: 46, }, {transform: [{ translateY: 6}, {translateX: -5}]}]}
+                        resizeMode="contain"
+                      />
+                      <Image 
+                        source={require('../assets/frogs/cute_frog_cheeks.png')}
+                        style={[styles.profileAvatarImage, { position: 'absolute', height: 44,}, {transform: [{ translateY: 4}, {translateX: -3}]}]}
+                      />
                     </View>
                     <Text style={styles.text}>{contact.name}</Text>
                   </TouchableOpacity>
@@ -110,7 +124,21 @@ export const Home = ({ onBack, onNext, onSearch }: HomeProps) => {
                     onPress={() => onNext(invite)}
                   >
                     <View style={styles.avatar}>
-                      <Image source = {require('../assets/frogs/frog.png')}/>
+                      <Image 
+                        source={require('../assets/frogs/cute_frog_body.png')}
+                        style={[styles.profileAvatarImage, {height: 37}, {transform: [{ translateY: 6}, {translateX: -5}]}]}
+                        resizeMode="contain"
+                        tintColor={invite.color}
+                      />
+                      <Image 
+                        source={require('../assets/frogs/cute_frog_outline.png')}
+                        style={[styles.profileAvatarImage, { position: 'absolute', height: 46, }, {transform: [{ translateY: 6}, {translateX: -5}]}]}
+                        resizeMode="contain"
+                      />
+                      <Image 
+                        source={require('../assets/frogs/cute_frog_cheeks.png')}
+                        style={[styles.profileAvatarImage, { position: 'absolute', height: 44,}, {transform: [{ translateY: 4}, {translateX: -3}]}]}
+                      />
                     </View>
                     <Text style={styles.text}>{invite.name}</Text>
                   </TouchableOpacity>

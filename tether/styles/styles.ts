@@ -302,7 +302,7 @@ const globalStyles = StyleSheet.create({
     marginBottom: 8,
   },
   text: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '400',
     fontFamily: chosenFont,
     color: palette.mediumBrown,
@@ -430,7 +430,8 @@ const globalStyles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
     backgroundColor: palette.cream,
-    borderColor: palette.cream,
+    borderColor: palette.darkBrown,
+    borderWidth: 2,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 16,
