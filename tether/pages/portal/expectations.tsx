@@ -4,6 +4,7 @@ import {
   Text, 
   ImageBackground, 
   TouchableOpacity,
+  Image
 } from 'react-native';
 import { palette } from '../../styles/palette';
 import { ChevronLeft } from 'lucide-react-native';
@@ -29,7 +30,7 @@ export const Expectations = ({ onBack, onContinue }: ExpectationsProps) => {
           <ChevronLeft size={40} color={palette.slate} />
         </TouchableOpacity>
         
-        <View style={[portalStyles.content, { paddingTop: 80 }]}>
+        <View style={[portalStyles.content]}>
           <Text style={[portalStyles.title,]}> Setting Expectations</Text>
         </View>
       </View>

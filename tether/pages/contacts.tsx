@@ -16,6 +16,7 @@ export const Contacts = ({ onNext, onBack, onSearch }: ContactsProps) => {
     { id: '1', name: 'Zafar', color: palette.beige},
     { id: '2', name: 'Yuina', color: palette.sage},
     { id: '3', name: 'Zimin', color: palette.slate},
+    { id: '4', name: 'Fayez', color: palette.teal},
   ];
 
   const invites = [
@@ -28,7 +29,7 @@ export const Contacts = ({ onNext, onBack, onSearch }: ContactsProps) => {
   const [showNewInvites, setShowNewInvites] = useState(true);
   const [filteredContacts, setFilteredContacts] = useState(contacts);
   const [filteredInvites, setFilteredInvites] = useState(invites);
-    const [blinkStates, setBlinkStates] = useState<boolean[]>(
+  const [blinkStates, setBlinkStates] = useState<boolean[]>(
       [...contacts, ...invites].map(() => false)
     );
 

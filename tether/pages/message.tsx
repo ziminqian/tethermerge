@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import styles from '../styles/styles';
 import { palette } from '../styles/palette';
-import { ChevronLeft, Send, X, HeartHandshake } from 'lucide-react-native';
+import { ChevronLeft, Send, X, HeartHandshake, Sparkles } from 'lucide-react-native';
 
 interface MessageProps {
   contact: { id: string; name: string };
@@ -54,7 +54,7 @@ export const Message = ({ contact, onNext, onBack }: MessageProps) => {
       setTimeout(() => {
         const aiResponse: ChatMessage = {
           id: (Date.now() + 1).toString(),
-          text: `Sure, here's one version:\n\nInvite Message Window\n\n"Hey ${contact.name}, I've been thinking about what happened yesterday. I don't want that fight to sit between us or mess with our friendship. Can we talk it through when you're free?"`,
+          text: `Sure, here's one version:\n"Hey ${contact.name}, I've been thinking about what happened yesterday. I don't want that fight to sit between us or mess with our friendship. Can we talk it through when you're free?"`,
           isAI: true
         };
         setMessages(prev => [...prev, aiResponse]);
@@ -117,7 +117,7 @@ export const Message = ({ contact, onNext, onBack }: MessageProps) => {
                 >
                   {message.isAI && (
                     <View style={{flexDirection: "column"}}>
-                      <View style={{flexDirection: "row", gap: 5}}><Image source={require("../assets/other/ai.png")} style={{height: 30, width: 30}}/>
+                      <View style={{flexDirection: "row", gap: 5}}><Sparkles size={28} color={palette.slate}/>
                       <Text style={[styles.headingtext, {fontSize: 24}]}>Tether AI</Text></View>
                     <View style={styles.divider} />
                     </View>

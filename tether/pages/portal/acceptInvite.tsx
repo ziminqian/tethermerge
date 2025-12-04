@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { 
   View, 
   Text, 
@@ -10,16 +10,32 @@ import { palette } from '../../styles/palette';
 import { ChevronLeft } from 'lucide-react-native';
 import portalStyles from '../../styles/portalStyles';
 
+import { updatePortalStep } from '../../utils/portalProgress';
+
 const spiral = require('../../assets/portal/spiral_res.png');
 
 interface AcceptInviteProps {
-  contact: { id: string; name: string };
+  contact: { id: string; name: string; color: any };
   isNewPortalRequest?: boolean;
   onBack: () => void;
   onNavigateToExpectations: () => void;
 }
 
 export const AcceptInvite = ({ contact, isNewPortalRequest = false, onBack, onNavigateToExpectations }: AcceptInviteProps) => {
+
+  useEffect(() => {
+    // Mark INVITE as accepted when this screen is shown (not expectations!)
+    const markComplete = async () => {
+      await updatePortalStep(contact.id, 'inviteAccepted', true);
+    };
+    markComplete();
+  }, [contact.id]);
+
+  const handleContinue = async () => {
+    // Navigate to expectations
+    onNavigateToExpectations();
+  };
+  
   return (
     <ImageBackground 
       source={require("../../assets/backgrounds/light_ombre.png")}
@@ -34,14 +50,14 @@ export const AcceptInvite = ({ contact, isNewPortalRequest = false, onBack, onNa
         <View style={[portalStyles.content, { paddingTop: 80, justifyContent: 'center', flex: 1, alignItems: 'center' }]}>
           <Text style={[portalStyles.title, { textAlign: 'center' }]}>
             {isNewPortalRequest
-              ? `Awaiting ${contact.name}'s acceptance of invitation`
-              : `${contact.name} accepted invite! Continue to setting expectations`
+              ? `Awaiting ${contact.name}'s${"\n"} acceptance of invitation`
+              : `${contact.name} accepted invite!${"\n"}Continue to setting expectations`
             }
           </Text>
           {!isNewPortalRequest && (
             <TouchableOpacity
               style={[portalStyles.continueButton, { marginTop: 8, alignSelf: 'center', position: 'relative', bottom: 'auto', right: 'auto', width: 'auto', minWidth: 200 }]}
-              onPress={onNavigateToExpectations}
+              onPress={handleContinue}
             >
               <Text style={[portalStyles.continueButtonText,]}>
                 Continue
@@ -51,15 +67,6 @@ export const AcceptInvite = ({ contact, isNewPortalRequest = false, onBack, onNa
         </View>
         
         <View style={{ alignItems: 'center', marginBottom: 40 }}>
-          <TouchableOpacity onPress={onBack} style={{ alignItems: 'center' }}>
-            <Image 
-              source={spiral} 
-              style={{ width: 100, height: 100, resizeMode: 'contain' }}
-            />
-            <Text style={[portalStyles.backToPortalText, { marginTop: 8 }]}>
-              Back to Portal
-            </Text>
-          </TouchableOpacity>
         </View>
       </View>
     </ImageBackground>

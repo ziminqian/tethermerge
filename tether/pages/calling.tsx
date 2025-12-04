@@ -12,9 +12,10 @@ import {
 import { palette } from '../styles/palette';
 import { ChevronLeft, Phone, PhoneOff } from 'lucide-react-native';
 import convoStyles from '../styles/convoStyles';
+import styles from "../styles/styles"
 
 interface CallingProps {
-  contact: { id: string; name: string };
+  contact: { id: string; name: string, color: any };
   onBack: () => void;
   onCallConnected: () => void;
 }
@@ -187,7 +188,21 @@ export const Calling = ({ contact, onBack, onCallConnected }: CallingProps) => {
               { transform: [{ scale: pulseAnim }] }
             ]}
           >
-            <Image source={require('../assets/frogs/frog.png')} />
+          <Image 
+          source={require('../assets/frogs/cute_frog_body.png')}
+          style={[styles.profileAvatarImage, {height: 57}, {transform: [{ translateY: 6}, {translateX: -5}]}]}
+          resizeMode="contain"
+          tintColor={contact.color}
+        />
+        <Image 
+          source={require('../assets/frogs/cute_frog_outline.png')}
+          style={[styles.profileAvatarImage, { position: 'absolute', height: 96, }, {transform: [{ translateY: 6}, {translateX: -5}]}]}
+          resizeMode="contain"
+        />
+        <Image 
+          source={require('../assets/frogs/cute_frog_cheeks.png')}
+          style={[styles.profileAvatarImage, { position: 'absolute', height: 64,}, {transform: [{ translateY: 4}, {translateX: -2}]}]}
+        />
           </Animated.View>
         </View>
 

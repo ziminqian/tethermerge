@@ -20,7 +20,17 @@
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
     },
-    "web": {
+    "web": {},
+    "extra": {
+      "eas": {
+        "projectId": "41a6fefe-2f5b-4d3e-8fb0-ab41b6fa0ad2"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/41a6fefe-2f5b-4d3e-8fb0-ab41b6fa0ad2"
     }
   }
 }

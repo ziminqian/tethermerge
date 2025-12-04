@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   View, 
   Text, 
@@ -6,10 +6,11 @@ import {
   TouchableOpacity,
   StyleSheet,
   Dimensions,
-  Image
+  Image,
+  Animated
 } from 'react-native';
 import { palette } from '../styles/palette';
-import { ChevronLeft, Pause, Lightbulb, MessageCircleHeart } from 'lucide-react-native';
+import { ChevronLeft, Pause, Lightbulb, MessageCircleHeart, X } from 'lucide-react-native';
 import convoStyles from "../styles/convoStyles"
 import resourceStyles from '../styles/resourceStyles';
 import { ResourceModal, ResourceType } from './components/Resources';
@@ -17,17 +18,29 @@ import { ResourceModal, ResourceType } from './components/Resources';
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 interface ConversationProps {
-  contact: { id: string; name: string };
+  contact: { id: string; name: string, color: any };
+  userColor?: any;
   onBack: () => void;
   onPause: (contact: { id: string; name: string }) => void;
+  onEndConversation: () => void;
 }
 
-export const Conversation = ({ contact, onBack, onPause }: ConversationProps) => {
+export const Conversation = ({ 
+  contact, 
+  userColor = palette.sage,
+  onBack, 
+  onPause, 
+  onEndConversation 
+}: ConversationProps) => {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [isSpeaking, setIsSpeaking] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedResource, setSelectedResource] = useState<ResourceType>('conversation-starters');
+  const [blinkStates, setBlinkStates] = useState<[boolean, boolean]>([false, false]);
   
+  // Animation values
+  const pulseAnim = useRef(new Animated.Value(1)).current;
+  const opacityAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -37,6 +50,65 @@ export const Conversation = ({ contact, onBack, onPause }: ConversationProps) =>
     return () => clearInterval(timer);
   }, []);
 
+  // Pulsing animation for the status dot
+  useEffect(() => {
+    const pulseAnimation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulseAnim, {
+          toValue: 1.5,
+          duration: 800,
+          useNativeDriver: true,
+        }),
+        Animated.timing(pulseAnim, {
+          toValue: 1,
+          duration: 800,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+
+    const opacityAnimation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(opacityAnim, {
+          toValue: 0.5,
+          duration: 800,
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacityAnim, {
+          toValue: 1,
+          duration: 800,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+
+    pulseAnimation.start();
+    opacityAnimation.start();
+
+    return () => {
+      pulseAnimation.stop();
+      opacityAnimation.stop();
+    };
+  }, []);
+
+  // Blinking animation for frogs
+  useEffect(() => {
+    const blinkInterval = setInterval(() => {
+      const newBlinkStates: [boolean, boolean] = [
+        Math.random() > 0.5, // 30% chance for contact frog to blink
+        Math.random() > 0.7  // 30% chance for user frog to blink
+      ];
+      setBlinkStates(newBlinkStates);
+      
+      // Reset blink after 150ms
+      setTimeout(() => {
+        setBlinkStates([false, false]);
+      }, 150);
+    }, 3000); // Check every 3 seconds
+
+    return () => clearInterval(blinkInterval);
+  }, []);
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -44,10 +116,56 @@ export const Conversation = ({ contact, onBack, onPause }: ConversationProps) =>
   };
 
   const handleResourcePress = (resourceType: ResourceType) => {
-      setSelectedResource(resourceType);
-      setModalVisible(true);
-    };
-  
+    setSelectedResource(resourceType);
+    setModalVisible(true);
+  };
+
+  const renderFrog = (color: any, isBlinking: boolean, isFlipped: boolean = false) => {
+    const transform = isFlipped 
+      ? [{ translateY: 6 }, { translateX: 9 }, { scaleX: -1 }]
+      : [{ translateY: 6 }, { translateX: -5 }];
+    
+    const outlineTransform = isFlipped
+      ? [{ translateY: 6 }, { translateX: 9 }, { scaleX: -1 }]
+      : [{ translateY: 6 }, { translateX: -5 }];
+    
+    const cheeksTransform = isFlipped
+      ? [{ translateY: 4 }, { translateX: 2 }, { scaleX: -1 }]
+      : [{ translateY: 4 }, { translateX: 0 }];
+
+    return (
+      <View style={convoStyles.avatar}>
+        <Image 
+          source={require('../assets/frogs/cute_frog_body.png')}
+          style={[
+            { height: 90, width: 74 },
+            { transform }
+          ]}
+          resizeMode="contain"
+          tintColor={color}
+        />
+        <Image 
+          source={isBlinking 
+            ? require('../assets/frogs/cute_frog_blinking.png')
+            : require('../assets/frogs/cute_frog_outline.png')
+          }
+          style={[
+            { position: 'absolute', height: 100, width: 90 },
+            { transform: outlineTransform }
+          ]}
+          resizeMode="contain"
+        />
+        <Image 
+          source={require('../assets/frogs/cute_frog_cheeks.png')}
+          style={[
+            { position: 'absolute', height: 100, width: 90 },
+            { transform: cheeksTransform }
+          ]}
+          resizeMode="contain"
+        />
+      </View>
+    );
+  };
 
   return (
     <ImageBackground 
@@ -64,22 +182,26 @@ export const Conversation = ({ contact, onBack, onPause }: ConversationProps) =>
 
         <View style={convoStyles.avatarsContainer}>
           <View style={convoStyles.avatarSection}>
-            <View style={convoStyles.avatar}>
-               <Image source = {require('../assets/frogs/frog.png')}/>
-            </View>
+            {renderFrog(contact.color || palette.sage, blinkStates[0], false)}
             <Text style={convoStyles.nameText}>{contact.name}</Text>
             <View style={convoStyles.statusIndicator}>
-              <View style={convoStyles.statusDot} />
-              <Text style={convoStyles.statusLabel}>Speaking</Text>
+              <Animated.View 
+                style={[
+                  convoStyles.statusDot,
+                  { 
+                    transform: [{ scale: pulseAnim }],
+                    opacity: opacityAnim
+                  }
+                ]} 
+              />
+              <Text style={[convoStyles.statusLabel, {fontSize: 17}]}>Speaking</Text>
             </View>
           </View>
 
           <View style={convoStyles.dividerLine} />
 
           <View style={convoStyles.avatarSection}>
-            <View style={[convoStyles.avatar, {width: 100, height: 100}]}>
-               <Image source = {require('../assets/frogs/frog.png')}/>
-            </View>
+            {renderFrog(userColor, blinkStates[1], false)}
             <Text style={convoStyles.nameText}>You</Text>
           </View>
         </View>
@@ -111,16 +233,24 @@ export const Conversation = ({ contact, onBack, onPause }: ConversationProps) =>
           <Pause size={24} color={palette.cream} fill={palette.cream} />
           <Text style={convoStyles.pauseButtonText}>PAUSE & BREATHE</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity 
+          style={[convoStyles.pauseButton, { backgroundColor: palette.teal, marginTop: 16 }]}
+          onPress={onEndConversation}
+        >
+          <X size={24} color={palette.cream} fill={palette.cream} />
+          <Text style={convoStyles.pauseButtonText}>END CONVERSATION</Text>
+        </TouchableOpacity>
+    
       </View>
       <ResourceModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
         resourceType={selectedResource}
         contactName={contact.name}
-        userExpectations={['Listen without interrupting', 'Stay calm and respectful']} //change
+        userExpectations={['Listen without interrupting', 'Stay calm and respectful']}
         contactExpectations={['Be honest about feelings', 'Take breaks when needed']}
       />
     </ImageBackground>
   );
 };
-

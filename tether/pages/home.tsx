@@ -4,6 +4,7 @@ import styles from '../styles/styles';
 import { ChevronDown, ChevronRight, Search, Plus, Clock } from 'lucide-react-native';
 import theme from '../styles/theme';
 import { palette } from '../styles/palette';
+import { usePortal } from '../context/PortalContext';
 
 interface HomeProps {
   onBack: () => void;
@@ -12,12 +13,10 @@ interface HomeProps {
 }
 
 export const Home = ({ onBack, onNext, onSearch }: HomeProps) => {
-  const activePortals = [
-    { id: '1', name: 'Fayez', color: palette.teal, lastActive: '2 hours ago' },
-  ];
+  const { activePortals } = usePortal();
 
   const requestPortals = [
-    { id: '1', name: 'Alan', color: palette.beige, requestTime: 'Just now' },
+    { id: '4', name: 'Alan', color: palette.darkBrown, requestTime: 'Just now' },
   ];
 
   const [showActivePortals, setShowActivePortals] = useState(true);
@@ -38,6 +37,20 @@ export const Home = ({ onBack, onNext, onSearch }: HomeProps) => {
   const bounceAnims = useRef(
     [...activePortals, ...requestPortals].map(() => new Animated.Value(0))
   ).current;
+
+  // Update filtered portals when activePortals changes
+  useEffect(() => {
+    if (input.trim() === '') {
+      setFilteredActivePortals(activePortals);
+    } else {
+      const searchLower = input.toLowerCase();
+      setFilteredActivePortals(
+        activePortals.filter(portal => 
+          portal.name.toLowerCase().includes(searchLower)
+        )
+      );
+    }
+  }, [activePortals, input]);
 
   useEffect(() => {
     // Rotate portal slowly
@@ -101,14 +114,13 @@ export const Home = ({ onBack, onNext, onSearch }: HomeProps) => {
 
     // Blinking animation for frogs
     const blinkInterval = setInterval(() => {
-      const newBlinkStates = blinkStates.map(() => Math.random() > 0.7); // 30% chance to blink
+      const newBlinkStates = blinkStates.map(() => Math.random() > 0.7);
       setBlinkStates(newBlinkStates);
       
-      // Reset blink after 150ms
       setTimeout(() => {
         setBlinkStates(blinkStates.map(() => false));
       }, 150);
-    }, 3000); // Check every 3 seconds
+    }, 3000);
 
     return () => clearInterval(blinkInterval);
   }, []);
@@ -131,7 +143,7 @@ export const Home = ({ onBack, onNext, onSearch }: HomeProps) => {
         )
       );
     }
-  }, [input]);
+  }, [input, activePortals]);
 
   const handleSearchSubmit = () => {
     if (input.trim()) {
@@ -154,7 +166,7 @@ export const Home = ({ onBack, onNext, onSearch }: HomeProps) => {
   });
 
   const renderFrog = (contact: any, index: number, isBlinking: boolean) => {
-    const bounceAnim = bounceAnims[index];
+    const bounceAnim = bounceAnims[index] || new Animated.Value(0);
 
     return (
       <Animated.View 
@@ -330,30 +342,6 @@ export const Home = ({ onBack, onNext, onSearch }: HomeProps) => {
 
 
          <View style={styles.bottomSection}>
-          {/* 
-            <Animated.View style={{
-              position: 'absolute',
-              top: 20,
-              width: 220,
-              height: 220,
-              borderRadius: 110,
-              backgroundColor: palette.slate,
-              opacity: glowOpacity,
-              transform: [{ scale: pulseAnim }]
-            }} />
-            <Animated.Image 
-              source={require("../assets/other/portal.png")} 
-              style={[
-                styles.portal,
-                {
-                  transform: [
-                    { rotate: spin },
-                    { scale: pulseAnim }
-                  ]
-                }
-              ]}
-              resizeMode="contain"
-            />*/}
             <TouchableOpacity 
               style={styles.addPortalButton}
               onPress={handleAddPortal}

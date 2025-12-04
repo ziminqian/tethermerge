@@ -25,7 +25,7 @@ export const LockedStep = ({ onBack }: LockedStepProps) => {
           <ChevronLeft size={40} color={palette.slate} />
         </TouchableOpacity>
         
-        <View style={[portalStyles.content, { paddingTop: 80 }]}>
+        <View style={[portalStyles.content, { paddingTop: 0 }]}>
           <Text style={[portalStyles.title,]}>
             LOCKED
           </Text>
