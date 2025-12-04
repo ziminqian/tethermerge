@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { 
   View, 
   Text, 
@@ -8,13 +8,24 @@ import {
 import { palette } from '../../styles/palette';
 import { ChevronLeft } from 'lucide-react-native';
 import portalStyles from '../../styles/portalStyles';
+import { updatePortalStep } from '../../utils/portalProgress';
 
 interface ExpectationsCompleteProps {
+  contact: { id: string; name: string; color: any };
   onBack: () => void;
   onBackToPortal: () => void;
 }
 
-export const ExpectationsComplete = ({ onBack, onBackToPortal }: ExpectationsCompleteProps) => {
+export const ExpectationsComplete = ({ contact, onBack, onBackToPortal }: ExpectationsCompleteProps) => {
+  
+  useEffect(() => {
+    // Mark expectations as completed when this screen is shown
+    const markComplete = async () => {
+      await updatePortalStep(contact.id, 'expectationsCompleted', true);
+    };
+    markComplete();
+  }, [contact.id]);
+
   return (
     <ImageBackground 
       source={require("../../assets/backgrounds/background_vibrant.png")}

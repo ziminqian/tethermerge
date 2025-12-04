@@ -86,7 +86,8 @@ const convoStyles = StyleSheet.create({
   },
   dividerLine: {
     width: 2,
-    height: 60,
+    height: 50,
+    padding: 0,
     backgroundColor: palette.cream + '40',
   },
   pauseHintText: {
@@ -213,7 +214,6 @@ callingAvatar: {
   width: 150,
   height: 150,
   borderRadius: 75,
-  backgroundColor: palette.cream,
   alignItems: 'center',
   justifyContent: 'center',
   shadowColor: palette.shadow,

@@ -11,12 +11,16 @@ import {
   StyleSheet,
   Animated,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../../styles/styles';
 import { palette } from '../../styles/palette';
-import { ChevronDown, ChevronLeft, ChevronUp, Phone, X } from 'lucide-react-native';
+import { ChevronDown, ChevronLeft, ChevronUp, Phone, X, Check } from 'lucide-react-native';
 import portalStyles from '../../styles/portalStyles';
 import { createClient } from '@supabase/supabase-js';
 import { Reflect } from './reflect';
+
+// Import the review modal
+import { ExpectationsReviewModal } from './ExpectationsReviewModal';
 
 const supabaseUrl = 'https://iyjdjalbdcstlskoildv.supabase.co';
 const supabaseKey =
@@ -24,11 +28,9 @@ const supabaseKey =
 const db = createClient(supabaseUrl, supabaseKey);
 
 const strokemap = require('../../assets/portal/strokemap.png');
-
 const together = require('../../assets/portal/together.png');
 const expectationsnum = require('../../assets/portal/expectation#image.png');
 const reflect = require('../../assets/portal/reflect_icon.png');
-
 const one = require('../../assets/portal/one.png');
 const spiral = require('../../assets/portal/spiral_res.png');
 const invite = require('../../assets/portal/invite.png');
@@ -40,7 +42,6 @@ const three = require('../../assets/portal/3.png');
 const four = require('../../assets/portal/four.png');
 const reflectwhite = require('../../assets/portal/reflectwhite.png');
 const down = require('../../assets/portal/down.png');
-
 const maptwo = require('../../assets/portal/maptwo.png');
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -60,6 +61,13 @@ interface PortalProps {
   onComplete?: () => void;
 }
 
+interface PortalProgress {
+  inviteAccepted: boolean;
+  expectationsCompleted: boolean;
+  assurancesCompleted: boolean;
+  reflectCompleted: boolean;
+}
+
 export const Portal = ({
   contact,
   userColor,
@@ -74,24 +82,59 @@ export const Portal = ({
   onStartCall,
   onComplete,
 }: PortalProps) => {
-  const [hasCompletedExpectations, setHasCompletedExpectations] =
-    useState(expectationsCompleted);
+  const [progress, setProgress] = useState<PortalProgress>({
+    inviteAccepted: false,
+    expectationsCompleted: false,
+    assurancesCompleted: false,
+    reflectCompleted: false,
+  });
 
-  // when true, show the reflect page
   const [showReflect, setShowReflect] = useState(false);
-  
-  // Add ref for the main portal ScrollView
   const scrollViewRef = useRef<ScrollView>(null);
-  
-  // Add state to track if user has accepted the invite (completed step 1)
-  const [hasAcceptedInvite, setHasAcceptedInvite] = useState(false);
-  
-  // Track if we're in the lower half of the portal
   const [isInLowerHalf, setIsInLowerHalf] = useState(false);
-  
-  // Track if complete modal is visible
   const [showCompleteModal, setShowCompleteModal] = useState(false);
+  const [showReviewModal, setShowReviewModal] = useState(false);
 
+  // Load progress from AsyncStorage
+  useEffect(() => {
+    const loadProgress = async () => {
+      try {
+        const key = `@portal_progress_${contact.id}`;
+        const storedProgress = await AsyncStorage.getItem(key);
+        if (storedProgress) {
+          setProgress(JSON.parse(storedProgress));
+        } else {
+          // Set initial state based on props
+          setProgress({
+            inviteAccepted: !isNewPortalRequest,
+            expectationsCompleted: expectationsCompleted,
+            assurancesCompleted: false,
+            reflectCompleted: false,
+          });
+        }
+      } catch (error) {
+        console.error('Error loading portal progress:', error);
+      }
+    };
+
+    loadProgress();
+  }, [contact.id, isNewPortalRequest, expectationsCompleted]);
+
+  // Save progress to AsyncStorage whenever it changes
+  useEffect(() => {
+    const saveProgress = async () => {
+      try {
+        const key = `@portal_progress_${contact.id}`;
+        await AsyncStorage.setItem(key, JSON.stringify(progress));
+      } catch (error) {
+        console.error('Error saving portal progress:', error);
+      }
+    };
+
+    saveProgress();
+  }, [progress, contact.id]);
+
+  // Check expectations completion from database
   useEffect(() => {
     const checkExpectationsCompletion = async () => {
       try {
@@ -109,26 +152,17 @@ export const Portal = ({
         const allCompleted = results.every(
           (result) => result.data && result.data.length > 0
         );
-        setHasCompletedExpectations(allCompleted || expectationsCompleted);
+        
+        if (allCompleted && !progress.expectationsCompleted) {
+          setProgress(prev => ({ ...prev, expectationsCompleted: true }));
+        }
       } catch (error) {
         console.error('Error checking expectations completion:', error);
-        setHasCompletedExpectations(expectationsCompleted);
-      }
-    };
-
-    const checkInviteAcceptance = async () => {
-      try {
-        // Add your logic here to check if user has accepted invite
-        // For now, assume it's completed if not a new portal request
-        setHasAcceptedInvite(!isNewPortalRequest);
-      } catch (error) {
-        console.error('Error checking invite acceptance:', error);
       }
     };
 
     checkExpectationsCompletion();
-    checkInviteAcceptance();
-  }, [expectationsCompleted, isNewPortalRequest]);
+  }, []);
 
   const scrollToLowerHalf = () => {
     scrollViewRef.current?.scrollTo({ 
@@ -151,14 +185,73 @@ export const Portal = ({
     setIsInLowerHalf(offsetY > SCREEN_HEIGHT / 2);
   };
 
-  // --------- REFLECT PAGE ----------
+  // Mark invite as accepted
+  const handleInviteAccepted = () => {
+    setProgress(prev => ({ ...prev, inviteAccepted: true }));
+    onNavigateToAcceptInvite();
+  };
+
+  // Mark assurances as completed
+  const handleAssurancesComplete = () => {
+    setProgress(prev => ({ ...prev, assurancesCompleted: true }));
+    onNavigateToAIAssurance();
+  };
+
+  // Mark reflect as completed
+  const handleReflectComplete = () => {
+    setProgress(prev => ({ ...prev, reflectCompleted: true }));
+    setShowReflect(true);
+  };
+
+  // Render checkmark or number
+  const renderStepIcon = (stepCompleted: boolean, numberImage: any, size: number = 0.18) => {
+    if (stepCompleted) {
+      return (
+        <View style={{
+          width: SCREEN_WIDTH * size,
+          height: SCREEN_WIDTH * size,
+          borderRadius: (SCREEN_WIDTH * size) / 2,
+          backgroundColor: palette.sage,
+          justifyContent: 'center',
+          alignItems: 'center',
+          shadowColor: palette.shadow,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.3,
+          shadowRadius: 4,
+          elevation: 4,
+        }}>
+          <Check size={SCREEN_WIDTH * size * 0.6} color={palette.cream} strokeWidth={3} />
+        </View>
+      );
+    }
+    return (
+      <Image
+        source={numberImage}
+        style={{
+          width: SCREEN_WIDTH * size,
+          height: SCREEN_WIDTH * size,
+          resizeMode: 'contain',
+        }}
+      />
+    );
+  };
+
   if (showReflect) {
     return (
-      <Reflect onBack={() => setShowReflect(false)} />
+      <Reflect 
+        contact={contact} 
+        onBack={() => {
+          setShowReflect(false);
+          setIsInLowerHalf(false); // Reset to upper half
+          // Scroll back to top
+          setTimeout(() => {
+            scrollViewRef.current?.scrollTo({ y: 0, animated: false });
+          }, 100);
+        }} 
+      />
     );
   }
 
-  // --------- SINGLE SCROLLABLE PORTAL SCREEN ----------
   return (
     <ImageBackground
       source={require('../../assets/backgrounds/background_vibrant.png')}
@@ -167,10 +260,11 @@ export const Portal = ({
     >
       <SafeAreaView style={{ flex: 1, overflow: 'visible' }}>
         <View style={styles.screen}>
-          <View style={[styles.heading, { marginBottom: 0, zIndex: 100 }]}>
-            <TouchableOpacity onPress={onBack} style={styles.backButton}>
-              <ChevronLeft size={40} color={palette.slate} />
-            </TouchableOpacity>
+          <View style={[styles.heading, {marginBottom: 0}]}>
+              <TouchableOpacity onPress={onBack} style={styles.backButton}>
+                <ChevronLeft size={40} color={palette.slate} />
+              </TouchableOpacity>
+              <Text style={styles.headingtext}>Portal with {contact.name}</Text>
           </View>
 
           <ScrollView 
@@ -184,12 +278,9 @@ export const Portal = ({
             onScroll={handleScroll}
             scrollEventThrottle={16}
           >
-            {/* Spacer for upper half content - keeps original layout positioning */}
             <View style={{ height: SCREEN_HEIGHT }} />
             
-            {/* ========== LOWER HALF - FULL MAP VIEW ========== */}
             <View style={{ height: SCREEN_HEIGHT, width: SCREEN_WIDTH, paddingHorizontal: 16, paddingBottom: 32, alignItems: 'center' }}>
-              {/* Together image */}
               <Image
                 source={together}
                 style={{
@@ -201,8 +292,6 @@ export const Portal = ({
                   left: -8
                 }}
               />
-
-              {/* Map image */}
               <Image
                 source={maptwo}
                 style={{
@@ -217,14 +306,10 @@ export const Portal = ({
         </View>
       </SafeAreaView>
 
-      {/* ABSOLUTE POSITIONED CONTENT - UPPER HALF (original portal elements) */}
-      {/* Only show upper half elements when not in lower half */}
       {!isInLowerHalf && (
         <>
-      {/* Two frogs in upper right */}
       <View style={portalStyles.frogsContainer}>
         <View style={portalStyles.frogPair}>
-          {/* User's frog (left) */}
           <View style={portalStyles.singleFrog}>
             <Image 
               source={require('../../assets/frogs/cute_frog_body.png')}
@@ -255,7 +340,6 @@ export const Portal = ({
             />
           </View>
 
-          {/* Contact's frog (right) */}
           <View style={portalStyles.singleFrog}>
             <Image 
               source={require('../../assets/frogs/cute_frog_body.png')}
@@ -281,7 +365,7 @@ export const Portal = ({
               style={[
                 portalStyles.frogBody,
                 { position: 'absolute', height: 44 },
-                { transform: [{ translateY: 4 }, { translateX: 0 }] },
+                { transform: [{ translateY: 4 }, { translateX: 1 }] },
               ]}
             />
           </View>
@@ -294,107 +378,85 @@ export const Portal = ({
       </View>
 
       <View style={[portalStyles.spiralTouchable, { alignSelf: 'flex-start' }]}>
-        <TouchableOpacity onPress={onNavigateToAcceptInvite}>
-          <Image 
-            source={hasAcceptedInvite ? one : lock} 
-            style={portalStyles.one} 
-          />
+        <TouchableOpacity onPress={handleInviteAccepted}>
+          {progress.inviteAccepted ? (
+            renderStepIcon(true, one, 0.18)
+          ) : (
+            <Image source={lock} style={portalStyles.one} />
+          )}
         </TouchableOpacity>
       </View>
-      <Image 
-        source={invite} 
-        style={portalStyles.invite} 
-      />
-
-      <Image 
-        source={spiral} 
-        style={portalStyles.spiral} 
-      />
+      <Image source={invite} style={portalStyles.invite} />
+      <Image source={spiral} style={portalStyles.spiral} />
 
       <TouchableOpacity 
         onPress={() => {
-          if (isNewPortalRequest || !hasAcceptedInvite) {
+          if (!progress.inviteAccepted) {
             onNavigateToLockedStep();
+          } else if (progress.expectationsCompleted) {
+            // If completed, show review modal
+            setShowReviewModal(true);
           } else {
+            // If not completed, go to expectations
             onNavigateToExpectations();
           }
         }}
         style={portalStyles.expectationsTouchable}
       >
-        <Image 
-          source={(isNewPortalRequest || !hasAcceptedInvite) ? lock : two} 
-          style={portalStyles.two} 
-        />
+        {!progress.inviteAccepted ? (
+          <Image source={lock} style={portalStyles.two} />
+        ) : (
+          renderStepIcon(progress.expectationsCompleted, two, 0.18)
+        )}
       </TouchableOpacity>
-      <Image 
-        source={expectations} 
-        style={portalStyles.expectationsImage} 
-      />
+      <Image source={expectations} style={portalStyles.expectationsImage} />
 
       <View style={[portalStyles.reflectContainer]}> 
         <TouchableOpacity 
           onPress={() => {
-            if (isNewPortalRequest || !hasCompletedExpectations) {
+            if (!progress.expectationsCompleted) {
               onNavigateToLockedStep();
             } else {
-              onNavigateToAIAssurance();
+              handleAssurancesComplete();
             }
           }}
           style={portalStyles.reflectTouchable}
         > 
-          <Image 
-            source={(isNewPortalRequest || !hasCompletedExpectations) ? lock : three} 
-            style={portalStyles.lock} 
-          />
+          {!progress.expectationsCompleted ? (
+            <Image source={lock} style={portalStyles.lock} />
+          ) : (
+            renderStepIcon(progress.assurancesCompleted, three, 0.18)
+          )}
         </TouchableOpacity>
       </View>
-      <Image 
-        source={assurances} 
-        style={portalStyles.assurances} 
-      />
+      <Image source={assurances} style={portalStyles.assurances} />
       
       <TouchableOpacity 
         style={[
           portalStyles.portalCallButton, 
           {bottom: 165, left: 163},
-          (isNewPortalRequest || !hasCompletedExpectations) && { opacity: 1 }
+          !progress.expectationsCompleted && { opacity: 1 }
         ]}
         onPress={() => {
-          if (isNewPortalRequest || !hasCompletedExpectations) {
+          if (!progress.expectationsCompleted) {
             onNavigateToLockedStep();
           } else {
             onStartCall?.();
           }
         }}
       >
-        <View style={[portalStyles.portalCallButtonInner, {backgroundColor: (isNewPortalRequest || !hasCompletedExpectations) ? '#a2a2a2ff' : palette.slate}]}>
+        <View style={[portalStyles.portalCallButtonInner, {backgroundColor: !progress.expectationsCompleted ? '#a2a2a2ff' : palette.slate}]}>
           <Phone size={34} color={palette.cream} />
         </View>
       </TouchableOpacity>
 
       <View style={portalStyles.elementcontainer}>
-        <Image 
-          source={strokemap} 
-          style={portalStyles.strokemap} 
-        />
-        <Image 
-          source={together} 
-          style={[portalStyles.together, {top: -25, width: 600, height: 400}]} 
-        />
+        <Image source={strokemap} style={portalStyles.strokemap} />
+        <Image source={together} style={[portalStyles.together, {top: -25, width: 600, height: 400}]} />
       </View>
 
-      {/* See full map button - only visible in upper half */}
-      <View
-        style={{
-          position: 'absolute',
-          bottom: 20,
-          alignSelf: 'center',
-        }}
-      >
-        <TouchableOpacity
-          onPress={scrollToLowerHalf}
-          style={portalStyles.scrollButton}
-        >
+      <View style={{ position: 'absolute', bottom: 20, alignSelf: 'center' }}>
+        <TouchableOpacity onPress={scrollToLowerHalf} style={portalStyles.scrollButton}>
           <ChevronDown size={16} color="white" />
           <Text style={portalStyles.scrollText}>See full map</Text>
         </TouchableOpacity>
@@ -402,17 +464,14 @@ export const Portal = ({
         </>
       )}
 
-      {/* ABSOLUTE POSITIONED CONTENT - LOWER HALF (map view elements) */}
-      {/* Only show lower half elements when in lower half */}
       {isInLowerHalf && (
         <>
-            {/* Reflect white image - positioned for lower half in bottom right */}
       <TouchableOpacity
         onPress={() => {
-          if (isNewPortalRequest || !hasCompletedExpectations) {
+          if (!progress.expectationsCompleted) {
             onNavigateToLockedStep();
           } else {
-            setShowReflect(true);
+            handleReflectComplete();
           }
         }}
         style={{
@@ -432,8 +491,7 @@ export const Portal = ({
         />
       </TouchableOpacity>
 
-      {/* Four image or Lock - positioned for lower half */}
-      {(isNewPortalRequest || !hasCompletedExpectations) ? (
+      {!progress.expectationsCompleted ? (
         <TouchableOpacity
           onPress={onNavigateToLockedStep}
           style={{
@@ -454,44 +512,25 @@ export const Portal = ({
         </TouchableOpacity>
       ) : (
         <TouchableOpacity
-          onPress={() => setShowReflect(true)}
+          onPress={handleReflectComplete}
           style={{
             position: 'absolute',
             bottom: SCREEN_HEIGHT * 0.18,
-            right: SCREEN_WIDTH * 0.2,
+            right: SCREEN_WIDTH * 0.18,
             zIndex: 100,
           }}
         >
-          <Image
-            source={four}
-            style={{
-              width: SCREEN_WIDTH * 0.18,
-              height: SCREEN_WIDTH * 0.18,
-              resizeMode: 'contain',
-            }}
-          />
+          {renderStepIcon(progress.reflectCompleted, four, 0.18)}
         </TouchableOpacity>
       )}
 
-      {/* Up arrow button - only visible in lower half */}
-      <View
-        style={{
-          position: 'absolute',
-          top: 60,
-          alignSelf: 'center',
-          zIndex: 1000,
-        }}
-      >
-        <TouchableOpacity
-          onPress={scrollToUpperHalf}
-          style={[portalStyles.scrollButton, {top: 15}]}
-        >
+      <View style={{ position: 'absolute', top: 99, alignSelf: 'center', zIndex: 1000 }}>
+        <TouchableOpacity onPress={scrollToUpperHalf} style={[portalStyles.scrollButton, {top: 15}]}>
           <ChevronUp size={16} color="white" />
           <Text style={portalStyles.scrollText}>Back to Top</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Complete button - only visible in lower half */}
       <TouchableOpacity
         style={{
           position: 'absolute',
@@ -507,10 +546,10 @@ export const Portal = ({
           shadowOpacity: 0.2,
           shadowRadius: 8,
           elevation: 4,
-          opacity: (isNewPortalRequest || !hasCompletedExpectations) ? 0.4 : 1,
+          opacity: !progress.expectationsCompleted ? 0.4 : 1,
         }}
         onPress={() => {
-          if (isNewPortalRequest || !hasCompletedExpectations) {
+          if (!progress.expectationsCompleted) {
             onNavigateToLockedStep();
           } else {
             setShowCompleteModal(true);
@@ -522,7 +561,6 @@ export const Portal = ({
         </>
       )}
       
-      {/* Complete Modal */}
       {showCompleteModal && (
         <View
           style={{
@@ -596,6 +634,12 @@ export const Portal = ({
           </View>
         </View>
       )}
+      
+      {/* Expectations Review Modal */}
+      <ExpectationsReviewModal
+        visible={showReviewModal}
+        onClose={() => setShowReviewModal(false)}
+      />
     </ImageBackground>
   );
 };

@@ -28,7 +28,7 @@ export const Contacts = ({ onNext, onBack, onSearch }: ContactsProps) => {
   const [showNewInvites, setShowNewInvites] = useState(true);
   const [filteredContacts, setFilteredContacts] = useState(contacts);
   const [filteredInvites, setFilteredInvites] = useState(invites);
-    const [blinkStates, setBlinkStates] = useState<boolean[]>(
+  const [blinkStates, setBlinkStates] = useState<boolean[]>(
       [...contacts, ...invites].map(() => false)
     );
 

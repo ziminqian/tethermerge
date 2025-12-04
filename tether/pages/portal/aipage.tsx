@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import styles from '../../styles/styles';
 import { palette } from '../../styles/palette';
-import { ChevronLeft, Send } from 'lucide-react-native';
+import { ChevronLeft, Send, Sparkles } from 'lucide-react-native';
 import portalStyles from '../../styles/portalStyles';
 
 interface AIPageProps {
@@ -99,7 +99,7 @@ export const AIPage = ({ onBack, onContinue, onBackToPortal }: AIPageProps) => {
                     {message.isAI && (
                       <View style={{flexDirection: "column"}}>
                         <View style={{flexDirection: "row", gap: 5, alignItems: "center"}}>
-                          <Image source={require("../../assets/other/ai.png")} style={{height: 30, width: 30}}/>
+                          <Sparkles size={28} color={palette.slate}/>
                           <Text style={[styles.headingtext, {fontSize: 24}]}>Tether AI</Text>
                         </View>
                         <View style={styles.divider} />

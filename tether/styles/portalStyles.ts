@@ -93,9 +93,9 @@ const portalStyles = StyleSheet.create({
     fontFamily: chosenFont,
     color: palette.mediumBrown,
   },
-    frogsContainer: {
+  frogsContainer: {
     position: 'absolute',
-    top: SCREEN_HEIGHT * 0.1,
+    top: SCREEN_HEIGHT * 0.14,
     right: SCREEN_WIDTH * 0.05,
     alignItems: 'center',
     zIndex: 5,

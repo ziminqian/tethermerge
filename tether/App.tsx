@@ -425,8 +425,9 @@ function AppContent() {
             onBackToPortal={handleBackToPortal}
           />
         )}
-        {activeTab === 'friends' && showExpectationsComplete && (
+        {activeTab === 'friends' && showExpectationsComplete && selectedContact &&(
           <ExpectationsComplete 
+            contact={selectedContact}
             onBack={handleBackToSection5}
             onBackToPortal={handleBackToPortal}
           />
@@ -436,9 +437,10 @@ function AppContent() {
         {activeTab === 'friends' && showReflect && (
           <Reflect onBack={handleBackToPortal} />
         )}
-        {activeTab === 'friends' && showAIAssurance && (
+        {activeTab === 'friends' && showAIAssurance && selectedContact &&(
           <AIAssurance 
-            onBack={handleBackToPortal} 
+            contact={selectedContact}
+            onBack={handleBackToPortal}
             onContinue={handleBackToPortal}
             onBackToPortal={handleBackToPortal}
           />

@@ -223,6 +223,7 @@ const globalStyles = StyleSheet.create({
     fontWeight: '600',
     color: palette.slate,
     marginBottom: 20,
+    marginTop: 10,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center"
@@ -231,7 +232,7 @@ const globalStyles = StyleSheet.create({
     position: 'absolute',
     justifyContent: "center",
     left: 8,
-    bottom: -40,
+    bottom: -6,
     zIndex: 2,
   },
   headingtext: {

@@ -15,8 +15,10 @@ import styles from '../../styles/styles';
 import { palette } from '../../styles/palette';
 import { ChevronLeft, Send } from 'lucide-react-native';
 import portalStyles from '../../styles/portalStyles';
+import { updatePortalStep } from '../../utils/portalProgress';
 
 interface ReflectProps {
+  contact?: { id: string; name: string; color: any };
   onBack: () => void;
   onContinue?: () => void;
   onBackToPortal?: () => void;
@@ -28,10 +30,25 @@ interface ChatMessage {
   isAI: boolean;
 }
 
-export const Reflect = ({ onBack, onContinue, onBackToPortal }: ReflectProps) => {
+export const Reflect = ({ contact, onBack, onContinue, onBackToPortal }: ReflectProps) => {
   // Use onBack as fallback for onContinue and onBackToPortal if not provided
-  const handleContinue = onContinue || onBackToPortal || onBack;
+  const handleContinue = async () => {
+    // Mark reflect as completed if contact is provided
+    if (contact) {
+      await updatePortalStep(contact.id, 'reflectCompleted', true);
+    }
+    
+    if (onContinue) {
+      onContinue();
+    } else if (onBackToPortal) {
+      onBackToPortal();
+    } else {
+      onBack();
+    }
+  };
+  
   const handleBackToPortal = onBackToPortal || onBack;
+  
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: '1',

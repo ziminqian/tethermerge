@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import styles from '../styles/styles';
 import { palette } from '../styles/palette';
-import { ChevronLeft, Send, X, HeartHandshake } from 'lucide-react-native';
+import { ChevronLeft, Send, X, HeartHandshake, Sparkles } from 'lucide-react-native';
 
 interface MessageProps {
   contact: { id: string; name: string };
@@ -117,7 +117,7 @@ export const Message = ({ contact, onNext, onBack }: MessageProps) => {
                 >
                   {message.isAI && (
                     <View style={{flexDirection: "column"}}>
-                      <View style={{flexDirection: "row", gap: 5}}><Image source={require("../assets/other/ai.png")} style={{height: 30, width: 30}}/>
+                      <View style={{flexDirection: "row", gap: 5}}><Sparkles size={28} color={palette.slate}/>
                       <Text style={[styles.headingtext, {fontSize: 24}]}>Tether AI</Text></View>
                     <View style={styles.divider} />
                     </View>
