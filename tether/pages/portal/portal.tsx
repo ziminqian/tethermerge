@@ -39,7 +39,7 @@ const three = require('../../assets/portal/3.png');
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 interface PortalProps {
-  contact: { id: string; name: string };
+  contact: { id: string; name: string, color: any};
   isNewPortalRequest?: boolean;
   expectationsCompleted?: boolean;
   onBack: () => void;

@@ -7,7 +7,7 @@ import theme from '../styles/theme';
 import { palette } from '../styles/palette';
 
 interface ContactsProps {
-  onNext: (contact: { id: string; name: string }, isInvite?: boolean) => void;
+  onNext: (contact: { id: string; name: string, color: any }, isInvite?: boolean) => void;
   onBack: () => void;
   onSearch: (query: string) => void;
 }

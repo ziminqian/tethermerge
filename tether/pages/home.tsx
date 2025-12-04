@@ -7,7 +7,7 @@ import { palette } from '../styles/palette';
 
 interface HomeProps {
   onBack: () => void;
-  onNext: (contact: { id: string; name: string }) => void;
+  onNext: (contact: { id: string; name: string, color: any  }) => void;
   onSearch: (query: string) => void;
 }
 
