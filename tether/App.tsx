@@ -33,10 +33,11 @@ import styles from './styles/styles';
 import AuthGate from './pages/components/AuthGate';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { palette } from './styles/palette';
+import { PortalProvider, usePortal } from "./context/PortalContext"
 
 function AppContent() {
   const [activeTab, setActiveTab] = useState< 'friends' | 'home' | 'profile'>('home');
-
+  const { addActivePortal } = usePortal();
   const [showMessage, setShowMessage] = useState(false);
   const [showPortal, setShowPortal] = useState(false);
   const [showExpectationsIntro, setShowExpectationsIntro] = useState(false);
@@ -81,6 +82,7 @@ function AppContent() {
     setSelectedContact(contact);
     setIsNewPortalRequest(false);
     setExpectationsCompleted(false);
+    addActivePortal(contact);
     if (isInvite) {
       setShowMessage(true);
       setShowPortal(false);
@@ -536,10 +538,12 @@ export default function App() {
   if (currentScreen === 'welcome') {
     return (
       <TetherProvider>
+        <PortalProvider>
         <View style={styles.container}>
           <StatusBar barStyle="dark-content" />
           <Welcome onContinue={handleWelcomeContinue} />
         </View>
+        </PortalProvider>
       </TetherProvider>
     );
   }
@@ -547,10 +551,12 @@ export default function App() {
   if (currentScreen === 'onboard1') {
     return (
       <TetherProvider>
+        <PortalProvider>
         <View style={styles.container}>
           <StatusBar barStyle="dark-content" />
           <Onboard1 onContinue={handleOnboard1Continue} />
         </View>
+        </PortalProvider>
       </TetherProvider>
     );
   }
@@ -558,10 +564,12 @@ export default function App() {
   if (currentScreen === 'onboard2') {
     return (
       <TetherProvider>
+        <PortalProvider>
         <View style={styles.container}>
           <StatusBar barStyle="dark-content" />
           <Onboard2 onContinue={handleOnboard2Continue} />
         </View>
+        </PortalProvider>
       </TetherProvider>
     );
   }
@@ -569,6 +577,7 @@ export default function App() {
   if (currentScreen === 'login') {
     return (
       <TetherProvider>
+        <PortalProvider>
         <View style={styles.container}>
           <StatusBar barStyle="dark-content" />
           {showSignup ? (
@@ -577,15 +586,18 @@ export default function App() {
             <Title onSignup={handleShowSignup} onLoginSuccess={handleLoginSuccess} />
           )}
         </View>
+        </PortalProvider>
       </TetherProvider>
     );
   }
 
   return (
     <TetherProvider>
+      <PortalProvider>
       <AuthGate>
         <AppContent/>
       </AuthGate>
+      </PortalProvider>
     </TetherProvider>
   );
 }
