@@ -1,5 +1,5 @@
 # tether
-Tether is a React Native app for initiating, preparing for, and navigating a difficult conversation. <br />
+Tether is a React Native app for initiating and navigating difficult conversations. <br />
 By reducing the anxiety and miscommunication surrounding vulnerability, we hope to help users build deeper, more meaningful connections.
 <p align="center">
   <img src="tether/demo/IMG_4635.PNG" height=400 />
