@@ -478,7 +478,7 @@ export const Portal = ({
           }
         }}
       >
-        <View style={[portalStyles.portalCallButtonInner, {backgroundColor: !progress.expectationsCompleted ? '#a2a2a2ff' : palette.slate}]}>
+        <View style={[portalStyles.portalCallButtonInner, {backgroundColor: !progress.expectationsCompleted ? '#ABB6A0' : palette.slate}]}>
           <Phone size={34} color={palette.cream} />
         </View>
       </TouchableOpacity>
