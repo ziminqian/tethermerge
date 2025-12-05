@@ -466,7 +466,7 @@ export const Portal = ({
       <TouchableOpacity 
         style={[
           portalStyles.portalCallButton, 
-          {bottom: 165, left: 163},
+          {bottom: 140, left: 150},
           !progress.expectationsCompleted && { opacity: 1 }
         ]}
         onPress={() => {
