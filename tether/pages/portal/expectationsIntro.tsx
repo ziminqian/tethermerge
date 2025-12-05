@@ -4,10 +4,14 @@ import {
   Text, 
   ImageBackground, 
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import { palette } from '../../styles/palette';
 import { ChevronLeft } from 'lucide-react-native';
 import portalStyles from '../../styles/portalStyles';
+
+const leftp = require('../../assets/other/leftp.png');
+const rightp = require('../../assets/other/rightp.png');
 
 interface ExpectationsIntroProps {
   onBack: () => void;
@@ -31,8 +35,32 @@ export const ExpectationsIntro = ({ onBack, onContinue, onBackToPortal }: Expect
           <ChevronLeft size={40} color={palette.slate} />
         </TouchableOpacity>
         
-        <View style={[portalStyles.content]}>
+        <View style={[portalStyles.content, { position: 'relative' }]}>
+          <Image 
+            source={leftp}
+            style={{
+              position: 'absolute',
+              top: -40,
+              left: -20,
+              width: 120,
+              height: 150,
+              resizeMode: 'contain',
+              zIndex: 1,
+            }}
+          />
           <Text style={[portalStyles.title,]}>Setting Expectations</Text>
+          <Image 
+            source={rightp}
+            style={{
+              position: 'absolute',
+              bottom: -80,
+              right: -30,
+              width: 120,
+              height: 150,
+              resizeMode: 'contain',
+              zIndex: 1,
+            }}
+          />
         </View>
       </View>
       
