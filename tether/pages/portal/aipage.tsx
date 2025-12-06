@@ -111,15 +111,7 @@ export const AIPage = ({ onBack, onContinue, onBackToPortal }: AIPageProps) => {
               </View>
             </ScrollView>
 
-            <View style={[styles.inputArea, { 
-              position: 'absolute',
-              bottom: 120,
-              left: 16,
-              right: 16,
-              paddingBottom: 8,
-              backgroundColor: 'transparent',
-              zIndex: 5
-            }]}>
+            <View style={[styles.inputArea, { marginBottom: 80, padding: 20 }]}>
               <TextInput
                 style={styles.chatInput}
                 value={inputText}
@@ -132,19 +124,20 @@ export const AIPage = ({ onBack, onContinue, onBackToPortal }: AIPageProps) => {
                 <Send size={26} color={palette.slate} />
               </TouchableOpacity>
             </View>
+            <TouchableOpacity
+              style={[portalStyles.continueButton, { bottom: 20, right: 80 }]}
+              onPress={onContinue}
+            >
+              <Text style={portalStyles.continueButtonText}>Continue</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={onBackToPortal} style={[portalStyles.backToPortalButton, { bottom: 20, left: 70 }]}>
+              <Text style={portalStyles.backToPortalText}>Back to Portal</Text>
+            </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
 
-        <TouchableOpacity
-          style={portalStyles.continueButton}
-          onPress={onContinue}
-        >
-          <Text style={portalStyles.continueButtonText}>Continue</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={onBackToPortal} style={portalStyles.backToPortalButton}>
-          <Text style={portalStyles.backToPortalText}>Back to Portal</Text>
-        </TouchableOpacity>
+        
       </SafeAreaView>
     </ImageBackground>
   );
