@@ -14,17 +14,14 @@ import {
   Image,
   Animated
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../styles/styles';
 import resourceStyles from '../styles/resourceStyles';
 import theme from '../styles/theme';
 import { palette } from '../styles/palette';
-import { LogOut, Edit2, X, Check, Lightbulb, MessageCircleHeart, Brain, ShieldBan, Goal, Snail, CircleQuestionMark } from 'lucide-react-native';
+import { LogOut, Edit2, X, Check, Lightbulb, Brain, ShieldBan, Goal, Snail, CircleQuestionMark } from 'lucide-react-native';
 import useSession from '../utils/useSession';
 import { ResourceModal, ResourceType } from './components/Resources';
-
-
-const PROFILE_KEY = '@tether_profile';
+import { supabase } from '../utils/supabaseClient';
 
 interface UserProfile {
   username: string;
@@ -49,8 +46,9 @@ const ICON_COLORS = [
 export const Profile = ({ onBack, onProfileUpdate }: ProfileProps) => {
   const { signOut, session } = useSession();
   const [loggingOut, setLoggingOut] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<UserProfile>({
-    username: 'Test User',
+    username: 'Loading...',
     bio: '',
     iconColor: palette.slate,
   });
@@ -61,24 +59,21 @@ export const Profile = ({ onBack, onProfileUpdate }: ProfileProps) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedResource, setSelectedResource] = useState<ResourceType>('conversation-starters');
 
-  // Animation values for edit modal
   const editFadeAnim = useRef(new Animated.Value(0)).current;
   const editScaleAnim = useRef(new Animated.Value(0.9)).current;
 
   // Load profile on mount
   useEffect(() => {
-    loadProfile();
-  }, []);
+    if (session?.user?.id) {
+      loadProfile();
+    }
+  }, [session]);
 
-  
-  // Animate edit modal
   useEffect(() => {
     if (editModalVisible) {
-      // Reset values before animating in
       editFadeAnim.setValue(0);
       editScaleAnim.setValue(0.9);
       
-      // Fade in
       Animated.parallel([
         Animated.timing(editFadeAnim, {
           toValue: 1,
@@ -93,7 +88,6 @@ export const Profile = ({ onBack, onProfileUpdate }: ProfileProps) => {
         }),
       ]).start();
     } else {
-      // Fade out
       Animated.parallel([
         Animated.timing(editFadeAnim, {
           toValue: 0,
@@ -111,24 +105,57 @@ export const Profile = ({ onBack, onProfileUpdate }: ProfileProps) => {
 
   const loadProfile = async () => {
     try {
-      const storedProfile = await AsyncStorage.getItem(PROFILE_KEY);
-      if (storedProfile) {
-        setProfile(JSON.parse(storedProfile));
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('username, bio, icon_color')
+        .eq('id', session?.user?.id)
+        .single();
+
+      if (error) {
+        console.error('Error loading profile:', error);
+        return;
+      }
+
+      if (data) {
+        const loadedProfile = {
+          username: data.username || 'User',
+          bio: data.bio || '',
+          iconColor: data.icon_color || palette.slate,
+        };
+        setProfile(loadedProfile);
       }
     } catch (error) {
       console.error('Error loading profile:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const saveProfile = async (newProfile: UserProfile) => {
     try {
-      await AsyncStorage.setItem(PROFILE_KEY, JSON.stringify(newProfile));
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          username: newProfile.username,
+          bio: newProfile.bio,
+          icon_color: newProfile.iconColor,
+        })
+        .eq('id', session?.user?.id);
+
+      if (error) {
+        console.error('Error saving profile:', error);
+        Alert.alert('Error', 'Failed to save profile');
+        return;
+      }
+
       setProfile(newProfile);
       if (onProfileUpdate) {
         onProfileUpdate(newProfile);
       }
     } catch (error) {
       console.error('Error saving profile:', error);
+      Alert.alert('Error', 'Failed to save profile');
     }
   };
 
@@ -146,8 +173,8 @@ export const Profile = ({ onBack, onProfileUpdate }: ProfileProps) => {
 
   const handleSaveProfile = async () => {
     const updatedProfile = {
-      username: editUsername || 'Test User',
-      bio: editBio,
+      username: editUsername.trim() || 'User',
+      bio: editBio.trim(),
       iconColor: selectedColor,
     };
     await saveProfile(updatedProfile);
@@ -181,9 +208,23 @@ export const Profile = ({ onBack, onProfileUpdate }: ProfileProps) => {
     );
   };
 
+  if (loading) {
+    return (
+      <ImageBackground 
+        source={require("../assets/backgrounds/light_ombre.png")}
+        style={{ flex: 1, width: '100%', height: '100%' }}
+        resizeMode='cover'
+      >
+        <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color={palette.slate} />
+        </SafeAreaView>
+      </ImageBackground>
+    );
+  }
+
   return (
     <ImageBackground 
-      source= {require("../assets/backgrounds/light_ombre.png")}
+      source={require("../assets/backgrounds/light_ombre.png")}
       style={{ flex: 1, width: '100%', height: '100%' }}
       resizeMode='cover'
     >
@@ -192,7 +233,7 @@ export const Profile = ({ onBack, onProfileUpdate }: ProfileProps) => {
           <View style={styles.screen}>
             <View style={styles.profileHeader}>
               <View style={styles.profileAvatarRow}>
-                <View style={[styles.profileAvatar, ]}>
+                <View style={styles.profileAvatar}>
                   <Image 
                     source={require('../assets/frogs/cute_frog_body.png')}
                     style={[styles.profileAvatarImage,{height:55}, {transform: [{ translateY: 9}, {translateX: -8}]}]}
@@ -220,7 +261,7 @@ export const Profile = ({ onBack, onProfileUpdate }: ProfileProps) => {
                     {profile.bio || 'Tap edit to add a bio!'}
                   </Text>
                   <Text style={styles.profilePhone}>
-                    {session?.user?.phone || 'No phone'}
+                    {session?.user?.email || 'No email'}
                   </Text>
                 </View>
               </View>
@@ -245,68 +286,67 @@ export const Profile = ({ onBack, onProfileUpdate }: ProfileProps) => {
             </View>
           </View>
           <View style={resourceStyles.resourcesSection}>
-          <Text style={resourceStyles.resourcesTitle}>Conversation Resources</Text>
-          
-          <View style={resourceStyles.resourcesGrid}>
+            <Text style={resourceStyles.resourcesTitle}>Conversation Resources</Text>
             
-            <TouchableOpacity style={resourceStyles.resourceCard2}
-            onPress={() => handleResourcePress('conversation-starters')}>
-              <View style={[resourceStyles.resourceIcon, { backgroundColor: palette.teal }]}>
-              <Lightbulb size={35} color={palette.cream}/>
-            </View>
-              <Text style={resourceStyles.resourceTitle}>Conversation Starters</Text>
-              <Text style={resourceStyles.resourceSubtitle}>Prompts to move forward</Text>
-            </TouchableOpacity>
+            <View style={resourceStyles.resourcesGrid}>
+              
+              <TouchableOpacity style={resourceStyles.resourceCard2}
+              onPress={() => handleResourcePress('conversation-starters')}>
+                <View style={[resourceStyles.resourceIcon, { backgroundColor: palette.teal }]}>
+                <Lightbulb size={35} color={palette.cream}/>
+              </View>
+                <Text style={resourceStyles.resourceTitle}>Conversation Starters</Text>
+                <Text style={resourceStyles.resourceSubtitle}>Prompts to move forward</Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity style={resourceStyles.resourceCard2}
-            onPress={() => handleResourcePress('empathy-prompts')}>
-              <View style={[resourceStyles.resourceIcon, { backgroundColor: palette.mutedBrown }]}>
-              <Brain size={35} color={palette.cream}/>
-            </View>
-              <Text style={resourceStyles.resourceTitle}>Empathy Prompts</Text>
-              <Text style={resourceStyles.resourceSubtitle}>Understand their perspective</Text>
-            </TouchableOpacity>
+              <TouchableOpacity style={resourceStyles.resourceCard2}
+              onPress={() => handleResourcePress('empathy-prompts')}>
+                <View style={[resourceStyles.resourceIcon, { backgroundColor: palette.mutedBrown }]}>
+                <Brain size={35} color={palette.cream}/>
+              </View>
+                <Text style={resourceStyles.resourceTitle}>Empathy Prompts</Text>
+                <Text style={resourceStyles.resourceSubtitle}>Understand their perspective</Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity style={resourceStyles.resourceCard2}
-            onPress={() => handleResourcePress('boundary-setting')}>
-              <View style={[resourceStyles.resourceIcon, { backgroundColor: palette.sage }]}>
-              <ShieldBan size={35} color={palette.cream}/>
-            </View>
-              <Text style={resourceStyles.resourceTitle}>Boundary Setting</Text>
-              <Text style={resourceStyles.resourceSubtitle}>Respectful ways to set limits</Text>
-            </TouchableOpacity>
+              <TouchableOpacity style={resourceStyles.resourceCard2}
+              onPress={() => handleResourcePress('boundary-setting')}>
+                <View style={[resourceStyles.resourceIcon, { backgroundColor: palette.sage }]}>
+                <ShieldBan size={35} color={palette.cream}/>
+              </View>
+                <Text style={resourceStyles.resourceTitle}>Boundary Setting</Text>
+                <Text style={resourceStyles.resourceSubtitle}>Respectful ways to set limits</Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity style={resourceStyles.resourceCard2}
-            onPress={() => handleResourcePress('goal-setting')}>
-                <View style={[resourceStyles.resourceIcon, { backgroundColor: palette.slate }]}>
-                <Goal size={33} color={palette.cream}/>
-                </View>
-              <Text style={resourceStyles.resourceTitle}>Goal Setting</Text>
-              <Text style={resourceStyles.resourceSubtitle}>How to set conversation goals</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity style={resourceStyles.resourceCard2}
-            onPress={() => handleResourcePress('de-escalation')}>
-              <View style={[resourceStyles.resourceIcon, { backgroundColor: palette.mediumGray }]}>
-              <Snail size={35} color={palette.cream}/>
-            </View>
-              <Text style={resourceStyles.resourceTitle}>De-escalation Tactics</Text>
-              <Text style={resourceStyles.resourceSubtitle}>Calm heated{'\n'}moments</Text>
-            </TouchableOpacity>
+              <TouchableOpacity style={resourceStyles.resourceCard2}
+              onPress={() => handleResourcePress('goal-setting')}>
+                  <View style={[resourceStyles.resourceIcon, { backgroundColor: palette.slate }]}>
+                  <Goal size={33} color={palette.cream}/>
+                  </View>
+                <Text style={resourceStyles.resourceTitle}>Goal Setting</Text>
+                <Text style={resourceStyles.resourceSubtitle}>How to set conversation goals</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity style={resourceStyles.resourceCard2}
+              onPress={() => handleResourcePress('de-escalation')}>
+                <View style={[resourceStyles.resourceIcon, { backgroundColor: palette.mediumGray }]}>
+                <Snail size={35} color={palette.cream}/>
+              </View>
+                <Text style={resourceStyles.resourceTitle}>De-escalation Tactics</Text>
+                <Text style={resourceStyles.resourceSubtitle}>Calm heated{'\n'}moments</Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity style={resourceStyles.resourceCard2}
-            onPress={() => handleResourcePress('reflection-questions')}>
-              <View style={[resourceStyles.resourceIcon, { backgroundColor: palette.orange }]}>
-              <CircleQuestionMark size={35} color={palette.cream}/>
+              <TouchableOpacity style={resourceStyles.resourceCard2}
+              onPress={() => handleResourcePress('reflection-questions')}>
+                <View style={[resourceStyles.resourceIcon, { backgroundColor: palette.orange }]}>
+                <CircleQuestionMark size={35} color={palette.cream}/>
+              </View>
+                <Text style={resourceStyles.resourceTitle}>Reflection Questions</Text>
+                <Text style={resourceStyles.resourceSubtitle}>Deepen mutual{'\n'}understanding</Text>
+              </TouchableOpacity>
             </View>
-              <Text style={resourceStyles.resourceTitle}>Reflection Questions</Text>
-              <Text style={resourceStyles.resourceSubtitle}>Deepen mutual{'\n'}understanding</Text>
-            </TouchableOpacity>
           </View>
-        </View>
         </ScrollView>
 
-        {/* Edit Profile Modal with Fade Animation */}
         <Modal
           animationType="none"
           transparent={true}

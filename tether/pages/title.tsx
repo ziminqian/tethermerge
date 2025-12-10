@@ -11,16 +11,12 @@ import {
   TouchableOpacity,
   ImageBackground,
   SafeAreaView,
-  StyleSheet
 } from 'react-native';
 import styles from '../styles/styles';
 import { LogIn } from 'lucide-react-native';
 import { palette } from '../styles/palette';
 import useSession from '../utils/useSession';
 import theme from '../styles/theme';
-
-const TEST_PHONE = '1234567890';
-const TEST_PASSWORD = 'test';
 
 interface TitleProps {
   onSignup?: () => void;
@@ -29,32 +25,37 @@ interface TitleProps {
 
 export default function Title({ onSignup, onLoginSuccess }: TitleProps = {}) {
   const { signIn } = useSession();
-  const [areaCode, setAreaCode] = useState('+1');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const passwordRef = useRef<TextInput | null>(null);
 
   const handleLogin = async () => {
-    if (!phoneNumber || !password) {
-      Alert.alert('Error', 'Please enter both phone number and password');
+    if (!email || !password) {
+      Alert.alert('Error', 'Please enter both email and password');
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      Alert.alert('Error', 'Please enter a valid email address');
       return;
     }
 
     setLoading(true);
     
-    setTimeout(async () => {
-      if (phoneNumber === TEST_PHONE && password === TEST_PASSWORD) {
-        await signIn(areaCode + phoneNumber);
-        // Call onLoginSuccess callback if provided
-        if (onLoginSuccess) {
-          onLoginSuccess();
-        }
-      } else {
-        Alert.alert('Error', 'Invalid phone number or password');
+    try {
+      await signIn(email.toLowerCase().trim(), password);
+      if (onLoginSuccess) {
+        onLoginSuccess();
       }
+    } catch (error: any) {
+      console.error('Login error:', error);
+      Alert.alert('Error', error.message || 'Invalid email or password');
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -76,23 +77,22 @@ export default function Title({ onSignup, onLoginSuccess }: TitleProps = {}) {
 
             <View style={styles.imagePlaceholder}>
               <Image source={require("../assets/other/hands.png")} style={styles.image}></Image>
-              <Text style={styles.titleSubtitleItalic}>Test credentials are: phone# 1234567890, pw test</Text>
             </View>
 
             <View style={styles.loginInputContainer}>
               <View style={styles.loginInputWrapper}>
-                <View style={styles.areaCodeContainer}>
-                  <Text style={styles.areaCodeText}>{areaCode} -</Text>
-                </View>
                 <TextInput
-                  ref = {passwordRef}
-                  placeholder="phone number"
+                  placeholder="email"
                   placeholderTextColor={palette.mutedBrown}
-                  style={styles.loginInput}
-                  keyboardType="phone-pad"
-                  value={phoneNumber}
-                  onChangeText={setPhoneNumber}
+                  style={styles.loginInputPassword}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  value={email}
+                  onChangeText={setEmail}
                   editable={!loading}
+                  returnKeyType="next"
+                  onSubmitEditing={() => passwordRef.current?.focus()}
                   blurOnSubmit={false}
                 />
               </View>
@@ -101,6 +101,7 @@ export default function Title({ onSignup, onLoginSuccess }: TitleProps = {}) {
             <View style={styles.loginInputContainer}>
               <View style={styles.loginInputWrapper}>
                 <TextInput
+                  ref={passwordRef}
                   placeholder="password"
                   placeholderTextColor={palette.mutedBrown}
                   secureTextEntry
@@ -109,6 +110,8 @@ export default function Title({ onSignup, onLoginSuccess }: TitleProps = {}) {
                   value={password}
                   onChangeText={setPassword}
                   editable={!loading}
+                  returnKeyType="go"
+                  onSubmitEditing={handleLogin}
                 />
               </View>
             </View>

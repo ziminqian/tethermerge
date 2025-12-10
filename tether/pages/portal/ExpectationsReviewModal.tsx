@@ -10,15 +10,13 @@ import {
 import { palette } from '../../styles/palette';
 import { X } from 'lucide-react-native';
 import portalStyles from '../../styles/portalStyles';
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = 'https://iyjdjalbdcstlskoildv.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml5amRqYWxiZGNzdGxza29pbGR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzOTA3NTEsImV4cCI6MjA3OTk2Njc1MX0.Oh5zp-WhW8DpzXRYP4exF14cq_oscot7zJsKkzwrPK4';
-const db = createClient(supabaseUrl, supabaseKey);
+import useSession from '../../utils/useSession';
+import { getAllExpectations } from '../../utils/database';
 
 interface ExpectationsReviewModalProps {
   visible: boolean;
   onClose: () => void;
+  portalId: string;
 }
 
 interface SavedExpectation {
@@ -27,7 +25,12 @@ interface SavedExpectation {
   title: string;
 }
 
-export const ExpectationsReviewModal = ({ visible, onClose }: ExpectationsReviewModalProps) => {
+export const ExpectationsReviewModal = ({ 
+  visible, 
+  onClose, 
+  portalId 
+}: ExpectationsReviewModalProps) => {
+  const { session } = useSession();
   const [expectations, setExpectations] = useState<SavedExpectation[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -40,33 +43,32 @@ export const ExpectationsReviewModal = ({ visible, onClose }: ExpectationsReview
   };
 
   useEffect(() => {
-    if (visible) {
+    if (visible && session?.user?.id && portalId) {
       loadExpectations();
     }
-  }, [visible]);
+  }, [visible, session, portalId]);
 
   const loadExpectations = async () => {
     setLoading(true);
     try {
-      const sections = ['section1', 'section2', 'section3', 'section4', 'section5'];
+      const data = await getAllExpectations(portalId, session!.user!.id);
+      
       const loadedExpectations: SavedExpectation[] = [];
-
-      for (const section of sections) {
-        const { data, error } = await db
-          .from('expectations2')
-          .select('text')
-          .eq('section', section)
-          .order('created_at', { ascending: false })
-          .limit(1);
-
-        if (data && data.length > 0) {
+      Object.entries(data).forEach(([section, value]: [string, any]) => {
+        if (value && value.text) {
           loadedExpectations.push({
             section,
-            text: data[0].text || '',
-            title: sectionTitles[section],
+            text: value.text,
+            title: sectionTitles[section] || section,
           });
         }
-      }
+      });
+
+      // Sort by section order
+      const sectionOrder = ['section1', 'section2', 'section3', 'section4', 'section5'];
+      loadedExpectations.sort((a, b) => 
+        sectionOrder.indexOf(a.section) - sectionOrder.indexOf(b.section)
+      );
 
       setExpectations(loadedExpectations);
     } catch (error) {
@@ -119,12 +121,12 @@ export const ExpectationsReviewModal = ({ visible, onClose }: ExpectationsReview
 
           <Text
             style={{
+              fontFamily: "../../assets/fonts/AbhayaLibre-Regular.ttf",
               fontSize: 26,
               fontWeight: 'bold',
               color: palette.slate,
               marginBottom: 16,
               textAlign: 'center',
-              fontFamily: "../../assets/fonts/AbhayaLibre-Regular.ttf"
             }}
           >
             Your Expectations
@@ -148,21 +150,21 @@ export const ExpectationsReviewModal = ({ visible, onClose }: ExpectationsReview
                 >
                   <Text
                     style={{
+                      fontFamily: "../../assets/fonts/AbhayaLibre-Regular.ttf",
                       fontSize: 18,
                       fontWeight: '700',
                       color: palette.slate,
                       marginBottom: 8,
-                      fontFamily: "../../assets/fonts/AbhayaLibre-Regular.ttf"
                     }}
                   >
                     {expectation.title}
                   </Text>
                   <Text
                     style={{
+                      fontFamily: "../../assets/fonts/AbhayaLibre-Regular.ttf",
                       fontSize: 16,
                       color: palette.darkBrown,
                       lineHeight: 24,
-                      fontFamily: "../../assets/fonts/AbhayaLibre-Regular.ttf"
                     }}
                   >
                     {expectation.text}
@@ -176,8 +178,8 @@ export const ExpectationsReviewModal = ({ visible, onClose }: ExpectationsReview
                     textAlign: 'center',
                     color: palette.mutedBrown,
                     fontSize: 16,
+                    fontFamily: "../../assets/fonts/AbhayaLibre-Regular.ttf",
                     padding: 20,
-                    fontFamily: "../../assets/fonts/AbhayaLibre-Regular.ttf"
                   }}
                 >
                   No expectations saved yet
@@ -207,7 +209,7 @@ export const ExpectationsReviewModal = ({ visible, onClose }: ExpectationsReview
                 color: palette.cream,
                 fontSize: 16,
                 fontWeight: '700',
-                fontFamily: "../../assets/fonts/AbhayaLibre-Regular.ttf"
+                fontFamily: "../../assets/fonts/AbhayaLibre-Regular.ttf",
               }}
             >
               Close

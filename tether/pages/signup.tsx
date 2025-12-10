@@ -18,6 +18,7 @@ import styles from '../styles/styles';
 import { UserPlus, ChevronLeft, X } from 'lucide-react-native';
 import { palette } from '../styles/palette';
 import theme from '../styles/theme';
+import useSession from '../utils/useSession';
 
 const back = require('../assets/backgrounds/light_ombre.png');
 
@@ -27,8 +28,9 @@ interface SignupProps {
 }
 
 export default function Signup({ onBack, onSignupSuccess }: SignupProps) {
-  const [areaCode, setAreaCode] = useState('+1');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const { signUp } = useSession();
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -37,7 +39,6 @@ export default function Signup({ onBack, onSignupSuccess }: SignupProps) {
   const slideAnim = useRef(new Animated.Value(50)).current;
 
   useEffect(() => {
-    // Fade in and slide up animation on mount
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
@@ -53,8 +54,20 @@ export default function Signup({ onBack, onSignupSuccess }: SignupProps) {
   }, [fadeAnim, slideAnim]);
 
   const handleSignup = async () => {
-    if (!phoneNumber || !password || !confirmPassword) {
+    if (!username || !email || !password || !confirmPassword) {
       Alert.alert('Error', 'Please fill in all fields');
+      return;
+    }
+
+    if (username.length < 3) {
+      Alert.alert('Error', 'Username must be at least 3 characters');
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      Alert.alert('Error', 'Please enter a valid email address');
       return;
     }
 
@@ -70,16 +83,19 @@ export default function Signup({ onBack, onSignupSuccess }: SignupProps) {
 
     setLoading(true);
     
-    // Simulate signup process
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      await signUp(email.toLowerCase().trim(), password, username.trim());
       setShowSuccessModal(true);
-    }, 1000);
+    } catch (error: any) {
+      console.error('Signup error:', error);
+      Alert.alert('Error', error.message || 'Failed to create account');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCloseModal = () => {
     setShowSuccessModal(false);
-    // Navigate to onboard3 after successful signup
     if (onSignupSuccess) {
       onSignupSuccess();
     } else {
@@ -105,7 +121,6 @@ export default function Signup({ onBack, onSignupSuccess }: SignupProps) {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={{ flex: 1 }}
         >
-          {/* Back Button */}
           <View style={[styles.heading, { marginTop: 10 }]}>
             <TouchableOpacity onPress={onBack} style={styles.backButton}>
               <ChevronLeft size={40} color={palette.slate} />
@@ -128,18 +143,33 @@ export default function Signup({ onBack, onSignupSuccess }: SignupProps) {
 
             <View style={styles.loginInputContainer}>
               <View style={styles.loginInputWrapper}>
-                <View style={styles.areaCodeContainer}>
-                  <Text style={styles.areaCodeText}>{areaCode} -</Text>
-                </View>
                 <TextInput
-                  placeholder="phone number"
+                  placeholder="username"
                   placeholderTextColor={palette.mutedBrown}
-                  style={styles.loginInput}
-                  keyboardType="phone-pad"
-                  value={phoneNumber}
-                  onChangeText={setPhoneNumber}
+                  style={styles.loginInputPassword}
+                  value={username}
+                  onChangeText={setUsername}
                   editable={!loading}
-                  returnKeyType= "next"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  returnKeyType="next"
+                />
+              </View>
+            </View>
+
+            <View style={styles.loginInputContainer}>
+              <View style={styles.loginInputWrapper}>
+                <TextInput
+                  placeholder="email"
+                  placeholderTextColor={palette.mutedBrown}
+                  style={styles.loginInputPassword}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  value={email}
+                  onChangeText={setEmail}
+                  editable={!loading}
+                  returnKeyType="next"
                 />
               </View>
             </View>
@@ -155,6 +185,7 @@ export default function Signup({ onBack, onSignupSuccess }: SignupProps) {
                   value={password}
                   onChangeText={setPassword}
                   editable={!loading}
+                  returnKeyType="next"
                 />
               </View>
             </View>
@@ -170,6 +201,8 @@ export default function Signup({ onBack, onSignupSuccess }: SignupProps) {
                   value={confirmPassword}
                   onChangeText={setConfirmPassword}
                   editable={!loading}
+                  returnKeyType="go"
+                  onSubmitEditing={handleSignup}
                 />
               </View>
             </View>
@@ -192,7 +225,6 @@ export default function Signup({ onBack, onSignupSuccess }: SignupProps) {
         </KeyboardAvoidingView>
         </Animated.View>
 
-        {/* Success Modal */}
         <Modal
           animationType="fade"
           transparent={true}

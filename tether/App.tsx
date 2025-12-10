@@ -34,10 +34,14 @@ import AuthGate from './pages/components/AuthGate';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { palette } from './styles/palette';
 import { PortalProvider, usePortal } from "./context/PortalContext"
+import { SessionProvider } from './utils/useSession';
+import useSession from './utils/useSession';
+import { getOrCreatePortal } from './utils/database';
 
 function AppContent() {
   const [activeTab, setActiveTab] = useState< 'friends' | 'home' | 'profile'>('home');
   const { addActivePortal } = usePortal();
+  const { session } = useSession();
   const [showMessage, setShowMessage] = useState(false);
   const [showPortal, setShowPortal] = useState(false);
   const [showExpectationsIntro, setShowExpectationsIntro] = useState(false);
@@ -60,29 +64,41 @@ function AppContent() {
   const [showConfirmCallModal, setShowConfirmCallModal] = useState(false);
   const [expectationsCompleted, setExpectationsCompleted] = useState(false);
   const [userProfile, setUserProfile] = useState<{ iconColor: string } | null>(null);
+  const [portalId, setPortalId] = useState<string | null>(null);
 
 
   useEffect(() => {
-  const loadUserProfile = async () => {
-    try {
-      const storedProfile = await AsyncStorage.getItem('@tether_profile');
-      if (storedProfile) {
-        const profile = JSON.parse(storedProfile);
-        setUserProfile(profile);
+    const loadUserProfile = async () => {
+      try {
+        const storedProfile = await AsyncStorage.getItem('@tether_profile');
+        if (storedProfile) {
+          const profile = JSON.parse(storedProfile);
+          setUserProfile(profile);
+        }
+      } catch (error) {
+        console.error('Error loading user profile:', error);
       }
-    } catch (error) {
-      console.error('Error loading user profile:', error);
-    }
-  };
-  
-  loadUserProfile();
-}, []);
+    };
+    
+    loadUserProfile();
+  }, []);
 
-  const handleContactSelect = (contact: { id: string; name: string, color: any }, isInvite?: boolean) => {
+  const handleContactSelect = async (contact: { id: string; name: string, color: any }, isInvite?: boolean) => {
     setSelectedContact(contact);
     setIsNewPortalRequest(false);
     setExpectationsCompleted(false);
     addActivePortal(contact);
+    
+    // Create or get portal ID
+    if (session?.user?.id) {
+      try {
+        const id = await getOrCreatePortal(session.user.id, contact.id);
+        setPortalId(id);
+      } catch (error) {
+        console.error('Error creating portal:', error);
+      }
+    }
+    
     if (isInvite) {
       setShowMessage(true);
       setShowPortal(false);
@@ -112,16 +128,27 @@ function AppContent() {
     setShowConfirmCallModal(false);
     setSelectedContact(null);
     setIsNewPortalRequest(false);
+    setPortalId(null);
     setActiveTab('friends');
   };
 
   const handleCompleteConversation = () => {
     setShowPortal(false);
     setSelectedContact(null);
+    setPortalId(null);
     setActiveTab('home');
   };
 
-  const handleNavigateToExpectations = () => {
+  const handleNavigateToExpectations = async () => {
+    // Make sure we have a portal ID before navigating
+    if (!portalId && session?.user?.id && selectedContact) {
+      try {
+        const id = await getOrCreatePortal(session.user.id, selectedContact.id);
+        setPortalId(id);
+      } catch (error) {
+        console.error('Error creating portal:', error);
+      }
+    }
     setShowExpectationsIntro(true);
     setShowPortal(false);
     setShowAcceptInvite(false);
@@ -133,6 +160,7 @@ function AppContent() {
   };
 
   const handleNavigateToSection1 = () => {
+    console.log('Navigating to Section 1, portalId:', portalId, 'contact:', selectedContact?.id);
     setShowExpectationsSection1(true);
     setShowAIPage(false);
   };
@@ -241,6 +269,7 @@ function AppContent() {
   const handleSendInvite = () => {
     setShowMessage(false);
     setSelectedContact(null);
+    setPortalId(null);
   };
 
   // Show confirm call modal when call button is pressed
@@ -303,6 +332,7 @@ function AppContent() {
       setShowCalling(false);
       setShowConfirmCallModal(false);
       setSelectedContact(null);
+      setPortalId(null);
     }
     setActiveTab(tab);
   };
@@ -392,39 +422,49 @@ function AppContent() {
             onBackToPortal={handleBackToPortal}
           />
         )}
-        {activeTab === 'friends' && showExpectationsSection1 && (
+        {activeTab === 'friends' && showExpectationsSection1 && selectedContact && portalId && (
           <ExpectationsSection1 
             onBack={handleBackToAIPage} 
             onContinue={handleNavigateToSection2}
             onBackToPortal={handleBackToPortal}
+            portalId={portalId}
+            contactId={selectedContact.id}
           />
         )}
-        {activeTab === 'friends' && showExpectationsSection2 && (
+        {activeTab === 'friends' && showExpectationsSection2 && selectedContact && portalId && (
           <ExpectationsSection2 
             onBack={handleBackToSection1} 
             onContinue={handleNavigateToSection3}
             onBackToPortal={handleBackToPortal}
+            portalId={portalId}
+            contactId={selectedContact.id}
           />
         )}
-        {activeTab === 'friends' && showExpectationsSection3 && (
+        {activeTab === 'friends' && showExpectationsSection3 && selectedContact && portalId && (
           <ExpectationsSection3 
             onBack={handleBackToSection2} 
             onContinue={handleNavigateToSection4}
             onBackToPortal={handleBackToPortal}
+            portalId={portalId}
+            contactId={selectedContact.id}
           />
         )}
-        {activeTab === 'friends' && showExpectationsSection4 && (
+        {activeTab === 'friends' && showExpectationsSection4 && selectedContact && portalId && (
           <ExpectationsSection4 
             onBack={handleBackToSection3} 
             onContinue={handleNavigateToSection5}
             onBackToPortal={handleBackToPortal}
+            portalId={portalId}
+            contactId={selectedContact.id}
           />
         )}
-        {activeTab === 'friends' && showExpectationsSection5 && (
+        {activeTab === 'friends' && showExpectationsSection5 && selectedContact && portalId && (
           <ExpectationsSection5 
             onBack={handleBackToSection4} 
             onContinue={handleNavigateToComplete}
             onBackToPortal={handleBackToPortal}
+            portalId={portalId}
+            contactId={selectedContact.id}
           />
         )}
         {activeTab === 'friends' && showExpectationsComplete && selectedContact &&(
@@ -529,8 +569,6 @@ export default function App() {
     setCurrentScreen('app');
   };
 
-  
-
   const handleLoginSuccess = () => {
     setCurrentScreen('app');
   };
@@ -571,11 +609,13 @@ export default function App() {
         </View>
         </PortalProvider>
       </TetherProvider>
+      
     );
   }
 
   if (currentScreen === 'login') {
     return (
+      <SessionProvider>
       <TetherProvider>
         <PortalProvider>
         <View style={styles.container}>
@@ -588,10 +628,12 @@ export default function App() {
         </View>
         </PortalProvider>
       </TetherProvider>
+      </SessionProvider>
     );
   }
 
   return (
+    <SessionProvider>
     <TetherProvider>
       <PortalProvider>
       <AuthGate>
@@ -599,5 +641,7 @@ export default function App() {
       </AuthGate>
       </PortalProvider>
     </TetherProvider>
+    </SessionProvider>
   );
+
 }

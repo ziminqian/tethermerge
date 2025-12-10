@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, TextInput, ScrollView, Image, ImageBackground, StyleSheet, Animated } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, TextInput, ScrollView, Image, ImageBackground, Animated, ActivityIndicator } from 'react-native';
 import styles from '../styles/styles';
 import { ChevronDown, ChevronRight, Search, Plus, Clock } from 'lucide-react-native';
 import theme from '../styles/theme';
 import { palette } from '../styles/palette';
-import { usePortal } from '../context/PortalContext';
+import { getActivePortals, getPortalRequests } from '../utils/database';
+import useSession from '../utils/useSession';
 
 interface HomeProps {
   onBack: () => void;
@@ -13,120 +14,36 @@ interface HomeProps {
 }
 
 export const Home = ({ onBack, onNext, onSearch }: HomeProps) => {
-  const { activePortals } = usePortal();
-
-  const requestPortals = [
-    { id: '4', name: 'Alan', color: palette.darkBrown, requestTime: 'Just now' },
-  ];
+  const { session } = useSession();
+  const [activePortals, setActivePortals] = useState<any[]>([]);
+  const [requestPortals, setRequestPortals] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const [showActivePortals, setShowActivePortals] = useState(true);
   const [showRequestPortals, setShowRequestPortals] = useState(true);
   const [input, setInput] = useState<string>("");
-  const [filteredActivePortals, setFilteredActivePortals] = useState(activePortals);
-  const [filteredRequestPortals, setFilteredRequestPortals] = useState(requestPortals);
-  const [blinkStates, setBlinkStates] = useState<boolean[]>(
-    [...activePortals, ...requestPortals].map(() => false)
-  );
+  const [filteredActivePortals, setFilteredActivePortals] = useState<any[]>([]);
+  const [filteredRequestPortals, setFilteredRequestPortals] = useState<any[]>([]);
+  const [blinkStates, setBlinkStates] = useState<boolean[]>([]);
 
-  // Portal rotation animation
   const rotateAnim = useRef(new Animated.Value(0)).current;
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const glowAnim = useRef(new Animated.Value(0)).current;
+  const bounceAnims = useRef<Animated.Value[]>([]);
 
-  // Bounce animation for frogs
-  const bounceAnims = useRef(
-    [...activePortals, ...requestPortals].map(() => new Animated.Value(0))
-  ).current;
-
-  // Update filtered portals when activePortals changes
   useEffect(() => {
-    if (input.trim() === '') {
-      setFilteredActivePortals(activePortals);
-    } else {
-      const searchLower = input.toLowerCase();
-      setFilteredActivePortals(
-        activePortals.filter(portal => 
-          portal.name.toLowerCase().includes(searchLower)
-        )
-      );
+    if (session?.user?.id) {
+      loadPortals();
     }
-  }, [activePortals, input]);
+  }, [session]);
 
   useEffect(() => {
-    // Rotate portal slowly
-    Animated.loop(
-      Animated.timing(rotateAnim, {
-        toValue: 1,
-        duration: 20000,
-        useNativeDriver: true,
-      })
-    ).start();
-
-    // Pulse portal
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(pulseAnim, {
-          toValue: 1.05,
-          duration: 2000,
-          useNativeDriver: true,
-        }),
-        Animated.timing(pulseAnim, {
-          toValue: 1,
-          duration: 2000,
-          useNativeDriver: true,
-        }),
-      ])
-    ).start();
-
-    // Glow effect for portal
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(glowAnim, {
-          toValue: 1,
-          duration: 3000,
-          useNativeDriver: true,
-        }),
-        Animated.timing(glowAnim, {
-          toValue: 0,
-          duration: 3000,
-          useNativeDriver: true,
-        }),
-      ])
-    ).start();
-
-    // Bounce frogs
-    bounceAnims.forEach((anim, index) => {
-      Animated.loop(
-        Animated.sequence([
-          Animated.timing(anim, {
-            toValue: -3,
-            duration: 1000 + (index * 200),
-            useNativeDriver: true,
-          }),
-          Animated.timing(anim, {
-            toValue: 0,
-            duration: 1000 + (index * 200),
-            useNativeDriver: true,
-          }),
-        ])
-      ).start();
-    });
-
-    // Blinking animation for frogs
-    const blinkInterval = setInterval(() => {
-      const newBlinkStates = blinkStates.map(() => Math.random() > 0.7);
-      setBlinkStates(newBlinkStates);
-      
-      setTimeout(() => {
-        setBlinkStates(blinkStates.map(() => false));
-      }, 150);
-    }, 3000);
-
-    return () => clearInterval(blinkInterval);
-  }, []);
+    const totalPortals = [...activePortals, ...requestPortals];
+    bounceAnims.current = totalPortals.map(() => new Animated.Value(0));
+    setBlinkStates(totalPortals.map(() => false));
+  }, [activePortals, requestPortals]);
 
   useEffect(() => {
-    // Filter portals based on search input
     if (input.trim() === '') {
       setFilteredActivePortals(activePortals);
       setFilteredRequestPortals(requestPortals);
@@ -143,7 +60,93 @@ export const Home = ({ onBack, onNext, onSearch }: HomeProps) => {
         )
       );
     }
-  }, [input, activePortals]);
+  }, [input, activePortals, requestPortals]);
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.timing(rotateAnim, {
+        toValue: 1,
+        duration: 20000,
+        useNativeDriver: true,
+      })
+    ).start();
+
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulseAnim, {
+          toValue: 1.05,
+          duration: 2000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(pulseAnim, {
+          toValue: 1,
+          duration: 2000,
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(glowAnim, {
+          toValue: 1,
+          duration: 3000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(glowAnim, {
+          toValue: 0,
+          duration: 3000,
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+
+    bounceAnims.current.forEach((anim, index) => {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(anim, {
+            toValue: -3,
+            duration: 1000 + (index * 200),
+            useNativeDriver: true,
+          }),
+          Animated.timing(anim, {
+            toValue: 0,
+            duration: 1000 + (index * 200),
+            useNativeDriver: true,
+          }),
+        ])
+      ).start();
+    });
+
+    const blinkInterval = setInterval(() => {
+      const newBlinkStates = blinkStates.map(() => Math.random() > 0.7);
+      setBlinkStates(newBlinkStates);
+      
+      setTimeout(() => {
+        setBlinkStates(blinkStates.map(() => false));
+      }, 150);
+    }, 3000);
+
+    return () => clearInterval(blinkInterval);
+  }, []);
+
+  const loadPortals = async () => {
+    try {
+      setLoading(true);
+      const [activeData, requestsData] = await Promise.all([
+        getActivePortals(session!.user!.id),
+        getPortalRequests(session!.user!.id),
+      ]);
+      setActivePortals(activeData);
+      setRequestPortals(requestsData);
+      setFilteredActivePortals(activeData);
+      setFilteredRequestPortals(requestsData);
+    } catch (error) {
+      console.error('Error loading portals:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSearchSubmit = () => {
     if (input.trim()) {
@@ -166,7 +169,7 @@ export const Home = ({ onBack, onNext, onSearch }: HomeProps) => {
   });
 
   const renderFrog = (contact: any, index: number, isBlinking: boolean) => {
-    const bounceAnim = bounceAnims[index] || new Animated.Value(0);
+    const bounceAnim = bounceAnims.current[index] || new Animated.Value(0);
 
     return (
       <Animated.View 
@@ -196,6 +199,20 @@ export const Home = ({ onBack, onNext, onSearch }: HomeProps) => {
       </Animated.View>
     );
   };
+
+  if (loading) {
+    return (
+      <ImageBackground 
+        source={require("../assets/backgrounds/light_ombre.png")}
+        style={{ flex: 1, width: '100%', height: '100%' }}
+        resizeMode='cover'
+      >
+        <SafeAreaView style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator size="large" color={palette.slate} />
+        </SafeAreaView>
+      </ImageBackground>
+    );
+  }
 
   return (
     <ImageBackground 
@@ -261,7 +278,7 @@ export const Home = ({ onBack, onNext, onSearch }: HomeProps) => {
                     resizeMode="contain"
                   />
                   <Text style={[styles.text, { opacity: 0.6 }]}>
-                    {input ? 'No portals found' : 'No active portals'}
+                    {input ? 'No portals found' : 'No active portals. Start one below!'}
                   </Text>
                 </View>
               ) : (
@@ -327,7 +344,7 @@ export const Home = ({ onBack, onNext, onSearch }: HomeProps) => {
                       {renderFrog(invite, activePortals.length + index, blinkStates[activePortals.length + index])}
                       <View style={{ flex: 1, marginLeft: 12 }}>
                         <Text style={styles.portalName}>{invite.name}</Text>
-                        <Text style={styles.requestText}>Wants to connect</Text>
+                        <Text style={styles.requestText}>Wants to connect • {invite.requestTime}</Text>
                       </View>
                       <View style={styles.newIndicator}>
                         <Text style={styles.newText}>NEW</Text>
@@ -340,8 +357,7 @@ export const Home = ({ onBack, onNext, onSearch }: HomeProps) => {
             <View style={{ height: 220 }} />
           </ScrollView>
 
-
-         <View style={styles.bottomSection}>
+          <View style={styles.bottomSection}>
             <TouchableOpacity 
               style={styles.addPortalButton}
               onPress={handleAddPortal}

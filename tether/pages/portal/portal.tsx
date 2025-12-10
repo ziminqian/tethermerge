@@ -8,26 +8,21 @@ import {
   ScrollView,
   Image,
   Dimensions,
-  StyleSheet,
   Animated,
-  Alert,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../../styles/styles';
 import { palette } from '../../styles/palette';
 import { ChevronDown, ChevronLeft, ChevronUp, Phone, X, Check, RotateCcw } from 'lucide-react-native';
 import portalStyles from '../../styles/portalStyles';
-import { createClient } from '@supabase/supabase-js';
 import { Reflect } from './reflect';
-import { resetPortalProgress } from '../../utils/portalProgress';
-
-// Import the review modal
 import { ExpectationsReviewModal } from './ExpectationsReviewModal';
-
-const supabaseUrl = 'https://iyjdjalbdcstlskoildv.supabase.co';
-const supabaseKey =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml5amRqYWxiZGNzdGxza29pbGR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzOTA3NTEsImV4cCI6MjA3OTk2Njc1MX0.Oh5zp-WhW8DpzXRYP4exF14cq_oscot7zJsKkzwrPK4';
-const db = createClient(supabaseUrl, supabaseKey);
+import useSession from '../../utils/useSession';
+import { 
+  getPortalProgress, 
+  updatePortalProgress, 
+  resetPortalProgress as resetPortalProgressDB,
+  getOrCreatePortal 
+} from '../../utils/database';
 
 const strokemap = require('../../assets/portal/strokemap.png');
 const together = require('../../assets/portal/together.png');
@@ -84,6 +79,8 @@ export const Portal = ({
   onStartCall,
   onComplete,
 }: PortalProps) => {
+  const { session } = useSession();
+  const [portalId, setPortalId] = useState<string>('');
   const [progress, setProgress] = useState<PortalProgress>({
     inviteAccepted: false,
     expectationsCompleted: false,
@@ -97,75 +94,53 @@ export const Portal = ({
   const [showCompleteModal, setShowCompleteModal] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  // Load progress from AsyncStorage
+  // Initialize portal and load progress from database
   useEffect(() => {
-    const loadProgress = async () => {
+    const initializePortal = async () => {
+      if (!session?.user?.id) return;
+
       try {
-        const key = `@portal_progress_${contact.id}`;
-        const storedProgress = await AsyncStorage.getItem(key);
-        if (storedProgress) {
-          setProgress(JSON.parse(storedProgress));
-        } else {
-          // Set initial state based on props
-          setProgress({
-            inviteAccepted: !isNewPortalRequest,
-            expectationsCompleted: expectationsCompleted,
-            assurancesCompleted: false,
-            reflectCompleted: false,
-          });
-        }
+        setLoading(true);
+        
+        // Get or create portal
+        const portalIdResult = await getOrCreatePortal(session.user.id, contact.id);
+        setPortalId(portalIdResult);
+
+        // Load progress from database
+        const dbProgress = await getPortalProgress(portalIdResult, session.user.id);
+        
+        setProgress({
+          inviteAccepted: dbProgress.inviteAccepted || !isNewPortalRequest,
+          expectationsCompleted: dbProgress.expectationsCompleted || expectationsCompleted,
+          assurancesCompleted: dbProgress.assurancesCompleted || false,
+          reflectCompleted: dbProgress.reflectCompleted || false,
+        });
       } catch (error) {
-        console.error('Error loading portal progress:', error);
+        console.error('Error initializing portal:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
-    loadProgress();
-  }, [contact.id, isNewPortalRequest, expectationsCompleted]);
+    initializePortal();
+  }, [session?.user?.id, contact.id, isNewPortalRequest, expectationsCompleted]);
 
-  // Save progress to AsyncStorage whenever it changes
+  // Save progress to database whenever it changes
   useEffect(() => {
     const saveProgress = async () => {
+      if (!session?.user?.id || !portalId || loading) return;
+
       try {
-        const key = `@portal_progress_${contact.id}`;
-        await AsyncStorage.setItem(key, JSON.stringify(progress));
+        await updatePortalProgress(portalId, session.user.id, progress);
       } catch (error) {
         console.error('Error saving portal progress:', error);
       }
     };
 
     saveProgress();
-  }, [progress, contact.id]);
-
-  // Check expectations completion from database
-  useEffect(() => {
-    const checkExpectationsCompletion = async () => {
-      try {
-        const sections = ['section1', 'section2', 'section3', 'section4', 'section5'];
-        const promises = sections.map((section) =>
-          db
-            .from('expectations2')
-            .select('id')
-            .eq('section', section)
-            .order('created_at', { ascending: false })
-            .limit(1)
-        );
-
-        const results = await Promise.all(promises);
-        const allCompleted = results.every(
-          (result) => result.data && result.data.length > 0
-        );
-        
-        if (allCompleted && !progress.expectationsCompleted) {
-          setProgress(prev => ({ ...prev, expectationsCompleted: true }));
-        }
-      } catch (error) {
-        console.error('Error checking expectations completion:', error);
-      }
-    };
-
-    checkExpectationsCompletion();
-  }, []);
+  }, [progress, portalId, session?.user?.id, loading]);
 
   const scrollToLowerHalf = () => {
     scrollViewRef.current?.scrollTo({ 
@@ -208,14 +183,18 @@ export const Portal = ({
 
   // Handle reset confirmation
   const handleResetProgress = async () => {
+    if (!session?.user?.id || !portalId) return;
+
     try {
-      await resetPortalProgress(contact.id);
+      await resetPortalProgressDB(portalId, session.user.id);
+      
       setProgress({
         inviteAccepted: false,
         expectationsCompleted: false,
         assurancesCompleted: false,
         reflectCompleted: false,
       });
+      
       setShowResetModal(false);
       setIsInLowerHalf(false);
       scrollViewRef.current?.scrollTo({ y: 0, animated: true });
@@ -263,8 +242,7 @@ export const Portal = ({
         contact={contact} 
         onBack={() => {
           setShowReflect(false);
-          setIsInLowerHalf(false); // Reset to upper half
-          // Scroll back to top
+          setIsInLowerHalf(false);
           setTimeout(() => {
             scrollViewRef.current?.scrollTo({ y: 0, animated: false });
           }, 100);
@@ -426,10 +404,8 @@ export const Portal = ({
           if (!progress.inviteAccepted) {
             onNavigateToLockedStep();
           } else if (progress.expectationsCompleted) {
-            // If completed, show review modal
             setShowReviewModal(true);
           } else {
-            // If not completed, go to expectations
             onNavigateToExpectations();
           }
         }}
@@ -647,7 +623,7 @@ export const Portal = ({
                 marginTop: 8,
                 marginBottom: 16,
                 textAlign: 'center',
-                fontFamily: "../../assets/fonts/AbhayaLibre-Regular.ttf"
+                fontFamily: "../../assets/fonts/AbhayaLibre-Regular.ttf",
               }}
             >
               Conversation Complete!
@@ -718,7 +694,6 @@ export const Portal = ({
                 color: palette.slate,
                 marginBottom: 12,
                 textAlign: 'center',
-                fontFamily: "../../assets/fonts/AbhayaLibre-Bold.ttf"
               }}
             >
               Reset Portal Progress?
@@ -731,7 +706,6 @@ export const Portal = ({
                 textAlign: 'center',
                 marginBottom: 24,
                 lineHeight: 24,
-                fontFamily: "../../assets/fonts/AbhayaLibre-Regular.ttf",
               }}
             >
               This will reset all progress for this portal, including completed steps. This action cannot be undone.
@@ -756,7 +730,6 @@ export const Portal = ({
                     fontSize: 16,
                     fontWeight: '600',
                     color: palette.slate,
-                    fontFamily: "../../assets/fonts/AbhayaLibre-Bold.ttf"
                   }}
                 >
                   Cancel
@@ -784,7 +757,6 @@ export const Portal = ({
                     fontSize: 16,
                     fontWeight: '600',
                     color: palette.cream,
-                    fontFamily: "../../assets/fonts/AbhayaLibre-Bold.ttf"
                   }}
                 >
                   Reset
@@ -797,6 +769,7 @@ export const Portal = ({
       
       {/* Expectations Review Modal */}
       <ExpectationsReviewModal
+        portalId={portalId}
         visible={showReviewModal}
         onClose={() => setShowReviewModal(false)}
       />
