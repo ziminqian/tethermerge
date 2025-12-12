@@ -4,5 +4,11 @@ By reducing the anxiety and miscommunication surrounding vulnerability, we hope 
 <p align="center">
   <img src="tether/demo/IMG_4635.PNG" height=400 />
   <img src="tether/demo/IMG_4638.PNG" height=400 />
-  <img src="tether/demo/IMG_4639.PNG" height=400 />
+  <img src="tether/demo/IMG_4640.PNG" height=400 />
+</p>
+<p align="center">
+  <img src="tether/demo/IMG_4942.jpg" height=400 />
+  <img src="tether/demo/IMG_4943.jpg" height=400 />
+  <img src="tether/demo/IMG_4944.jpg" height=400 />
+  <img src="tether/demo/IMG_4946.jpg" height=400 />
 </p>
