@@ -207,13 +207,15 @@ export const Pause = ({ contact, onResume }: PauseProps) => {
           </View>
         </View>
 
-        <TouchableOpacity 
-          style={convoStyles.resumeButton}
-          onPress={onResume}
-        >
-          <Play size={24} color={palette.cream} fill={palette.cream} />
-          <Text style={convoStyles.resumeButtonText}>RESUME CONVERSATION</Text>
-        </TouchableOpacity>
+        <View style={{ alignItems: 'center' }}>
+          <TouchableOpacity 
+            style={convoStyles.resumeButton}
+            onPress={onResume}
+          >
+            <Play size={28} color={palette.cream} fill={palette.cream} />
+          </TouchableOpacity>
+          <Text style={convoStyles.resumeButtonLabel}>Resume Conversation</Text>
+        </View>
       </View>
       <ResourceModal
         visible={modalVisible}

@@ -10,11 +10,13 @@ import {
   Modal,
   KeyboardAvoidingView,
   Image,
-  Platform
+  Platform,
+  ActivityIndicator
 } from 'react-native';
 import styles from '../styles/styles';
 import { palette } from '../styles/palette';
 import { ChevronLeft, Send, X, HeartHandshake, Sparkles } from 'lucide-react-native';
+import { draftMessage } from '../utils/gemini';
 
 interface MessageProps {
   contact: { id: string; name: string };
@@ -39,29 +41,64 @@ export const Message = ({ contact, onNext, onBack }: MessageProps) => {
   const [inputText, setInputText] = useState('');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [generatedMessage, setGeneratedMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSend = () => {
-    if (inputText.trim()) {
+  const handleSend = async () => {
+    if (inputText.trim() && !isLoading) {
+      const userInput = inputText.trim();
+      
       // Add user message
       const userMessage: ChatMessage = {
         id: Date.now().toString(),
-        text: inputText.trim(),
+        text: userInput,
         isAI: false
       };
-      setMessages([...messages, userMessage]);
-      
-      // Simulate AI response
-      setTimeout(() => {
+      const updatedMessages = [...messages, userMessage];
+      setMessages(updatedMessages);
+      setIsLoading(true);
+      setInputText('');
+
+      try {
+        // Check if user is asking for a draft or providing feedback/refinement
+        const isRefinement = generatedMessage && (
+          userInput.toLowerCase().includes('change') ||
+          userInput.toLowerCase().includes('different') ||
+          userInput.toLowerCase().includes('revise') ||
+          userInput.toLowerCase().includes('update') ||
+          userInput.toLowerCase().includes('make it') ||
+          userInput.toLowerCase().includes('more') ||
+          userInput.toLowerCase().includes('less')
+        );
+        
+        // Call Gemini AI to draft the message
+        const draftedMessage = await draftMessage(
+          contact.name,
+          userInput,
+          messages
+        );
+        
+        // Add AI response with the drafted message
         const aiResponse: ChatMessage = {
           id: (Date.now() + 1).toString(),
-          text: `Sure, here's one version:\n"Hey ${contact.name}, I've been thinking about what happened yesterday. I don't want that fight to sit between us or mess with our friendship. Can we talk it through when you're free?"`,
+          text: isRefinement
+            ? `Here's a revised version:\n\n"${draftedMessage}"\n\nWould you like me to adjust anything else?`
+            : `Sure, here's a draft invitation message:\n\n"${draftedMessage}"\n\nWould you like me to change anything about it?`,
           isAI: true
         };
         setMessages(prev => [...prev, aiResponse]);
-        setGeneratedMessage(`Hey ${contact.name}, I've been thinking about what happened yesterday. I don't want that fight to sit between us or mess with our friendship. Can we talk it through when you're free?`);
-      }, 1000);
-      
-      setInputText('');
+        setGeneratedMessage(draftedMessage);
+      } catch (error) {
+        console.error('Error generating message:', error);
+        // Add error message
+        const errorResponse: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          text: `I'm sorry, I encountered an error while generating your message. Please try again or check your internet connection.`,
+          isAI: true
+        };
+        setMessages(prev => [...prev, errorResponse]);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -132,22 +169,43 @@ export const Message = ({ contact, onNext, onBack }: MessageProps) => {
                 style={styles.chatInput}
                 value={inputText}
                 onChangeText={setInputText}
-                placeholder="Draft a message, or ask Tether AI for some help"
+                placeholder={generatedMessage
+                  ? "Ask to revise the message, or type 'send' to use this version..."
+                  : "What do you want to talk about with them? I'll help draft an invitation message."}
                 placeholderTextColor={palette.mutedBrown}
                 multiline
+                editable={!isLoading}
               />
-              <TouchableOpacity onPress={handleSend} style={styles.sendButton}>
-                <Send size={26} color={palette.slate} />
+              <TouchableOpacity 
+                onPress={handleSend} 
+                style={styles.sendButton}
+                disabled={isLoading || !inputText.trim()}
+              >
+                {isLoading ? (
+                  <ActivityIndicator size="small" color={palette.slate} />
+                ) : (
+                  <Send size={26} color={palette.slate} />
+                )}
               </TouchableOpacity>
             </View>
-            <View style={{alignItems: "center"}}>
+            <View style={{alignItems: "center", marginTop: 10}}>
+              {generatedMessage && (
+                <View style={{marginBottom: 10, paddingHorizontal: 20}}>
+                  <Text style={[styles.messageText, {textAlign: 'center', fontStyle: 'italic', color: palette.mutedBrown}]}>
+                    Drafted message: "{generatedMessage}"
+                  </Text>
+                </View>
+              )}
               <TouchableOpacity 
                 onPress={handleSendInvite}
-                style={[styles.loginButton, {width: 200}]}
+                style={[
+                  styles.loginButton,
+                  {width: 200, opacity: generatedMessage ? 1 : 0.5}
+                ]}
                 disabled={!generatedMessage}
               >
-              <HeartHandshake size={30} color={palette.cream}/>
-              <Text style={styles.loginButtonText}>Send Invite</Text>
+                <HeartHandshake size={30} color={palette.cream}/>
+                <Text style={styles.loginButtonText}>Send Invite</Text>
               </TouchableOpacity>
             </View>
           </View>

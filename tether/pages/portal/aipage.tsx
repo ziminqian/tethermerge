@@ -9,12 +9,14 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Image,
-  Platform
+  Platform,
+  ActivityIndicator
 } from 'react-native';
 import styles from '../../styles/styles';
 import { palette } from '../../styles/palette';
 import { ChevronLeft, Send, Sparkles } from 'lucide-react-native';
 import portalStyles from '../../styles/portalStyles';
+import { getExpectationsAIResponse } from '../../utils/gemini';
 
 interface AIPageProps {
   onBack: () => void;
@@ -37,28 +39,46 @@ export const AIPage = ({ onBack, onContinue, onBackToPortal }: AIPageProps) => {
     }
   ]);
   const [inputText, setInputText] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSend = () => {
-    if (inputText.trim()) {
+  const handleSend = async () => {
+    if (inputText.trim() && !isLoading) {
+      const userInput = inputText.trim();
+      
       // Add user message
       const userMessage: ChatMessage = {
         id: Date.now().toString(),
-        text: inputText.trim(),
+        text: userInput,
         isAI: false
       };
-      setMessages([...messages, userMessage]);
-      
-      // Simulate AI response
-      setTimeout(() => {
+      const updatedMessages = [...messages, userMessage];
+      setMessages(updatedMessages);
+      setIsLoading(true);
+      setInputText('');
+
+      try {
+        // Call Gemini AI to get response
+        const aiResponseText = await getExpectationsAIResponse(userInput, messages);
+        
+        // Add AI response
         const aiResponse: ChatMessage = {
           id: (Date.now() + 1).toString(),
-          text: `That's a great question about expectations! Setting clear expectations helps you approach this conversation with intention. What else would you like to explore?`,
+          text: aiResponseText,
           isAI: true
         };
         setMessages(prev => [...prev, aiResponse]);
-      }, 1000);
-      
-      setInputText('');
+      } catch (error) {
+        console.error('Error getting AI response:', error);
+        // Add error message
+        const errorResponse: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          text: `I'm sorry, I encountered an error while processing your question. Please try again or check your internet connection.`,
+          isAI: true
+        };
+        setMessages(prev => [...prev, errorResponse]);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -119,9 +139,18 @@ export const AIPage = ({ onBack, onContinue, onBackToPortal }: AIPageProps) => {
                 placeholder="Ask about what you can control, outcomes, or emotional preparation..."
                 placeholderTextColor={palette.mutedBrown}
                 multiline
+                editable={!isLoading}
               />
-              <TouchableOpacity onPress={handleSend} style={styles.sendButton}>
-                <Send size={26} color={palette.slate} />
+              <TouchableOpacity 
+                onPress={handleSend} 
+                style={styles.sendButton}
+                disabled={isLoading || !inputText.trim()}
+              >
+                {isLoading ? (
+                  <ActivityIndicator size="small" color={palette.slate} />
+                ) : (
+                  <Send size={26} color={palette.slate} />
+                )}
               </TouchableOpacity>
             </View>
             <TouchableOpacity

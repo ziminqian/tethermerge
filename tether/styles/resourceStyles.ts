@@ -59,7 +59,7 @@ resourcesContainer: {
     resourcesSection: {
     flex: 1,
     width: '100%',
-    marginBottom: 20,
+    marginBottom: 40,
   },
   resourcesGrid: {
     flexDirection: 'row',

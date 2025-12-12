@@ -226,21 +226,27 @@ export const Conversation = ({
 
         <Text style={convoStyles.pauseHintText}>Pause for more resources</Text>
 
-        <TouchableOpacity 
-          style={convoStyles.pauseButton}
-          onPress={() => onPause(contact)}
-        >
-          <Pause size={24} color={palette.cream} fill={palette.cream} />
-          <Text style={convoStyles.pauseButtonText}>PAUSE & BREATHE</Text>
-        </TouchableOpacity>
+        <View style={convoStyles.actionButtonsRow}>
+          <View style={convoStyles.actionButtonContainer}>
+            <TouchableOpacity 
+              style={convoStyles.circularActionButton}
+              onPress={() => onPause(contact)}
+            >
+              <Pause size={28} color={palette.cream} fill={palette.cream} />
+            </TouchableOpacity>
+            <Text style={convoStyles.actionButtonLabel}>Pause</Text>
+          </View>
 
-        <TouchableOpacity 
-          style={[convoStyles.pauseButton, { backgroundColor: palette.teal, marginTop: 16 }]}
-          onPress={onEndConversation}
-        >
-          <X size={24} color={palette.cream} fill={palette.cream} />
-          <Text style={convoStyles.pauseButtonText}>END CONVERSATION</Text>
-        </TouchableOpacity>
+          <View style={convoStyles.actionButtonContainer}>
+            <TouchableOpacity 
+              style={convoStyles.circularActionButtonTeal}
+              onPress={onEndConversation}
+            >
+              <X size={28} color={palette.cream} fill={palette.cream} />
+            </TouchableOpacity>
+            <Text style={convoStyles.actionButtonLabel}>End</Text>
+          </View>
+        </View>
     
       </View>
       <ResourceModal

@@ -5,6 +5,7 @@ import {
   TextInput,
   ImageBackground, 
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Alert,
   ScrollView,
   ActivityIndicator
@@ -147,14 +148,17 @@ export const ExpectationsSection2 = ({
             
             {savedText && !isEditing ? (
               <>
-                <TextInput
-                  style={portalStyles.savedTextBox}
-                  value={savedText}
-                  editable={false}
-                  multiline
-                  numberOfLines={4}
-                  textAlignVertical="top"
-                />
+                <TouchableWithoutFeedback onPress={handleEdit}>
+                  <TextInput
+                    style={portalStyles.savedTextBox}
+                    value={savedText}
+                    editable={false}
+                    multiline
+                    numberOfLines={4}
+                    textAlignVertical="top"
+                    pointerEvents="none"
+                  />
+                </TouchableWithoutFeedback>
                 <TouchableOpacity onPress={handleEdit} style={portalStyles.editButton}>
                   <Text style={portalStyles.editButtonText}>Edit</Text>
                 </TouchableOpacity>

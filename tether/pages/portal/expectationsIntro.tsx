@@ -4,10 +4,17 @@ import {
   Text, 
   ImageBackground, 
   TouchableOpacity,
+  Image,
+  Dimensions,
 } from 'react-native';
 import { palette } from '../../styles/palette';
-import { ChevronLeft } from 'lucide-react-native';
+import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 import portalStyles from '../../styles/portalStyles';
+
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+
+const leftp = require('../../assets/other/leftp.png');
+const rightp = require('../../assets/other/rightp.png');
 
 interface ExpectationsIntroProps {
   onBack: () => void;
@@ -27,25 +34,49 @@ export const ExpectationsIntro = ({ onBack, onContinue, onBackToPortal }: Expect
       resizeMode='cover'
     >
       <View style={portalStyles.container}>
-        <TouchableOpacity onPress={onBack} style={portalStyles.backButton}>
-          <ChevronLeft size={40} color={palette.slate} />
-        </TouchableOpacity>
-        
-        <View style={[portalStyles.content]}>
-          <Text style={[portalStyles.title,]}>Setting Expectations</Text>
+        {/* Left figure - top left */}
+        <Image
+          source={leftp}
+          style={{
+            position: 'absolute',
+            top: -120,
+            left: 3,
+            width: SCREEN_WIDTH * 0.7,
+            height: SCREEN_HEIGHT * 0.75,
+            resizeMode: 'contain',
+            zIndex: 1,
+          }}
+        />
+
+        {/* Right figure - bottom right */}
+        <Image
+          source={rightp}
+          style={{
+            position: 'absolute',
+            bottom: -60,
+            right: 1,
+            width: SCREEN_WIDTH * 0.9,
+            height: SCREEN_HEIGHT * 0.95,
+            resizeMode: 'contain',
+            zIndex: 1,
+          }}
+        />
+
+        {/* Centered content */}
+        <View style={[portalStyles.content, { position: 'relative', justifyContent: 'center', flex: 1 }]}>
+          <Text style={[portalStyles.title, { textAlign: 'center' }]}>Setting Expectations</Text>
         </View>
       </View>
-      
-      <TouchableOpacity
-        style={portalStyles.continueButton}
-        onPress={handleContinue}
-      >
-        <Text style={[portalStyles.continueButtonText,]}>Continue</Text>
-      </TouchableOpacity>
 
-      <TouchableOpacity onPress={onBackToPortal} style={portalStyles.backToPortalButton}>
-        <Text style={[portalStyles.backToPortalText,]}>Back to Portal</Text>
-      </TouchableOpacity>
+      {/* Bottom navigation */}
+      <View style={{ position: 'absolute', bottom: 20, left: 0, right: 0, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, zIndex: 10 }}>
+        <TouchableOpacity onPress={onBack} style={{ padding: 10 }}>
+          <ChevronLeft size={32} color={palette.slate} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleContinue} style={{ padding: 10 }}>
+          <ChevronRight size={32} color={palette.slate} />
+        </TouchableOpacity>
+      </View>
     </ImageBackground>
   );
 };

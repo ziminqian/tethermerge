@@ -4,7 +4,7 @@ import styles from '../styles/styles';
 import { Search, ChevronDown, ChevronRight } from 'lucide-react-native';
 import theme from '../styles/theme';
 import { palette } from '../styles/palette';
-import { getContacts, getPendingInvites, searchUsers } from '../utils/database';
+import { getContacts, getPendingInvites, searchUsers, HARDCODED_CONTACTS } from '../utils/database';
 import useSession from '../utils/useSession';
 
 interface ContactsProps {
@@ -24,6 +24,7 @@ export const Contacts = ({ onNext, onBack, onSearch }: ContactsProps) => {
   const [input, setInput] = useState<string>("");
   const [showFriends, setShowFriends] = useState(true);
   const [showNewInvites, setShowNewInvites] = useState(true);
+  const [showNewInviteTab, setShowNewInviteTab] = useState(false);
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [filteredContacts, setFilteredContacts] = useState<any[]>([]);
   const [filteredInvites, setFilteredInvites] = useState<any[]>([]);
@@ -38,7 +39,7 @@ export const Contacts = ({ onNext, onBack, onSearch }: ContactsProps) => {
   }, [session]);
 
   useEffect(() => {
-    const totalContacts = [...contacts, ...invites, ...searchResults];
+    const totalContacts = [...contacts, ...invites, ...searchResults, ...HARDCODED_CONTACTS];
     bounceAnims.current = totalContacts.map(() => new Animated.Value(0));
     setBlinkStates(totalContacts.map(() => false));
 
@@ -277,6 +278,60 @@ export const Contacts = ({ onNext, onBack, onSearch }: ContactsProps) => {
                   marginHorizontal: 20,
                 }} />
               </>
+            )}
+
+            <TouchableOpacity 
+              style={styles.dropdown} 
+              onPress={() => setShowNewInviteTab(!showNewInviteTab)}
+            >
+              {showNewInviteTab ? 
+                <ChevronDown color={theme.button}/> : 
+                <ChevronRight color={theme.button}/>
+              }
+              <Text style={styles.subheading}>New Invite</Text>
+            </TouchableOpacity>
+
+            {showNewInviteTab && (
+              HARDCODED_CONTACTS.length === 0 ? (
+                <View style={styles.empty}>
+                  <Image 
+                    source={require('../assets/frogs/cute_frog_body.png')}
+                    style={{ width: 80, height: 80, opacity: 0.3, marginBottom: 12 }}
+                    resizeMode="contain"
+                    tintColor={palette.sage}
+                  />
+                  <Text style={[styles.text, { opacity: 0.6 }]}>
+                    No contacts available
+                  </Text>
+                </View>
+              ) : (
+                HARDCODED_CONTACTS.map((contact, index) => (
+                  <TouchableOpacity 
+                    key={contact.id} 
+                    style={[styles.contactCard, {
+                      backgroundColor: 'rgba(255, 255, 255, 0.6)',
+                      borderRadius: 16,
+                      marginBottom: 12,
+                      marginHorizontal: 8,
+                      padding: 16,
+                      shadowColor: palette.shadow,
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowOpacity: 0.1,
+                      shadowRadius: 8,
+                      elevation: 2,
+                    }]} 
+                    onPress={() => onNext(contact, true)} 
+                  >
+                    {renderFrog(contact, contacts.length + invites.length + searchResults.length + index, blinkStates[contacts.length + invites.length + searchResults.length + index])}
+                    <View style={{ flex: 1 }}>
+                      <Text style={[styles.text, { fontWeight: '600' }]}>{contact.name}</Text>
+                      <Text style={[styles.text, { fontSize: 15, opacity: 0.6, marginTop: 2, fontStyle: "italic" }]}>
+                        New invite
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                ))
+              )
             )}
 
             <TouchableOpacity 

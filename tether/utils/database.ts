@@ -1,5 +1,36 @@
 // utils/database.ts
 import { supabase } from './supabaseClient';
+import { palette } from '../styles/palette';
+
+// Hardcoded contacts for testing/development
+// Using valid UUID format so they work with database operations
+export const HARDCODED_CONTACTS = [
+  {
+    id: '00000000-0000-0000-0000-000000000001',
+    name: 'Alex',
+    color: palette.teal,
+  },
+  {
+    id: '00000000-0000-0000-0000-000000000002',
+    name: 'Sam',
+    color: palette.sage,
+  },
+  {
+    id: '00000000-0000-0000-0000-000000000003',
+    name: 'Jordan',
+    color: palette.mediumBrown,
+  },
+  {
+    id: '00000000-0000-0000-0000-000000000004',
+    name: 'Taylor',
+    color: palette.slate,
+  },
+];
+
+// Check if a user ID is a hardcoded contact
+function isHardcodedContact(userId: string): boolean {
+  return HARDCODED_CONTACTS.some(contact => contact.id === userId);
+}
 
 // Get user's contacts
 export async function getContacts(userId: string) {
@@ -20,10 +51,11 @@ export async function getContacts(userId: string) {
 
   if (error) {
     console.error('Error fetching contacts:', error);
-    return [];
+    // Return hardcoded contacts even if database fails
+    return HARDCODED_CONTACTS;
   }
 
-  return data.map((contact: any) => {
+  const dbContacts = data.map((contact: any) => {
     const profile = Array.isArray(contact.contact_profile) 
       ? contact.contact_profile[0] 
       : contact.contact_profile;
@@ -36,6 +68,9 @@ export async function getContacts(userId: string) {
       color: profile.icon_color,
     };
   }).filter((item): item is { id: string; name: string; color: string } => item !== null);
+
+  // Combine hardcoded contacts with database contacts
+  return [...HARDCODED_CONTACTS, ...dbContacts];
 }
 
 // Get pending invites
@@ -239,6 +274,16 @@ export async function searchUsers(query: string, currentUserId: string) {
 // Get or create a portal between two users
 export async function getOrCreatePortal(user1Id: string, user2Id: string) {
   try {
+    // Check if either user is a hardcoded contact
+    // Hardcoded contacts don't exist in the database, so we can't create real portals with them
+    if (isHardcodedContact(user1Id) || isHardcodedContact(user2Id)) {
+      // Return a mock portal ID for demo purposes
+      // This allows the UI to work but won't save to database
+      const mockId = `mock-${user1Id}-${user2Id}`.replace(/[^a-zA-Z0-9-]/g, '-');
+      console.log('Using mock portal ID for hardcoded contact:', mockId);
+      return mockId;
+    }
+
     // First try to find existing portal
     const { data: existingPortal } = await supabase
       .from('portals')
@@ -282,6 +327,19 @@ export async function saveExpectation(
   section: 'section1' | 'section2' | 'section3',
   text: string
 ) {
+  // Handle mock portals for hardcoded contacts - don't save to database
+  if (portalId.startsWith('mock-') || isHardcodedContact(userId)) {
+    console.log('Skipping expectation save for hardcoded contact');
+    return {
+      id: `mock-expectation-${Date.now()}`,
+      portal_id: portalId,
+      user_id: userId,
+      section,
+      text: text.trim(),
+      created_at: new Date().toISOString(),
+    };
+  }
+
   const { data, error } = await supabase
     .from('expectations')
     .insert([
@@ -308,6 +366,11 @@ export async function getLatestExpectation(
   userId: string,
   section: 'section1' | 'section2' | 'section3'
 ) {
+  // Handle mock portals for hardcoded contacts - return null (no saved expectations)
+  if (portalId.startsWith('mock-') || isHardcodedContact(userId)) {
+    return null;
+  }
+
   const { data, error } = await supabase
     .from('expectations')
     .select('text, created_at')
@@ -351,6 +414,16 @@ export async function getAllExpectations(portalId: string, userId: string) {
 
 // Portal Progress functions
 export async function getPortalProgress(portalId: string, userId: string) {
+  // Handle mock portals for hardcoded contacts
+  if (portalId.startsWith('mock-') || isHardcodedContact(userId)) {
+    return {
+      inviteAccepted: false,
+      expectationsCompleted: false,
+      assurancesCompleted: false,
+      reflectCompleted: false,
+    };
+  }
+
   const { data, error } = await supabase
     .from('portal_progress')
     .select('*')
@@ -395,6 +468,12 @@ export async function updatePortalProgress(
     reflectCompleted?: boolean;
   }
 ) {
+  // Handle mock portals for hardcoded contacts - don't save to database
+  if (portalId.startsWith('mock-') || isHardcodedContact(userId)) {
+    console.log('Skipping portal progress update for hardcoded contact');
+    return null;
+  }
+
   const { data, error } = await supabase
     .from('portal_progress')
     .upsert({
